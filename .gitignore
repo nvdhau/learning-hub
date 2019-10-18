@@ -25,3 +25,4 @@ mysql
 
 *Dockerfile
 docker-compose.yml
+.env
