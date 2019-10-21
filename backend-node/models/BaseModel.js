@@ -2,9 +2,12 @@ const mysql = require('mysql2');
 
 class BaseModel {
 
-  static table = 'base_model';
+  static get table() { 
+    return 'base_model';
+  }
 
-  static connection = mysql.createPool({
+  static get connection() {
+    return mysql.createPool({
       host     : process.env.DB_HOST,
       user     : process.env.DB_USER,
       password : process.env.DB_PASS,
@@ -12,6 +15,7 @@ class BaseModel {
       waitForConnections: true,
       connectionLimit: 10,
     }).promise();
+  }
 
   static get() {
     return this.connection.execute(`SELECT * FROM ${this.table}`);

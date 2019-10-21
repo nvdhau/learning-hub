@@ -1,7 +1,9 @@
 const BaseModel = require('../models/BaseModel');
 
 class User extends BaseModel {
-  static table = 'users';
+  static get table() {
+    return 'users';
+  }
 }
 
 module.exports = User;
