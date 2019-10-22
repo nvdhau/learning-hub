@@ -57,5 +57,8 @@ typings/
 # dotenv environment variables file
 .env
 
+# Firebase configuration file
+service-account-file.json
+
 # next.js build output
 .next
