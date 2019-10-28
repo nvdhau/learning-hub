@@ -17,10 +17,24 @@ class BaseModel {
     }).promise();
   }
 
+  static camelToSnakeCase(str) {
+    return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+  }
+
   static get() {
     return this.connection.execute(`SELECT * FROM ${this.table}`);
   }
 
+  static create(instance) {
+    let instancePropertiesArray = Object.getOwnPropertyNames(instance);
+    let instancePropertiesArraySnakeCase = instancePropertiesArray.map(string => this.camelToSnakeCase(string));
+    let questionMarksArray = instancePropertiesArray.map(string => '?');
+    
+    return this.connection.execute(
+      `INSERT INTO ${this.table} (${instancePropertiesArraySnakeCase}) VALUES (${questionMarksArray})`,
+      Object.values(instance)
+    );
+  }
 }
 
 module.exports = BaseModel;

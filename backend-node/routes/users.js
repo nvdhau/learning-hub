@@ -17,7 +17,9 @@ router.get('/', function(req, res, next) {
 
 router.post('/create', [
   check('email').isEmail(),
-  check('password').isLength({min: 6})
+  check('password').isLength({min: 6}),
+  check('fullName').isLength({min: 1}),
+  check('username').isLength({min: 1})
 ], (req, res, next) => {
   //Forward the errors
   const errors = validationResult(req);
@@ -25,15 +27,15 @@ router.post('/create', [
     return res.status(422).json({ errors: errors.array() });
   }
 
-  const user = req.body;
-  firebaseAdmin.auth().createUser(user)
+  const userRequest = req.body;
+  let userDB;
+  firebaseAdmin.auth().createUser(userRequest)
     .then(userRecord => {
-      delete user.password;
-      user.uid = userRecord.uid;
-      return new Promise((resolve, reject) => resolve()); //User.saveUser(user);
+      userDB = new User(userRecord.uid, userRequest.username, userRequest.fullName);
+      return User.create(userDB);
     })
-    .then(resultData => {
-      res.status(201).json(user);
+    .then(([rows]) => {
+      res.status(201).json(userDB);
     })
     .catch(err => {
       console.log(err);
