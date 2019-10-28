@@ -33,13 +33,13 @@ class HeaderNavigation extends Component {
                 <div className="collapse navbar-collapse" id="navbar-mobile">
                     <ul className="nav navbar-nav mr-auto float-left">
                         <li className="nav-item d-none d-md-block">
-                            <a className="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i className="la la-eye"></i>Trending</a>
+                            <a className="nav-link nav-menu-main hidden-xs" href="#"><i className="la la-eye"></i>Trending</a>
                         </li>
                         <li className="nav-item d-none d-md-block">
-                            <a className="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i className="la la-fire"></i>New</a>
+                            <a className="nav-link nav-menu-main hidden-xs" href="#"><i className="la la-fire"></i>New</a>
                         </li>
                         <li className="nav-item d-none d-md-block">
-                            <a className="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i className="la la-search"></i>Search</a>
+                            <a className="nav-link nav-menu-main hidden-xs" href="#"><i className="la la-search"></i>Search</a>
                         </li>
                     </ul>
                     <ul className="nav navbar-nav float-right">
