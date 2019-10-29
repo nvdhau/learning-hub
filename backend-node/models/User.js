@@ -13,6 +13,15 @@ class User extends BaseModel {
     this.fullName = fullName;
     this.isActive = isActive;
   }
+
+  static fromDB(row) {
+    return new User(row.id, row.username, row.full_name, Boolean(row.is_active));
+  }
+
+  static findBy(propertyName, value) {
+    return super.findBy(propertyName, value)
+      .then((rows) => this.fromDB(rows[0]));
+  } 
 }
 
 module.exports = User;

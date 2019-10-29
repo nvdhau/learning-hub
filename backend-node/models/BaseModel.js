@@ -35,6 +35,17 @@ class BaseModel {
       Object.values(instance)
     );
   }
+
+  static findBy(propertyName, value) {
+    return this.connection.execute(
+      `SELECT * FROM ${this.table} WHERE ${propertyName} = ?`,
+      [value]
+    ).then(([rows]) => {
+      if (rows.length <= 0)
+        throw `Table ${this.table} with ${propertyName} = ${value} not found`;
+      return rows;
+    });
+  }
 }
 
 module.exports = BaseModel;

@@ -4,15 +4,24 @@ var router = express.Router();
 const { firebaseAdmin } = require('../utils/firebase');
 const User = require('../models/User');
 const { check, validationResult } = require('express-validator');
+const { isAuthenticated } = require('../middlewares/auth');
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-
-  User.get().then(([rows,fields]) => {
+router.get('/', isAuthenticated, (req, res, next) => {
+  User.get().then(([rows, fields]) => {
     console.log(rows);
   });
+});
 
+router.get('/:uid', isAuthenticated, (req, res, next) => {
+  let uid = req.params.uid;
+  User.findBy('id', uid)
+    .then(user => {
+      res.status(200).json(user);
+    }).catch(error => {
+      console.log(error);
+      res.status(404).json({});
+    });
 });
 
 router.post('/create', [
