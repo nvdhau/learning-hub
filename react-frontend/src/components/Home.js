@@ -1,10 +1,10 @@
 import React from 'react';
 import { Component } from 'react';
+import HeaderNavigation from './HeaderNavigation';
+import MenuBar from './MenuBar';
 import ListPosts from './Posts/ListPosts';
 import Events from './Widgets/Events';
 
-// import SCSS if any
-// import '../sass/HeaderNavigation.scss';
 
 class Home extends Component {
   constructor(props) {
@@ -14,13 +14,15 @@ class Home extends Component {
   render() {
     return (
         <React.Fragment>
+            <HeaderNavigation />
+            <MenuBar />
             <div className="app-content content">
                 <div className="content-wrapper">
                     <div className="content-header row">
                         <div className="content-header-left col-md-12 col-12 mb-2">
                             <h3 className="content-header-title">Trending</h3>
                             <div className="content-header-right col-md-12 col-12">
-                              <div className="btn float-md-right">   
+                              <div className="btn float-md-right float-sm-right float-right">   
                                 <button className="btn btn-info round box-shadow-2 px-2" id="btnPost" type="button"><i className="ft-plus icon-left"></i> Create Post</button>
                               </div>
                             </div>

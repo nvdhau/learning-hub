@@ -12,7 +12,7 @@ class MenuBar extends Component {
   render() {
     return (
         <React.Fragment>
-          <div className="main-menu menu-fixed menu-light menu-accordion menu-shadow" data-scroll-to-active="true">
+          <div id="my-menu-sidebar" className="main-menu menu-fixed menu-light menu-accordion menu-shadow" data-scroll-to-active="true">
             <div className="main-menu-content">
               <ul className="navigation navigation-main tags-menu" id="main-menu-navigation" data-menu="menu-navigation">
                 <li className="navigation-header"><span data-i18n="nav.category.admin-panels"><i className="la la-tags"></i><strong> # Tags</strong></span>
