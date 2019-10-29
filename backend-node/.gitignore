@@ -59,6 +59,7 @@ typings/
 
 # Firebase configuration file
 service-account-file.json
+firebaseConfig.js
 
 # next.js build output
 .next

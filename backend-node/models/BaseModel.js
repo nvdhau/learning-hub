@@ -17,10 +17,35 @@ class BaseModel {
     }).promise();
   }
 
+  static camelToSnakeCase(str) {
+    return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+  }
+
   static get() {
     return this.connection.execute(`SELECT * FROM ${this.table}`);
   }
 
+  static create(instance) {
+    let instancePropertiesArray = Object.getOwnPropertyNames(instance);
+    let instancePropertiesArraySnakeCase = instancePropertiesArray.map(string => this.camelToSnakeCase(string));
+    let questionMarksArray = instancePropertiesArray.map(string => '?');
+    
+    return this.connection.execute(
+      `INSERT INTO ${this.table} (${instancePropertiesArraySnakeCase}) VALUES (${questionMarksArray})`,
+      Object.values(instance)
+    );
+  }
+
+  static findBy(propertyName, value) {
+    return this.connection.execute(
+      `SELECT * FROM ${this.table} WHERE ${propertyName} = ?`,
+      [value]
+    ).then(([rows]) => {
+      if (rows.length <= 0)
+        throw `Table ${this.table} with ${propertyName} = ${value} not found`;
+      return rows;
+    });
+  }
 }
 
 module.exports = BaseModel;

@@ -1,13 +1,13 @@
 -- email match with firebase authentication 
-DROP DATABASE IF EXISTS test;
+DROP DATABASE IF EXISTS learning_hub_3280;
 
-CREATE DATABASE test;
-USE test;
+CREATE DATABASE learning_hub_3280;
+USE learning_hub_3280;
 CREATE TABLE USERS (
-    user_id VARCHAR(200) PRIMARY KEY,   
-    user_name VARCHAR(50),
+    id VARCHAR(200) PRIMARY KEY,   
+    username VARCHAR(50),
     full_name TEXT,
-    in_active BOOLEAN NOT NULL DEFAULT 0
+    is_active BOOLEAN NOT NULL DEFAULT 1
 );
 
 CREATE TABLE POSTS (
@@ -19,7 +19,7 @@ CREATE TABLE POSTS (
     updated_at DATETIME,
     deleted BOOLEAN NOT NULL DEFAULT 0,
 
-    FOREIGN KEY (author) REFERENCES USERS(user_id)
+    FOREIGN KEY (author) REFERENCES USERS(id)
 );
 
 CREATE TABLE RATING(
@@ -28,7 +28,7 @@ CREATE TABLE RATING(
     rating TINYINT NOT NULL,
     PRIMARY KEY (post_id, user_id),
     FOREIGN KEY (post_id) REFERENCES POSTS(post_id),
-    FOREIGN KEY (user_id) REFERENCES USERS(user_id)
+    FOREIGN KEY (user_id) REFERENCES USERS(id)
 );
 
 CREATE TABLE ATTACHMENTS(

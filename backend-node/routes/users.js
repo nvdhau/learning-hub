@@ -4,20 +4,31 @@ var router = express.Router();
 const { firebaseAdmin } = require('../utils/firebase');
 const User = require('../models/User');
 const { check, validationResult } = require('express-validator');
+const { isAuthenticated } = require('../middlewares/auth');
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-
-  User.get().then(([rows,fields]) => {
+router.get('/', isAuthenticated, (req, res, next) => {
+  User.get().then(([rows, fields]) => {
     console.log(rows);
   });
+});
 
+router.get('/:uid', isAuthenticated, (req, res, next) => {
+  let uid = req.params.uid;
+  User.findBy('id', uid)
+    .then(user => {
+      res.status(200).json(user);
+    }).catch(error => {
+      console.log(error);
+      res.status(404).json({});
+    });
 });
 
 router.post('/create', [
   check('email').isEmail(),
-  check('password').isLength({min: 6})
+  check('password').isLength({min: 6}),
+  check('fullName').isLength({min: 1}),
+  check('username').isLength({min: 1})
 ], (req, res, next) => {
   //Forward the errors
   const errors = validationResult(req);
@@ -25,15 +36,15 @@ router.post('/create', [
     return res.status(422).json({ errors: errors.array() });
   }
 
-  const user = req.body;
-  firebaseAdmin.auth().createUser(user)
+  const userRequest = req.body;
+  let userDB;
+  firebaseAdmin.auth().createUser(userRequest)
     .then(userRecord => {
-      delete user.password;
-      user.uid = userRecord.uid;
-      return new Promise((resolve, reject) => resolve()); //User.saveUser(user);
+      userDB = new User(userRecord.uid, userRequest.username, userRequest.fullName);
+      return User.create(userDB);
     })
-    .then(resultData => {
-      res.status(201).json(user);
+    .then(([rows]) => {
+      res.status(201).json(userDB);
     })
     .catch(err => {
       console.log(err);
