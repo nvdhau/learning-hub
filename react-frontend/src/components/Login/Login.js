@@ -1,5 +1,6 @@
 import React from 'react';
 import { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 
 import './Login.scss';
@@ -51,6 +52,7 @@ class Login extends Component {
                                                                 type="text" 
                                                                 className="form-control form-control-lg input-lg"
                                                                 name="username"
+                                                                required
                                                                 />
                                                             <div className="form-control-position">
                                                                 <i className="ft-user"></i>
@@ -64,6 +66,7 @@ class Login extends Component {
                                                                     type="password"
                                                                     className="form-control form-control-lg input-lg"
                                                                     name="password"
+                                                                    required
                                                                     />
                                                             <div className="form-control-position">
                                                                 <i className="la la-key"></i>
@@ -71,6 +74,7 @@ class Login extends Component {
                                                         </fieldset>
                                                     </FormGroup>
                                                     <button type="submit" className="btn btn-info btn-lg btn-block"><i className="ft-unlock"></i> Login</button>
+                                                    <Link to="/signup" className="btn btn-primary btn-lg btn-block"><i className="ft-user"></i> SignUp</Link>
                                                 </Form>
                                             </div>
                                         </div>
