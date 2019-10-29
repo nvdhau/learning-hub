@@ -46,6 +46,23 @@ class BaseModel {
       return rows;
     });
   }
+
+  static update(instance) {
+    let instancePropertiesArray = Object.getOwnPropertyNames(instance);
+    let instancePropertiesArraySnakeCase = instancePropertiesArray.map(string => `${this.camelToSnakeCase(string)} = ?`);
+    let values = Object.values(instance);
+    values.push(values[0]);
+    
+    return this.connection.execute(
+      `UPDATE ${this.table} SET ${instancePropertiesArraySnakeCase.toString()} WHERE ${instancePropertiesArraySnakeCase[0]}`,
+      values
+    ).then(([rows]) => {
+      if (rows.affectedRows == 1)
+        return rows;
+      else
+        throw `Table ${this.table} has more than 1 record that match ${instancePropertiesArraySnakeCase[0]}`;
+    });
+  }
 }
 
 module.exports = BaseModel;
