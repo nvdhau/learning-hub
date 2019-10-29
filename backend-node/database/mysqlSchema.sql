@@ -1,8 +1,8 @@
 -- email match with firebase authentication 
-DROP DATABASE IF EXISTS learning_hub_3280;
+DROP DATABASE IF EXISTS learning_hub_4280;
 
-CREATE DATABASE learning_hub_3280;
-USE learning_hub_3280;
+CREATE DATABASE learning_hub_4280;
+USE learning_hub_4280;
 CREATE TABLE USERS (
     id VARCHAR(200) PRIMARY KEY,   
     username VARCHAR(50),
@@ -10,16 +10,24 @@ CREATE TABLE USERS (
     is_active BOOLEAN NOT NULL DEFAULT 1
 );
 
+CREATE TABLE CATEGORIES(
+    category_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    category VARCHAR(255) 
+);
+
 CREATE TABLE POSTS (
     post_id INTEGER AUTO_INCREMENT PRIMARY KEY,
     author VARCHAR(200) NOT NULL,
+    category_id INTEGER NOT NULL,
     title TEXT,
     description TEXT,
+    tags TEXT,
     created_at DATETIME,
     updated_at DATETIME,
     deleted BOOLEAN NOT NULL DEFAULT 0,
 
-    FOREIGN KEY (author) REFERENCES USERS(id)
+    FOREIGN KEY (author) REFERENCES USERS(id),
+    FOREIGN KEY (category_id) REFERENCES CATEGORIES(category_id)
 );
 
 CREATE TABLE RATING(
@@ -39,20 +47,6 @@ CREATE TABLE ATTACHMENTS(
     is_local BOOLEAN NOT NULL DEFAULT 1,
 
     FOREIGN KEY (post_id) REFERENCES POSTS(post_id)
-);
-
-CREATE TABLE TAGS(
-    tag_id INTEGER AUTO_INCREMENT PRIMARY KEY,
-    tag_name VARCHAR(255),
-    tag_slug VARCHAR(255)
-); 
-
-CREATE TABLE POST_TAG(
-    post_id INTEGER,
-    tag_id INTEGER,
-    PRIMARY KEY (post_id, tag_id),
-    FOREIGN KEY (post_id) REFERENCES POSTS(post_id),
-    FOREIGN KEY (tag_id) REFERENCES TAGS(tag_id)
 );
 
 CREATE TABLE COMMENTS(
