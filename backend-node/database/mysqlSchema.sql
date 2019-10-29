@@ -11,7 +11,7 @@ CREATE TABLE USERS (
 );
 
 CREATE TABLE POSTS (
-    post_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    id INTEGER AUTO_INCREMENT PRIMARY KEY,
     author VARCHAR(200) NOT NULL,
     title TEXT,
     description TEXT,
@@ -27,7 +27,7 @@ CREATE TABLE RATING(
     post_id INTEGER,
     rating TINYINT NOT NULL,
     PRIMARY KEY (post_id, user_id),
-    FOREIGN KEY (post_id) REFERENCES POSTS(post_id),
+    FOREIGN KEY (post_id) REFERENCES POSTS(id),
     FOREIGN KEY (user_id) REFERENCES USERS(id)
 );
 
@@ -38,11 +38,11 @@ CREATE TABLE ATTACHMENTS(
     url TEXT NOT NULL,
     is_local BOOLEAN NOT NULL DEFAULT 1,
 
-    FOREIGN KEY (post_id) REFERENCES POSTS(post_id)
+    FOREIGN KEY (post_id) REFERENCES POSTS(id)
 );
 
 CREATE TABLE TAGS(
-    tag_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    id INTEGER AUTO_INCREMENT PRIMARY KEY,
     tag_name VARCHAR(255),
     tag_slug VARCHAR(255)
 ); 
@@ -51,16 +51,16 @@ CREATE TABLE POST_TAG(
     post_id INTEGER,
     tag_id INTEGER,
     PRIMARY KEY (post_id, tag_id),
-    FOREIGN KEY (post_id) REFERENCES POSTS(post_id),
-    FOREIGN KEY (tag_id) REFERENCES TAGS(tag_id)
+    FOREIGN KEY (post_id) REFERENCES POSTS(id),
+    FOREIGN KEY (tag_id) REFERENCES TAGS(id)
 );
 
 CREATE TABLE COMMENTS(
-    comment_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    id INTEGER AUTO_INCREMENT PRIMARY KEY,
     post_id INTEGER NOT NULL,
     reply_id INTEGER,
     content TEXT NOT NULL,
 
-    FOREIGN KEY (post_id) REFERENCES POSTS(post_id),
-    FOREIGN KEY (reply_id) REFERENCES COMMENTS(comment_id)
+    FOREIGN KEY (post_id) REFERENCES POSTS(id),
+    FOREIGN KEY (reply_id) REFERENCES COMMENTS(id)
 );
