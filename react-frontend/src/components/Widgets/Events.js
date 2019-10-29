@@ -5,9 +5,6 @@ import { Component } from 'react';
 // import '../sass/HeaderNavigation.scss';
 
 class Events extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   render () {
       return (

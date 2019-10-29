@@ -5,9 +5,6 @@ import { Component } from 'react';
 // import '../sass/HeaderNavigation.scss';
 
 class ListPosts extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   renderListPosts () {
       return (

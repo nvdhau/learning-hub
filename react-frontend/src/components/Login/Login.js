@@ -1,11 +1,28 @@
 import React from 'react';
 import { Component } from 'react';
+import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 
 import './Login.scss';
 
 class Login extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            username: '',
+            password: ''
+        }
+
+        this.handleLogin = this.handleLogin.bind(this);
+    }
+    
+    handleLogin (e) {
+        console.log(e.target.username.value);
+        console.log(e.target.password.value);
+
+        // call api to login
+
+        e.preventDefault();
     }
 
     render () {
@@ -26,21 +43,35 @@ class Login extends Component {
                                         </div>
                                         <div className="card-content">
                                             <div className="card-body">
-                                                <form className="form-horizontal form-simple" action="index.html" novalidate>
-                                                    <fieldset className="form-group position-relative has-icon-left mb-0">
-                                                        <input type="text" className="form-control form-control-lg input-lg" id="user-name" placeholder="Your Username" required></input>
-                                                        <div className="form-control-position">
-                                                            <i className="ft-user"></i>
-                                                        </div>
-                                                    </fieldset>
-                                                    <fieldset className="form-group position-relative has-icon-left">
-                                                        <input type="password" className="form-control form-control-lg input-lg" id="user-password" placeholder="Enter Password" required></input>
-                                                        <div className="form-control-position">
-                                                            <i className="la la-key"></i>
-                                                        </div>
-                                                    </fieldset>
+                                                <Form className="form-horizontal form-simple" onSubmit={this.handleLogin}>
+                                                    <FormGroup>
+                                                        <fieldset className="form-group position-relative has-icon-left mb-0">
+                                                            <Input 
+                                                                id="username"
+                                                                type="text" 
+                                                                className="form-control form-control-lg input-lg"
+                                                                name="username"
+                                                                />
+                                                            <div className="form-control-position">
+                                                                <i className="ft-user"></i>
+                                                            </div>
+                                                        </fieldset>
+                                                    </FormGroup>
+                                                    <FormGroup>
+                                                        <fieldset className="form-group position-relative has-icon-left">
+                                                            <Input 
+                                                                    id="password"
+                                                                    type="password"
+                                                                    className="form-control form-control-lg input-lg"
+                                                                    name="password"
+                                                                    />
+                                                            <div className="form-control-position">
+                                                                <i className="la la-key"></i>
+                                                            </div>
+                                                        </fieldset>
+                                                    </FormGroup>
                                                     <button type="submit" className="btn btn-info btn-lg btn-block"><i className="ft-unlock"></i> Login</button>
-                                                </form>
+                                                </Form>
                                             </div>
                                         </div>
                                     </div>
