@@ -1,3 +1,15 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="appName">Learning HUB</string>
+
+    <!-- Navigation Drawer -->
+    <string name="openMenu">Open menu</string>
+    <string name="closeMenu">Close menu</string>
+    <string name="logout">Log out</string>
+
+    <!-- Login -->
+    <string name="login">Log in</string>
+    <string name="submit">Submit</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+
 </resources>

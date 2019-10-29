@@ -1,4 +1,4 @@
-package com.quangle.myapplication;
+package ca.specialTopics.learningHub;
 
 import android.content.Context;
 
