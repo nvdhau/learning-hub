@@ -13,10 +13,14 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import ca.specialTopics.learningHub.R;
 
 public class MainActivity extends BaseActivity implements LoginFragment.OnFragmentInteractionListener {
+    private FirebaseAuth mAuth;
+
     //TAB INDEX
     public static final String ARG_TAB_ITEM_ID = "tabItemId";
 
@@ -32,6 +36,8 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
 
         setProgressBarWithMenu();
         setTitleActionBar(getString(R.string.login));
+
+        mAuth = FirebaseAuth.getInstance();
 
         drawerLayout = findViewById(R.id.drawer_layout);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.openMenu, R.string.closeMenu);
@@ -50,14 +56,22 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
     }
 
     private void setMenu() {
-        //TODO: Check if the user is logged
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
         navigationView.getMenu().clear();
-        //user = loggedUser
-        //user not logged
-        emailInTheMenu.setText("");
-        emailInTheMenu.setVisibility(View.GONE);
-        navigationView.inflateMenu(R.menu.guest);
-        navigationView.setCheckedItem(R.id.login);
+        if (firebaseUser == null) {
+            emailInTheMenu.setText("");
+            emailInTheMenu.setVisibility(View.GONE);
+
+            navigationView.inflateMenu(R.menu.guest);
+            navigationView.setCheckedItem(R.id.login);
+        } else {
+            emailInTheMenu.setText(firebaseUser.getEmail());
+            emailInTheMenu.setVisibility(View.VISIBLE);
+
+            navigationView.inflateMenu(R.menu.logged);
+            navigationView.setCheckedItem(R.id.login);
+        }
         itemSelectedOnMenu(navigationView.getCheckedItem());
     }
 
@@ -68,12 +82,11 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
                 setTitleActionBar(getResources().getString(R.string.login));
                 fragmentDisplay = new LoginFragment();
                 break;
-            /*case R.id.logout:
-                MySharedPreferences.clearSharedPreferences(this);
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(this, Home.class));
+            case R.id.logout:
+                mAuth.signOut();
+                startActivity(new Intent(this, MainActivity.class));
                 finish();
-                return;*/
+                return;
         }
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentDisplay, fragmentDisplay)
@@ -82,7 +95,7 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
 
     @Override
     public void logUser() {
-
+        setMenu();
     }
 
     //Static methods for starting this activity
@@ -109,7 +122,7 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(actionBarDrawerToggle.onOptionsItemSelected(item))
+        if (actionBarDrawerToggle.onOptionsItemSelected(item))
             return true;
         return super.onOptionsItemSelected(item);
     }

@@ -3,70 +3,73 @@ package ca.specialTopics.learningHub.ui;
 import android.content.Context;
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
+import android.widget.EditText;
+
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 
 import ca.specialTopics.learningHub.R;
+import ca.specialTopics.learningHub.utils.Helper;
+import ca.specialTopics.learningHub.utils.Validation;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link LoginFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link LoginFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class LoginFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class LoginFragment extends BaseFragment {
+    private FirebaseAuth mAuth;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+    private static String TAG = LoginFragment.class.getSimpleName();
     private OnFragmentInteractionListener mListener;
-
-    public LoginFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment LoginFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static LoginFragment newInstance(String param1, String param2) {
-        LoginFragment fragment = new LoginFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
+
+        mAuth = FirebaseAuth.getInstance();
+        final Validation validation = new Validation(getContext());
+        final EditText etEmail = view.findViewById(R.id.etEmail);
+        final EditText etPassword = view.findViewById(R.id.etPassword);
+        final TextInputLayout tiEmail = view.findViewById(R.id.tiEmail);
+        final TextInputLayout tiPassword = view.findViewById(R.id.tiPassword);
+        final Button btnSubmit = view.findViewById(R.id.btnSubmit);
+        final Button btnRegister = view.findViewById(R.id.btnRegister);
+        //final AuthViewModel authViewModel = ViewModelProviders.of(getActivity()).get(AuthViewModel.class);
+
+        btnSubmit.setOnClickListener(v -> {
+            String email = etEmail.getText().toString();
+            String password = etPassword.getText().toString();
+
+            boolean isEmailValid = validation.required(tiEmail, email) &&
+                    validation.isValidEmail(tiEmail, email);
+            boolean isPasswordValid = validation.required(tiPassword, password)
+                    && validation.isLongEnough(tiPassword, password, 6);
+
+            hideKeyboard();
+            if (isEmailValid && isPasswordValid) {
+                btnSubmit.setEnabled(false);
+                showProgressBar();
+                mAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d(TAG, "signInWithEmail:success");
+                                mListener.logUser();
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                tiEmail.setError(getResources().getText(R.string.errorLogin));
+                            }
+
+                            btnSubmit.setEnabled(true);
+                            hideProgressBar();
+                        });
+            } else {
+                Helper.errorsInForm(getContext());
+            }
+        });
         return view;
     }
 
