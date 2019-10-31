@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Home from './components/Home';
 import Login from './components/Login/Login';
 import SignUp from './components/SignUp/SignUp';
+import 'react-toastify/dist/ReactToastify.min.css'
 
 class App extends Component {
   constructor(props) {

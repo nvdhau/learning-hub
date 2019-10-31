@@ -2,7 +2,7 @@ import React from 'react';
 import { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
-
+import { ToastContainer } from 'react-toastify';
 import './Login.scss';
 
 class Login extends Component {
@@ -35,6 +35,7 @@ class Login extends Component {
                         <section className="flexbox-container">
                             <div className="col-12 d-flex align-items-center justify-content-center">
                                 <div className="col-md-4 col-10 box-shadow-2 p-0">
+                                    <ToastContainer />
                                     <div className="card border-grey border-lighten-3 m-0">
                                         <div className="card-header border-0">
                                             <div className="card-title text-center">
