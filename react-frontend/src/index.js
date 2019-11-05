@@ -6,8 +6,6 @@ import * as serviceWorker from './serviceWorker';
 import reducers from './reducers';
 require('dotenv').config();
 
-// ReactDOM.render(<App />, document.getElementById('root'));
-
 ReactDOM.render((
     <Provider store={reducers}>
         <App />
