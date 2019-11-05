@@ -5,6 +5,7 @@ CREATE DATABASE learning_hub_4280;
 USE learning_hub_4280;
 CREATE TABLE USERS (
     id VARCHAR(200) PRIMARY KEY,   
+    uid VARCHAR(255),
     username VARCHAR(50),
     full_name TEXT,
     is_active BOOLEAN NOT NULL DEFAULT 1

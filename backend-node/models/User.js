@@ -6,16 +6,17 @@ class User extends BaseModel {
     return 'USERS';
   }
 
-  constructor(id, username, fullName, isActive = true) {
+  constructor(email, id, username, fullName, isActive = true) {
     super();
-    this.id = id;
+    this.id = email;
+    this.uid = id;
     this.username = username;
     this.fullName = fullName;
     this.isActive = isActive;
   }
 
   static fromDB(row) {
-    return new User(row.id, row.username, row.full_name, Boolean(row.is_active));
+    return new User(row.id, row.uid, row.username, row.full_name, Boolean(row.is_active));
   }
 
   static get() {

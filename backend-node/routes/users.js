@@ -15,6 +15,7 @@ router.get('/', isAuthenticated, (req, res, next) => {
 
 router.put('/', isAuthenticated, [
   check('id').isLength({min: 1}),
+  check('email').isEmail(),
   check('username').isLength({min: 1}),
   check('fullName').isLength({min: 1}),
   check('isActive').isLength({min: 1}),
@@ -25,7 +26,7 @@ router.put('/', isAuthenticated, [
     return res.status(422).json({ errors: errors.array() });
   }
 
-  let user = new User(req.body.id, req.body.username, req.body.fullName, req.body.isActive);
+  let user = new User(req.body.email, req.body.id, req.body.username, req.body.fullName, req.body.isActive);
   User.update(user)
     .then(user => {
       res.status(200).json(user);
@@ -62,7 +63,7 @@ router.post('/create', [
   let userDB;
   firebaseAdmin.auth().createUser(userRequest)
     .then(userRecord => {
-      userDB = new User(userRecord.uid, userRequest.username, userRequest.fullName);
+      userDB = new User(userRecord.email, userRecord.uid, userRequest.username, userRequest.fullName);
       return User.create(userDB);
     })
     .then(([rows]) => {
