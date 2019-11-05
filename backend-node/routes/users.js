@@ -69,7 +69,7 @@ router.post('/create', [
       res.status(201).json(userDB);
     })
     .catch(err => {
-      console.log(err);
+      console.error(err);
       let status = 400;
       if (err != null && err.errorInfo != null && err.errorInfo.code == 'auth/email-already-exists')
         status = 409;
