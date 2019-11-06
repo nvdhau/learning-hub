@@ -16,8 +16,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import styles from '../assets/jss/views/signup';
 import { accountSignUp } from '../actions/authenticate';
 import LinearProgress from '@material-ui/core/LinearProgress';
-
-// import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
 class SignUp extends Component {
     constructor(props) {
@@ -33,10 +32,9 @@ class SignUp extends Component {
         this.handleCreateAccount = this.handleCreateAccount.bind(this);
     }
 
-    componentWillReceiveProps(nextState) {
-        if (nextState.auth_message.success) {
-            // sign up successfully, redirect to home page
-            this.props.history.push('/');
+    componentDidUpdate(prevProps) {
+        if (prevProps.auth_message.success !== this.props.auth_message.success) {
+            this.props.history.push('/login');
         }
     }
 
@@ -59,6 +57,7 @@ class SignUp extends Component {
             <React.Fragment>
                 { this.props.auth_processing && <LinearProgress color="secondary" /> }
                 <Container component="main" maxWidth="xs">
+                <ToastContainer />   
                 <CssBaseline />
                 <div className={classes.paper}>
                     <Avatar className={classes.avatar}>

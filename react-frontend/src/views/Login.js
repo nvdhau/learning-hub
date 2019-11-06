@@ -1,8 +1,9 @@
 import React from 'react';
 import { Component } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
@@ -13,7 +14,8 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import styles from '../assets/jss/views/login';
-import { doSignInWithEmailAndPassword, getCurrentUserAuth, doSignOut } from '../actions/authenticate';
+import { doSignInWithEmailAndPassword, getCurrentUserAuth } from '../actions/authenticate';
+import { ToastContainer } from 'react-toastify';
 
 class Login extends Component {
     constructor(props) {
@@ -29,23 +31,33 @@ class Login extends Component {
                     console.log("USER SIGNED IN, SO REDIRECT TO HOME PAGE");
                     this.props.history.push('/');
                 } else {
-                    console.log("USER SIGNED OUT");
+                    console.log("USER NOT LOGIN YET");
                     this.props.history.push('/login');
                 }
             })
     }
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.auth_message.success !== this.props.auth_message.success) {
+            this.props.history.push('/');
+        }
+    }
+
     handleLogin (e) {
         const email = e.target.email.value;
         const password = e.target.password.value;
-        doSignInWithEmailAndPassword(email, password);
+        //doSignInWithEmailAndPassword(email, password);
+        this.props.login(email, password);
         e.preventDefault();
     }
 
     render () {
         const { classes } = this.props;
         return (
+            <React.Fragment>
+            { this.props.auth_processing && <LinearProgress color="secondary" /> }
             <Container component="main" maxWidth="xs">
+                <ToastContainer />
                 <CssBaseline />
                 <div className={classes.paper}>
                     <Avatar className={classes.avatar}>
@@ -101,6 +113,7 @@ class Login extends Component {
                     </form>
                 </div>
             </Container>
+            </React.Fragment>
         )
     }
 }
@@ -109,4 +122,17 @@ Login.propTypes = {
     classes: PropTypes.object.isRequired,
 }
 
-export default withStyles(styles)(Login);
+const mapStateToProps = state => {
+    return {
+        auth_processing: state.auth.auth_processing,
+        auth_message: state.auth.auth_message
+    }
+}
+
+const mapDispatchtoProps = dispatch => {
+    return {
+        login: (email, password) => dispatch(doSignInWithEmailAndPassword(email, password))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchtoProps)((withStyles(styles)(Login)));

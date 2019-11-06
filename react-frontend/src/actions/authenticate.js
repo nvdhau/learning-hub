@@ -1,7 +1,10 @@
-import { AUTH_SIGNUP_USER, API_CREATE_USER } from '../config/endpoints-conf';
+import { AUTH_SIGNUP_USER, 
+    API_CREATE_USER, AUTH_LOGIN_USER, AUTH_PROCESSING 
+} from '../config/endpoints-conf';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import * as firebase from 'firebase';
+// import * as firebase from 'firebase';
+import firebase from 'firebase/app';
 import 'firebase/auth';
 
 // firebase config
@@ -18,19 +21,59 @@ const fireBaseApp = firebase.initializeApp(fireBaseConfig);
 
 // firebase sign in account
 export const doSignInWithEmailAndPassword = (email, password) => {
-    fireBaseApp.auth().signInWithEmailAndPassword(email, password)
-        .then(res => {
-            console.log("AUTHENTICATED, DISPATCH TO REDUX");
-            console.log(res);
-        }).catch(err => {
-            console.log("ERROR AUTHENTICATED");
-            console.log(err);
+    return dispatch => {
+        dispatch({
+            type: AUTH_PROCESSING ,
+            payload: true
         });
+
+        fireBaseApp.auth().signInWithEmailAndPassword(email, password)
+            .then(res => {
+                console.log("AUTHENTICATED");
+                console.log("ReS", res);
+                const message = 'Successfully signin account';
+                dispatch({
+                    type: AUTH_LOGIN_USER,
+                    payload: { message, success: true}
+                });
+
+                const user = {
+                    uid: res.user.uid,
+                    email: res.user.email,
+                    displayName: res.user.displayName,
+                    photoURL: res.user.photoURL,
+                }
+
+                localStorage.setItem("app_user", JSON.stringify(user));
+
+                dispatch({
+                    type: AUTH_PROCESSING ,
+                    payload: false
+                });
+
+            }).catch(err => {
+                console.log("ERROR AUTHENTICATED");
+                const { message } = err;
+                dispatch({
+                    type: AUTH_LOGIN_USER,
+                    payload: { message, success: false}
+                });
+
+                dispatch({
+                    type: AUTH_PROCESSING ,
+                    payload: false
+                });
+
+                toast.error(message);
+            });
+    }
 }
 
 // firebase signout
-export const doSignOut = () => {
+export const doSignOut = (props) => {
     fireBaseApp.auth().signOut();
+    localStorage.setItem("app_user", null);
+    props.history.push('/login');
 }
 
 // get current Auth User
@@ -53,7 +96,7 @@ export const getCurrentUserAuth = () => {
 export const accountSignUp = (json) =>  {
     return dispatch => {
         dispatch({
-            type: "AUTH_PROCESSING",
+            type: AUTH_PROCESSING,
             payload: true
         });
 
@@ -67,16 +110,28 @@ export const accountSignUp = (json) =>  {
             const message = 'Successfully create account. Please login now';
             dispatch({
                 type: AUTH_SIGNUP_USER,
-                payload: { message, auth_processing: false, success: true}
+                payload: { message, success: true}
             })
+
+            dispatch({
+                type: AUTH_PROCESSING ,
+                payload: false
+            });
+
             toast.success(message);
         }).catch(err => {
             console.log("ERR: " + err);
-            const message = 'Sorry! Unable to create an account';
+            const { message } = err;
             dispatch({
                 type: AUTH_SIGNUP_USER,
-                payload: { message, auth_processing: false, success: false}
+                payload: { message, success: false}
             })
+
+            dispatch({
+                type: AUTH_PROCESSING ,
+                payload: false
+            });
+            
             toast.error(message);
         })
     }
