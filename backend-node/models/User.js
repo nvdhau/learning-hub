@@ -6,16 +6,23 @@ class User extends BaseModel {
     return 'USERS';
   }
 
-  constructor(id, username, fullName, isActive = true) {
+  constructor() {
     super();
-    this.id = id;
-    this.username = username;
-    this.fullName = fullName;
-    this.isActive = isActive;
+    this.id = -1;
+    this.username = "";
+    this.fullName = "";
+    this.isActive = true;
   }
 
   static fromDB(row) {
-    return new User(row.id, row.uid, row.username, row.full_name, Boolean(row.is_active));
+    const user = new User(); 
+    Object.assign(user, {
+      id: row.id,
+      username: row.username,
+      fullName: row.full_name,
+      isActive: Boolean(row.is_active),
+    });
+    return user;
   }
 
   static get() {

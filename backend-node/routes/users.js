@@ -25,7 +25,8 @@ router.put('/', isAuthenticated, [
     return res.status(422).json({ errors: errors.array() });
   }
 
-  let user = new User(req.body.id, req.body.username, req.body.fullName, req.body.isActive);
+  const user = new User();
+  Object.assign(user, req.body);
   User.update(user)
     .then(user => {
       res.status(200).json(user);
@@ -62,7 +63,13 @@ router.post('/create', [
   let userDB;
   firebaseAdmin.auth().createUser(userRequest)
     .then(userRecord => {
-      userDB = new User(userRecord.uid, userRequest.username, userRequest.fullName);
+      userRequest.id = userRecord.uid;
+      userDB = new User();
+      Object.assign(userDB, {
+        id: userRecord.uid,
+        username: userRequest.username,
+        fullName: userRequest.fullName
+      });
       return User.create(userDB);
     })
     .then(([rows]) => {
