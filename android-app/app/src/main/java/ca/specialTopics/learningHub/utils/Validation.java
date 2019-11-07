@@ -17,7 +17,7 @@ public class Validation {
         this.c = c;
     }
 
-    public static void setError(TextInputLayout field, String error) {
+    private static void setError(TextInputLayout field, String error) {
         field.setError(error);
     }
 

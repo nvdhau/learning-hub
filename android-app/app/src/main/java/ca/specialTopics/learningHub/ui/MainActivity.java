@@ -1,6 +1,5 @@
 package ca.specialTopics.learningHub.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -22,7 +21,7 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
     private FirebaseAuth mAuth;
 
     //TAB INDEX
-    public static final String ARG_TAB_ITEM_ID = "tabItemId";
+    //public static final String ARG_TAB_ITEM_ID = "tabItemId";
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
@@ -35,7 +34,6 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
         setContentView(R.layout.activity_main);
 
         setProgressBarWithMenu();
-        setTitleActionBar(getString(R.string.login));
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -70,27 +68,32 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
             emailInTheMenu.setVisibility(View.VISIBLE);
 
             navigationView.inflateMenu(R.menu.logged);
-            navigationView.setCheckedItem(R.id.login);
+            navigationView.setCheckedItem(R.id.profile);
         }
-        itemSelectedOnMenu(navigationView.getCheckedItem());
+
+        if (navigationView.getCheckedItem() != null)
+            itemSelectedOnMenu(navigationView.getCheckedItem());
     }
 
     private void itemSelectedOnMenu(MenuItem menuItem) {
-        Fragment fragmentDisplay = null;
+        Fragment fragmentToShow = null;
         switch (menuItem.getItemId()) {
             case R.id.login:
-                setTitleActionBar(getResources().getString(R.string.login));
-                fragmentDisplay = new LoginFragment();
+                fragmentToShow = new LoginFragment();
+                break;
+            case R.id.profile:
+                fragmentToShow = new UserFragment();
                 break;
             case R.id.logout:
                 mAuth.signOut();
                 startActivity(new Intent(this, MainActivity.class));
                 finish();
-                return;
         }
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentDisplay, fragmentDisplay)
-                .commit();
+        if (fragmentToShow != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragmentDisplay, fragmentToShow)
+                    .commit();
+        }
     }
 
     @Override
@@ -99,7 +102,7 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
     }
 
     //Static methods for starting this activity
-    public static void startHomeActivityAtTab(Context context, int tabItemId) {
+    /*public static void startHomeActivityAtTab(Context context, int tabItemId) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(ARG_TAB_ITEM_ID, tabItemId);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//clear all top activity
@@ -112,7 +115,7 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
         intent.putExtra("topItemsTabNavIndex", topItemsTabNavIndex);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//clear all top activity
         context.startActivity(intent);
-    }
+    }*/
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {

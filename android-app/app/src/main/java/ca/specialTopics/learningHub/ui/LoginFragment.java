@@ -10,11 +10,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
 import ca.specialTopics.learningHub.R;
-import ca.specialTopics.learningHub.utils.Helper;
+import ca.specialTopics.learningHub.utils.AlertHelper;
 import ca.specialTopics.learningHub.utils.Validation;
 
 public class LoginFragment extends BaseFragment {
@@ -24,19 +27,25 @@ public class LoginFragment extends BaseFragment {
     private OnFragmentInteractionListener mListener;
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
-        mAuth = FirebaseAuth.getInstance();
+        setTitle(getString(R.string.login));
+
         final Validation validation = new Validation(getContext());
         final EditText etEmail = view.findViewById(R.id.etEmail);
         final EditText etPassword = view.findViewById(R.id.etPassword);
         final TextInputLayout tiEmail = view.findViewById(R.id.tiEmail);
         final TextInputLayout tiPassword = view.findViewById(R.id.tiPassword);
-        final Button btnSubmit = view.findViewById(R.id.btnSubmit);
-        final Button btnRegister = view.findViewById(R.id.btnRegister);
-        //final AuthViewModel authViewModel = ViewModelProviders.of(getActivity()).get(AuthViewModel.class);
+        Button btnSubmit = view.findViewById(R.id.btnSubmit);
+        Button btnRegister = view.findViewById(R.id.btnRegister);
 
         btnSubmit.setOnClickListener(v -> {
             String email = etEmail.getText().toString();
@@ -67,14 +76,16 @@ public class LoginFragment extends BaseFragment {
                             hideProgressBar();
                         });
             } else {
-                Helper.errorsInForm(getContext());
+                AlertHelper.errorsInForm(getContext());
             }
         });
+
+        btnRegister.setOnClickListener(v -> pushFragment(new UserFragment()));
         return view;
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
