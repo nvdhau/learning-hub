@@ -1,7 +1,8 @@
 const sideBarStyle = theme => ({
     root: {
         flexGrow: 1,
-        padding: "0px auto !important"
+        padding: "0px auto !important",
+        backgroundColor: "white"
     },
     paper: {
         padding: theme.spacing(0),
@@ -17,6 +18,10 @@ const sideBarStyle = theme => ({
         margin: "0px auto",
         padding: "0px auto",
         color: "rgba(0, 0, 0, 0.87)",
+    },
+    tag: {
+        fontStyle: "italic",
+        color: "#616161"
     }
   });
   

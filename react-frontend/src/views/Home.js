@@ -4,7 +4,9 @@ import { withStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Drawer from "../components/Drawer";
 import SideBar from "../components/SideBar/SideBar";
+import HeaderTab from "../components/Header/HeaderTab";
 import GridItem from "../components/Grid/GridItem";
+
 import GridContainer from "../components/Grid/GridContainer";
 import styles from '../assets/jss/views/generalStyle';
 import { getCurrentUserAuth, doSignOut } from '../actions/authenticate';
@@ -13,6 +15,17 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
+import Paper from '@material-ui/core/Paper';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+
+import BottomNavigation from '@material-ui/core/BottomNavigation';
+import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import RestoreIcon from '@material-ui/icons/Restore';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+
+
 
 const data = [
   {
@@ -82,10 +95,14 @@ const data = [
 ];
 
 class Home extends Component {
-
+  constructor(props) {
+    super(props);
+  }
+  
   render() {
     const { classes } = this.props;
     const { loading = false } = this.props;
+    
     return (
         <React.Fragment>
               {/* Menu Drawer */}
@@ -93,11 +110,17 @@ class Home extends Component {
               {/* MAIN CONTENT */}
               <GridContainer nowrap>
                 {/* Sidebar */}
-                <GridItem xs={12} sm={12} md={3}>
+                <GridItem xs={12} sm={12} md={2}>
                   <SideBar title="Hello"/>
                 </GridItem>
                 {/* main content */}
-                <GridItem xs={12} sm={12} md={9}>
+                <GridItem xs={12} sm={12} md={10}>
+                  <GridContainer spacing={3} direction="row">
+                    <GridItem xs={12} sm={12} md={12} lg={12}>
+                      <HeaderTab />
+                    </GridItem>
+                  </GridContainer>
+                  
                   <GridContainer spacing={3} direction="row">
                     {(loading ? Array.from(new Array(8)) : data).map((item, index) => (
                       <GridItem xs={12} sm={4} md={4} lg={3}>

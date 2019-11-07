@@ -7,6 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
 import styles from '../../assets/jss/views/sideBar';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
@@ -43,9 +44,25 @@ class SideBar extends Component {
                             <ListItemText primary="Commerce" />
                         </ListItemLink>
                     </List>
-                </Paper>  
-                {/* LOAD FOLLOWS FROM API */}
-                <Paper className={[classes.paper, classes.root]}>
+                    <Divider />
+                    <Typography variant="subtitle1" gutterBottom>
+                        Trending tags
+                    </Typography>
+                    <List component="nav" dense={true} aria-label="secondary">
+                        <ListItemLink href="#simple-list">
+                            <ListItemText primary="webserver" className={classes.tag} />
+                        </ListItemLink>
+                        <ListItemLink href="#simple-list" className={classes.tag}>
+                            <ListItemText primary="linux" />
+                        </ListItemLink>
+                        <ListItemLink href="#simple-list" className={classes.tag}>
+                            <ListItemText primary="accounttax" />
+                        </ListItemLink>
+                        <ListItemLink href="#simple-list" className={classes.tag}>
+                            <ListItemText primary="excelmaster" />
+                        </ListItemLink>
+                    </List>
+                    <Divider />
                     <Typography variant="subtitle1" gutterBottom>
                         Follows
                     </Typography>
@@ -75,6 +92,10 @@ class SideBar extends Component {
                             <ListItemText primary="Vacation"/>
                         </ListItemLink>
                     </List>
+                </Paper>  
+                {/* LOAD FOLLOWS FROM API */}
+                <Paper className={[classes.paper, classes.root]}>
+                    
                 </Paper>  
             </React.Fragment>
         )
