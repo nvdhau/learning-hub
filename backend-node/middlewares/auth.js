@@ -14,7 +14,7 @@ const isAuthenticated = (req, res, next) => {
       return User.findBy('id', uid);
     }).then(user => {
       req.user = user; 
-      console.debug(user);
+      console.debug("User making the call:", user);
       next();
     }).catch(function(error) {
       console.error(error);

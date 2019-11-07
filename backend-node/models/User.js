@@ -6,10 +6,9 @@ class User extends BaseModel {
     return 'USERS';
   }
 
-  constructor(email, id, username, fullName, isActive = true) {
+  constructor(id, username, fullName, isActive = true) {
     super();
-    this.id = email;
-    this.uid = id;
+    this.id = id;
     this.username = username;
     this.fullName = fullName;
     this.isActive = isActive;
