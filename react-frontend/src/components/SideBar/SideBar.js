@@ -2,7 +2,6 @@
 import React from 'react';
 import { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import List from '@material-ui/core/List';
@@ -50,31 +49,31 @@ class SideBar extends Component {
                     <Typography variant="subtitle1" gutterBottom>
                         Follows
                     </Typography>
-                    <List dense className={classes.root}>
-                        <ListItem>
+                    <List component="nav" dense={true} className={classes.root}>
+                        <ListItemLink href="#simple-list">
                             <ListItemAvatar>
                             <Avatar>
                                 <ImageIcon />
                             </Avatar>
                             </ListItemAvatar>
-                            <ListItemText primary="Photos" secondary="Jan 9, 2014" />
-                        </ListItem>
-                        <ListItem>
+                            <ListItemText primary="Photos"/>
+                        </ListItemLink>
+                        <ListItemLink href="#simple-list">
                             <ListItemAvatar>
                             <Avatar>
                                 <WorkIcon />
                             </Avatar>
                             </ListItemAvatar>
-                            <ListItemText primary="Work" secondary="Jan 7, 2014" />
-                        </ListItem>
-                        <ListItem>
+                            <ListItemText primary="Work"/>
+                        </ListItemLink>
+                        <ListItemLink href="#simple-list">
                             <ListItemAvatar>
                             <Avatar>
                                 <BeachAccessIcon />
                             </Avatar>
                             </ListItemAvatar>
-                            <ListItemText primary="Vacation" secondary="July 20, 2014" />
-                        </ListItem>
+                            <ListItemText primary="Vacation"/>
+                        </ListItemLink>
                     </List>
                 </Paper>  
             </React.Fragment>

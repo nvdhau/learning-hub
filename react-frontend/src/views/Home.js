@@ -8,9 +8,11 @@ import GridItem from "../components/Grid/GridItem";
 import GridContainer from "../components/Grid/GridContainer";
 import styles from '../assets/jss/views/generalStyle';
 import { getCurrentUserAuth, doSignOut } from '../actions/authenticate';
-import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Skeleton from '@material-ui/lab/Skeleton';
+import Card from '@material-ui/core/Card';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardContent from '@material-ui/core/CardContent';
 
 const data = [
   {
@@ -89,47 +91,46 @@ class Home extends Component {
               {/* Menu Drawer */}
               <Drawer></Drawer>
               {/* MAIN CONTENT */}
-              <GridContainer>
+              <GridContainer nowrap>
                 {/* Sidebar */}
                 <GridItem xs={12} sm={12} md={3}>
                   <SideBar title="Hello"/>
                 </GridItem>
                 {/* main content */}
-                <GridItem xs={12} sm={12} md={9} style={{'marginTop': '12px'}}>
-                  <GridContainer>
-                  {(loading ? Array.from(new Array(8)) : data).map((item, index) => (
-                    <GridItem xs={12} sm={3}>
-                      <Box key={index} width={300} marginRight={0.5} my={1}>
-                        {item ? (
-                          <img style={{ width: 300, height: 118 }} alt={item.title} src={item.src} />
-                        ) : (
-                          <React.Fragment>
-                            <LinearProgress color="secondary"></LinearProgress>
-                            <Skeleton variant="rect" width={300} height={118} />
-                          </React.Fragment>
-                        )}
-
-                        {item ? (
-                          <Box paddingRight={1}>
-                            <Typography gutterBottom variant="body2">
-                              {item.title}
-                            </Typography>
-                            <Typography display="block" variant="caption" color="textSecondary">
-                              {item.channel}
-                            </Typography>
-                            <Typography variant="caption" color="textSecondary">
-                              {`${item.views} • ${item.createdAt}`}
-                            </Typography>
-                          </Box>
-                        ) : (
-                          <React.Fragment>
-                            <Skeleton />
-                            <Skeleton width="60%" />
-                          </React.Fragment>
-                        )}
-                      </Box>
-                    </GridItem>
-                  ))}
+                <GridItem xs={12} sm={12} md={9}>
+                  <GridContainer spacing={3} direction="row">
+                    {(loading ? Array.from(new Array(8)) : data).map((item, index) => (
+                      <GridItem xs={12} sm={4} md={4} lg={3}>
+                        <Card className={classes.card}>
+                            {item ? (
+                              <React.Fragment>
+                                <CardMedia
+                                  className={classes.media}
+                                  image={item.src}
+                                  title={item.title}
+                                />
+                              <CardContent>
+                                <Typography gutterBottom variant="subtitle2" component="h2">
+                                  {item.title}
+                                </Typography>
+                                <Typography gutterBottom variant="subtitle2" component="h2">
+                                  {item.channel}
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary" component="p">
+                                  {`${item.views} • ${item.createdAt}`}
+                                </Typography>
+                              </CardContent>
+                              </React.Fragment>
+                            ) : (
+                              <React.Fragment>
+                                <LinearProgress color="secondary"></LinearProgress>
+                                <Skeleton />
+                                <Skeleton width="60%" variant="rect" height={118}/>
+                              </React.Fragment>
+                            )}
+                        </Card>
+                      </GridItem>
+                    ))}
                   </GridContainer>
                 </GridItem>
               </GridContainer>
