@@ -5,6 +5,7 @@ const { firebaseAdmin } = require('../utils/firebase');
 const User = require('../models/User');
 const { check, validationResult } = require('express-validator');
 const { isAuthenticated } = require('../middlewares/auth');
+const uploadImageService = require('../utils/uploadImageService');
 
 /* GET users listing. */
 router.get('/', isAuthenticated, (req, res, next) => {
@@ -47,7 +48,7 @@ router.get('/:uid', isAuthenticated, (req, res, next) => {
     });
 });
 
-router.post('/create', [
+router.post('/create', uploadImageService.single('image'), [
   check('email').isEmail(),
   check('password').isLength({min: 6}),
   check('fullName').isLength({min: 1}),
@@ -57,13 +58,20 @@ router.post('/create', [
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.array() });
-  }
+  } /*else if (!req.file) {
+    console.log(req.files);
+    return res.status(422).json({
+        message: "missing an upload file"
+    });
+  } */
 
   const userRequest = req.body;
-  let userDB;
-  firebaseAdmin.auth().createUser(userRequest)
+  firebaseAdmin.auth().createUser({
+    email: userRequest.email,
+    password: userRequest.password,
+    //photoURL: `${req.protocol}://${req.get('host')}/images/${encodeURI(req.file.filename)}`
+  })
     .then(userRecord => {
-      userRequest.id = userRecord.uid;
       userDB = new User();
       Object.assign(userDB, {
         id: userRecord.uid,

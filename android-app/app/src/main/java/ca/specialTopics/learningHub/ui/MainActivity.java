@@ -1,9 +1,11 @@
 package ca.specialTopics.learningHub.ui;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -27,6 +29,7 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
     private TextView emailInTheMenu;
+    private ImageView menuImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,7 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
 
         navigationView = findViewById(R.id.nav_view);
         emailInTheMenu = navigationView.getHeaderView(0).findViewById(R.id.menuEmail);
+        menuImageView = navigationView.getHeaderView(0).findViewById(R.id.menuImageView);
         navigationView.setNavigationItemSelectedListener(menuItem -> {
             menuItem.setChecked(true);
             itemSelectedOnMenu(menuItem);
@@ -60,6 +64,7 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
         if (firebaseUser == null) {
             emailInTheMenu.setText("");
             emailInTheMenu.setVisibility(View.GONE);
+            menuImageView.setVisibility(View.GONE);
 
             navigationView.inflateMenu(R.menu.guest);
             navigationView.setCheckedItem(R.id.login);
