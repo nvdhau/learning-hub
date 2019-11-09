@@ -28,24 +28,6 @@ class SideBar extends Component {
                 {/* TODO LOAD ALL CATEGORIES, TAGS, Subscriptions from API */}
                 <Paper className={[classes.paper, classes.root]}>
                     <Typography variant="subtitle1" gutterBottom>
-                        Categories
-                    </Typography>
-                    <List component="nav" dense={true} aria-label="secondary mailbox folders">
-                        <ListItemLink href="#simple-list">
-                            <ListItemText primary="Accountant" />
-                        </ListItemLink>
-                        <ListItemLink href="#simple-list">
-                            <ListItemText primary="CSIS" />
-                        </ListItemLink>
-                        <ListItemLink href="#simple-list">
-                            <ListItemText primary="Supply Chain Management" />
-                        </ListItemLink>
-                        <ListItemLink href="#simple-list">
-                            <ListItemText primary="Commerce" />
-                        </ListItemLink>
-                    </List>
-                    <Divider />
-                    <Typography variant="subtitle1" gutterBottom>
                         Trending tags
                     </Typography>
                     <List component="nav" dense={true} aria-label="secondary">
@@ -61,37 +43,20 @@ class SideBar extends Component {
                         <ListItemLink href="#simple-list" className={classes.tag}>
                             <ListItemText primary="excelmaster" />
                         </ListItemLink>
+                        <ListItemLink href="#simple-list">
+                            <ListItemText primary="webserver" className={classes.tag} />
+                        </ListItemLink>
+                        <ListItemLink href="#simple-list" className={classes.tag}>
+                            <ListItemText primary="linux" />
+                        </ListItemLink>
+                        <ListItemLink href="#simple-list" className={classes.tag}>
+                            <ListItemText primary="accounttax" />
+                        </ListItemLink>
+                        <ListItemLink href="#simple-list" className={classes.tag}>
+                            <ListItemText primary="excelmaster" />
+                        </ListItemLink>
                     </List>
                     <Divider />
-                    <Typography variant="subtitle1" gutterBottom>
-                        Follows
-                    </Typography>
-                    <List component="nav" dense={true} className={classes.root}>
-                        <ListItemLink href="#simple-list">
-                            <ListItemAvatar>
-                            <Avatar>
-                                <ImageIcon />
-                            </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText primary="Photos"/>
-                        </ListItemLink>
-                        <ListItemLink href="#simple-list">
-                            <ListItemAvatar>
-                            <Avatar>
-                                <WorkIcon />
-                            </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText primary="Work"/>
-                        </ListItemLink>
-                        <ListItemLink href="#simple-list">
-                            <ListItemAvatar>
-                            <Avatar>
-                                <BeachAccessIcon />
-                            </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText primary="Vacation"/>
-                        </ListItemLink>
-                    </List>
                 </Paper>  
                 {/* LOAD FOLLOWS FROM API */}
                 <Paper className={[classes.paper, classes.root]}>

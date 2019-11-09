@@ -6,7 +6,6 @@ import Drawer from "../components/Drawer";
 import SideBar from "../components/SideBar/SideBar";
 import HeaderTab from "../components/Header/HeaderTab";
 import GridItem from "../components/Grid/GridItem";
-
 import GridContainer from "../components/Grid/GridContainer";
 import styles from '../assets/jss/views/generalStyle';
 import { getCurrentUserAuth, doSignOut } from '../actions/authenticate';
@@ -15,17 +14,6 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
-import Paper from '@material-ui/core/Paper';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-
-import BottomNavigation from '@material-ui/core/BottomNavigation';
-import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import RestoreIcon from '@material-ui/icons/Restore';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-
-
 
 const data = [
   {
@@ -109,52 +97,56 @@ class Home extends Component {
               <Drawer></Drawer>
               {/* MAIN CONTENT */}
               <GridContainer nowrap>
-                {/* Sidebar */}
-                <GridItem xs={12} sm={12} md={2}>
-                  <SideBar title="Hello"/>
-                </GridItem>
                 {/* main content */}
-                <GridItem xs={12} sm={12} md={10}>
+                <GridItem xs={12} sm={12} md={12}>
                   <GridContainer spacing={3} direction="row">
                     <GridItem xs={12} sm={12} md={12} lg={12}>
                       <HeaderTab />
+                      <GridContainer spacing={3} direction="row">
+                        <GridItem xs={12} sm={12} md={3} lg={2}>
+                          <SideBar title="Hello"/>
+                        </GridItem>
+                        <GridItem xs={12} sm={12} md={9} lg={10}>
+                            <GridContainer spacing={3} direction="row">
+                            {(loading ? Array.from(new Array(8)) : data).map((item, index) => (
+                              <GridItem xs={12} sm={4} md={4} lg={3}>
+                                <Card className={classes.card}>
+                                    {item ? (
+                                      <React.Fragment>
+                                        <CardMedia
+                                          className={classes.media}
+                                          image={item.src}
+                                          title={item.title}
+                                        />
+                                      <CardContent>
+                                        <Typography gutterBottom variant="subtitle2" component="h2">
+                                          {item.title}
+                                        </Typography>
+                                        <Typography gutterBottom variant="subtitle2" component="h2">
+                                          {item.channel}
+                                        </Typography>
+                                        <Typography variant="body2" color="textSecondary" component="p">
+                                          {`${item.views} • ${item.createdAt}`}
+                                        </Typography>
+                                      </CardContent>
+                                      </React.Fragment>
+                                    ) : (
+                                      <React.Fragment>
+                                        <LinearProgress color="secondary"></LinearProgress>
+                                        <Skeleton />
+                                        <Skeleton width="60%" variant="rect" height={118}/>
+                                      </React.Fragment>
+                                    )}
+                                </Card>
+                              </GridItem>
+                            ))}
+                          </GridContainer>
+                        </GridItem>
+                      </GridContainer>
                     </GridItem>
                   </GridContainer>
                   
-                  <GridContainer spacing={3} direction="row">
-                    {(loading ? Array.from(new Array(8)) : data).map((item, index) => (
-                      <GridItem xs={12} sm={4} md={4} lg={3}>
-                        <Card className={classes.card}>
-                            {item ? (
-                              <React.Fragment>
-                                <CardMedia
-                                  className={classes.media}
-                                  image={item.src}
-                                  title={item.title}
-                                />
-                              <CardContent>
-                                <Typography gutterBottom variant="subtitle2" component="h2">
-                                  {item.title}
-                                </Typography>
-                                <Typography gutterBottom variant="subtitle2" component="h2">
-                                  {item.channel}
-                                </Typography>
-                                <Typography variant="body2" color="textSecondary" component="p">
-                                  {`${item.views} • ${item.createdAt}`}
-                                </Typography>
-                              </CardContent>
-                              </React.Fragment>
-                            ) : (
-                              <React.Fragment>
-                                <LinearProgress color="secondary"></LinearProgress>
-                                <Skeleton />
-                                <Skeleton width="60%" variant="rect" height={118}/>
-                              </React.Fragment>
-                            )}
-                        </Card>
-                      </GridItem>
-                    ))}
-                  </GridContainer>
+                  
                 </GridItem>
               </GridContainer>
         </React.Fragment>

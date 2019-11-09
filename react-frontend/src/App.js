@@ -3,6 +3,7 @@ import { Component } from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import Login from './views/Login';
 import Home from './views/Home';
+import Upload from './views/Upload';
 import SignUp from './views/SignUp';
 import { doSignOut } from './actions/authenticate';
 import 'react-toastify/dist/ReactToastify.min.css'
@@ -29,6 +30,7 @@ class App extends Component {
             <Route path="/login" exact component={Login}/>
             <Route path="/signup" exact component={SignUp}/>
             <Route path="/logout" exact render={(props) => doSignOut(props)} />
+            <PrivateRoute path='/upload/:type' component={Upload} />
             <PrivateRoute path='/' exact component={Home} />
           </Switch>
         </BrowserRouter>

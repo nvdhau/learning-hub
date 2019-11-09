@@ -28,11 +28,12 @@ import PersonIcon from '@material-ui/icons/Person';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
 import VideoCallIcon from '@material-ui/icons/VideoCall';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
+function ListItemLink(props) {
+  return <ListItem button component="a" {...props} />;
+}
 const drawerWidth = 240;
-
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -137,8 +138,10 @@ export default function PersistentDrawerLeft() {
   const classes = useStyles();
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorUploadEl, setAnchorUploadEl] = React.useState(null);
   const [open, setOpen] = React.useState(false);
   const isMenuOpen = Boolean(anchorEl);
+  const isMenuUploadOpen = Boolean(anchorUploadEl);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -154,6 +157,14 @@ export default function PersistentDrawerLeft() {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleUploadMenuOpen = event => {
+    setAnchorUploadEl(event.currentTarget);
+  };
+
+  const handleUploadMenuClose = () => {
+    setAnchorUploadEl(null);
   };
   
   const menuId = 'primary-search-account-menu';
@@ -176,6 +187,27 @@ export default function PersistentDrawerLeft() {
     </Menu>
   );
 
+  const menuUploadId = 'primary-upload-menu';
+  const renderUploadMenu = (
+    <Menu
+      anchorEl={anchorUploadEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={menuUploadId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isMenuUploadOpen}
+      onClose={handleUploadMenuClose}
+    >
+      
+      <Link href="/upload/blog" style={{ textDecoration: 'none', display: 'block' }}> 
+        <MenuItem onClick={handleUploadMenuClose}><PostAddIcon />  Create Blog</MenuItem>
+      </Link>
+      <Link href="/upload/video" style={{ textDecoration: 'none', display: 'block' }}> 
+        <MenuItem onClick={handleUploadMenuClose}><VideoCallIcon /> Create Video</MenuItem>
+      </Link>
+    </Menu>
+  );
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -195,9 +227,13 @@ export default function PersistentDrawerLeft() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
-            Online Learning
-          </Typography>
+          
+          <Link href="/" style={{ textDecoration: 'none', display: 'block', color: 'white'}}>
+            <Typography variant="h6" noWrap>
+              Online Learning
+            </Typography>
+          </Link>
+          
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -217,7 +253,7 @@ export default function PersistentDrawerLeft() {
                     variant="contained"
                     color="secondary"
                     className={classes.button}
-                    href="/upload"
+                    onClick={handleUploadMenuOpen}
                     startIcon={<CloudUploadIcon />}
                 >
                 Upload
@@ -235,6 +271,7 @@ export default function PersistentDrawerLeft() {
           </div>
         </Toolbar>
       </AppBar>
+      {renderUploadMenu}
       {renderMenu}
       <Drawer
         className={classes.drawer}
@@ -256,14 +293,14 @@ export default function PersistentDrawerLeft() {
                 <ListItemIcon><SearchIcon/></ListItemIcon>
                 <ListItemText primary="Explore" />
             </ListItem>  
-            <ListItem button key="blogpost">
+            <ListItemLink button key="uploadblog" href="/upload/blog" >
                 <ListItemIcon><PostAddIcon/></ListItemIcon>
-                <ListItemText primary="Add post" />
-            </ListItem>  
-            <ListItem button key="videopost">
+                <ListItemText primary="Add blog" />
+            </ListItemLink> 
+            <ListItemLink button key="uploadvideo" href="/upload/video" >
                 <ListItemIcon><VideoCallIcon/></ListItemIcon>
                 <ListItemText primary="Add video" />
-            </ListItem>  
+            </ListItemLink>
             <ListItem button key="subscription">
                 <ListItemIcon><SubscriptionsIcon/></ListItemIcon>
                 <ListItemText primary="Subscriptions" />
@@ -282,10 +319,10 @@ export default function PersistentDrawerLeft() {
         </List>
         <Divider />
         <List>
-            <ListItem button key="signout">
+            <ListItemLink button key="signout" href="/logout" >
                 <ListItemIcon><ExitToAppIcon/></ListItemIcon>
                 <ListItemText primary="Sign out" />
-            </ListItem> 
+            </ListItemLink> 
         </List>
       </Drawer>
       <main
