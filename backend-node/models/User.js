@@ -25,20 +25,6 @@ class User extends BaseModel {
     return user;
   }
 
-  static get() {
-    return super.get()
-      .then(([rows]) => rows.map(row => this.fromDB(row)));
-  }
-
-  static findBy(propertyName, value) {
-    return super.findBy(propertyName, value)
-      .then(rows => this.fromDB(rows[0]));
-  } 
-
-  static update(user) {
-    return super.update(user)
-      .then(row => user);
-  }
 }
 
 module.exports = User;

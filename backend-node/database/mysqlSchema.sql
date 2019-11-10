@@ -3,6 +3,7 @@ DROP DATABASE IF EXISTS learning_hub_4280;
 
 CREATE DATABASE learning_hub_4280;
 USE learning_hub_4280;
+
 CREATE TABLE USERS (
     id VARCHAR(200) PRIMARY KEY,   
     username VARCHAR(50),

@@ -48,6 +48,20 @@ router.get('/:uid', isAuthenticated, (req, res, next) => {
     });
 });
 
+router.delete('/', (req, res, next) => {
+  firebaseAdmin.auth().listUsers(30)
+    .then(listUsersResult => {
+      const deletePromisesArray = listUsersResult.users.map(userRecord => firebaseAdmin.auth().deleteUser(userRecord.uid));
+      return Promise.all(deletePromisesArray);
+    }).then(deletePromisesResult => User.deleteAll())
+    .then(_ => {
+      res.status(200).json({});
+    }).catch(error => {
+      console.log(error);
+      res.status(404).json({});
+    });
+});
+
 router.post('/create', uploadImageService.single('image'), [
   check('email').isEmail(),
   check('password').isLength({min: 6}),
@@ -78,7 +92,7 @@ router.post('/create', uploadImageService.single('image'), [
         username: userRequest.username,
         fullName: userRequest.fullName
       });
-      return User.create(userDB);
+      return User.createWithId(userDB);
     })
     .then(([rows]) => {
       res.status(201).json(userDB);

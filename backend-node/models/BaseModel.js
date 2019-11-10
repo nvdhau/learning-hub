@@ -17,15 +17,21 @@ class BaseModel {
     }).promise();
   }
 
+  static fromDB(row) {
+    const baseModel = new BaseModel(); 
+    return baseModel;
+  }
+
   static camelToSnakeCase(str) {
     return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
   }
 
   static get() {
-    return this.connection.execute(`SELECT * FROM ${this.table}`);
+    return this.connection.execute(`SELECT * FROM ${this.table}`)
+     .then(([rows]) => rows.map(row => this.fromDB(row)));
   }
 
-  static create(instance) {
+  static createWithId(instance) {
     let instancePropertiesArray = Object.getOwnPropertyNames(instance);
     let instancePropertiesArraySnakeCase = instancePropertiesArray.map(string => this.camelToSnakeCase(string));
     let questionMarksArray = instancePropertiesArray.map(string => '?');
@@ -36,6 +42,23 @@ class BaseModel {
     );
   }
 
+  static create(instance) {
+    let instancePropertiesArray = Object.getOwnPropertyNames(instance);
+    instancePropertiesArray.shift();
+    let instancePropertiesArraySnakeCase = instancePropertiesArray.map(string => this.camelToSnakeCase(string));
+    let questionMarksArray = instancePropertiesArray.map(string => '?');
+    let valuesWithoutId = Object.values(instance);
+    valuesWithoutId.shift();
+    
+    return this.connection.execute(
+      `INSERT INTO ${this.table} (${instancePropertiesArraySnakeCase}) VALUES (${questionMarksArray})`,
+      valuesWithoutId
+    ).then(([rows,fields]) => {
+      instance.id = rows.insertId;
+      return instance;
+    });
+  }
+
   static findBy(propertyName, value) {
     return this.connection.execute(
       `SELECT * FROM ${this.table} WHERE ${propertyName} = ?`,
@@ -43,6 +66,28 @@ class BaseModel {
     ).then(([rows]) => {
       if (rows.length <= 0)
         throw `Table ${this.table} with ${propertyName} = ${value} not found`;
+      return rows;
+    }).then(rows => this.fromDB(rows[0]));
+  }
+
+  static deleteBy(propertyName, value) {
+    return this.connection.execute(
+      `DELETE FROM ${this.table} WHERE ${propertyName} = ?`,
+      [value]
+    ).then(([rows]) => {
+      if (rows.affectedRows <= 0)
+        throw `Table ${this.table} with ${propertyName} = ${value} not deleted`;
+      return rows;
+    });
+  }
+
+  static deleteAll() {
+    return this.connection.execute(
+      `DELETE FROM ${this.table}`
+    ).then(([rows]) => {
+      if (rows.length <= 0)
+        throw `Table ${this.table} with ${propertyName} = ${value} not deleted`;
+      console.log(rows);
       return rows;
     });
   }
@@ -61,7 +106,7 @@ class BaseModel {
         return rows;
       else
         throw `Table ${this.table} has more than 1 record that match ${instancePropertiesArraySnakeCase[0]}`;
-    });
+    }).then(row => instance);
   }
 }
 

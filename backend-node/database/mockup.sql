@@ -1,14 +1,12 @@
 USE learning_hub_4280;
-insert into USERS (id, full_name, username, is_active) values ('user1@lh.com', 'Fabio Makepeace', 'user1', 1);
-insert into USERS (id, full_name, username, is_active) values ('user2@lh.com', 'Chaunce McKirdy', 'user2', 1);
-insert into USERS (id, full_name, username, is_active) values ('user3@lh.com', 'Merline Hintzer', 'user3', 1);
-insert into USERS (id, full_name, username, is_active) values ('user4@lh.com', 'Louise Mitchell', 'user4', 1);
-insert into USERS (id, full_name, username, is_active) values ('user5@lh.com', 'Kerwinn Menezes', 'user5', 1);
+
+/*
+For creating users execute in terminal database/createUsers.sh
 insert into USERS (id, full_name, username, is_active) values ('user6@lh.com', 'Patsy Andriuzzi', 'user6', 1);
 insert into USERS (id, full_name, username, is_active) values ('user7@lh.com', 'Brigitta Turbayne', 'user7', 1);
 insert into USERS (id, full_name, username, is_active) values ('user8@lh.com', 'Margarethe Commings', 'user8', 1);
 insert into USERS (id, full_name, username, is_active) values ('user9@lh.com', 'Zacharie Wagge', 'user9', 1);
-insert into USERS (id, full_name, username, is_active) values ('user10@lh.com', 'Genia Widdocks', 'user10', 1);
+insert into USERS (id, full_name, username, is_active) values ('user10@lh.com', 'Genia Widdocks', 'user10', 1);*/
 
 insert into CATEGORIES (category_id, category) values (1, 'Computer Science');
 insert into CATEGORIES (category_id, category) values (2, 'Information System');
@@ -16,7 +14,7 @@ insert into CATEGORIES (category_id, category) values (3, 'Accounting');
 insert into CATEGORIES (category_id, category) values (4, 'Finance');
 insert into CATEGORIES (category_id, category) values (5, 'Business');
 
-insert into POSTS (post_id, author, category_id, title, tags, description, created_at, updated_at, deleted) values (1, 'user3@lh.com', 4, 'platea dictumst morbi vestibulum velit id', 'css,csis4175', 'Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.
+/*insert into POSTS (post_id, author, category_id, title, tags, description, created_at, updated_at, deleted) values (1, 'user3@lh.com', 4, 'platea dictumst morbi vestibulum velit id', 'css,csis4175', 'Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.
 
 Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.
 
@@ -642,5 +640,4 @@ Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integ
 In quis justo. Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet.
 
 Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui.', '2019-09-08 11:55:40', '2019-10-01 06:38:15', 0);
-
-
+*/
