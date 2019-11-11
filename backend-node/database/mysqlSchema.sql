@@ -16,9 +16,13 @@ CREATE TABLE CATEGORIES(
     name VARCHAR(255) 
 );
 
+CREATE TABLE TAGS (
+    name VARCHAR(255) PRIMARY KEY NOT NULL
+);
+
 CREATE TABLE POSTS (
     id INTEGER AUTO_INCREMENT PRIMARY KEY,
-    author VARCHAR(200) NOT NULL,
+    user_id VARCHAR(200) NOT NULL,
     category_id INTEGER NOT NULL,
     title TEXT,
     description TEXT,
@@ -28,7 +32,7 @@ CREATE TABLE POSTS (
     deleted BOOLEAN NOT NULL DEFAULT 0,
     is_blog BOOLEAN NOT NULL DEFAULT 0, -- blog or tutorial
 
-    FOREIGN KEY (author) REFERENCES USERS(id),
+    FOREIGN KEY (user_id) REFERENCES USERS(id),
     FOREIGN KEY (category_id) REFERENCES CATEGORIES(id)
 );
 

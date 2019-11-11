@@ -28,7 +28,13 @@ class BaseModel {
 
   static get() {
     return this.connection.execute(`SELECT * FROM ${this.table}`)
-     .then(([rows]) => rows.map(row => this.fromDB(row)));
+      .then(([rows]) => rows.map(row => this.fromDB(row)))
+      .then(values => {
+        if (Object.prototype.toString.call(values[0]) === "[object Promise]")
+          return Promise.all(values);
+        else 
+          return values;
+      });
   }
 
   static createWithId(instance) {
@@ -39,7 +45,9 @@ class BaseModel {
     return this.connection.execute(
       `INSERT INTO ${this.table} (${instancePropertiesArraySnakeCase}) VALUES (${questionMarksArray})`,
       Object.values(instance)
-    );
+    ).catch(error => {
+      console.debug(error);
+    });
   }
 
   static create(instance) {
@@ -68,6 +76,12 @@ class BaseModel {
         throw `Table ${this.table} with ${propertyName} = ${value} not found`;
       return rows;
     }).then(rows => this.fromDB(rows[0]));
+  }
+
+  static findByNoException(propertyName, value) {
+    return this.findBy(propertyName, value)
+      .then(instance => instance)
+      .catch(error => null);
   }
 
   static deleteBy(propertyName, value) {

@@ -7,8 +7,9 @@ const cors = require('cors');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 let testRouter = require('./routes/test');
-let tutorialRouter = require('./routes/turorial');
 let categoriesRouter = require('./routes/categories');
+let postsRouter = require('./routes/posts');
+let tagsRouter = require('./routes/tags');
 
 var app = express();
 
@@ -22,7 +23,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/test', testRouter);
-app.use('/api/tutorial', tutorialRouter);
 app.use('/api/categories', categoriesRouter);
+app.use('/api/posts', postsRouter);
+app.use('/api/tags', tagsRouter);
 
 module.exports = app;
