@@ -27,7 +27,7 @@ import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 import BlogPost from '../components/Post/BlogPost';
 import VideoPost from '../components/Post/VideoPost';
-
+import { ToastContainer } from 'react-toastify';
 
 class Upload extends Component {
   constructor(props) {
@@ -112,6 +112,7 @@ class Upload extends Component {
               <Drawer></Drawer>
               {/* MAIN CONTENT */}
               <Container component="main" maxWidth="md">
+                <ToastContainer />
                 <CssBaseline />
                 <div className={classes.paper}>
                     <Avatar className={classes.avatar}>
