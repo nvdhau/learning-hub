@@ -14,6 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import styles from '../assets/jss/views/login';
+import { AUTH_LOGIN_USER } from '../config/endpoints-conf';
 import { doSignInWithEmailAndPassword, getCurrentUserAuth } from '../actions/authenticate';
 import { ToastContainer } from 'react-toastify';
 
@@ -25,6 +26,7 @@ class Login extends Component {
     }
 
     componentDidMount() {
+        this.props.reset();
         getCurrentUserAuth()
             .then(user => {
                 if (user) {
@@ -131,7 +133,8 @@ const mapStateToProps = state => {
 
 const mapDispatchtoProps = dispatch => {
     return {
-        login: (email, password) => dispatch(doSignInWithEmailAndPassword(email, password))
+        login: (email, password) => dispatch(doSignInWithEmailAndPassword(email, password)),
+        reset: () => dispatch({type: AUTH_LOGIN_USER, payload: { message: '', success: false}})
     }
 }
 

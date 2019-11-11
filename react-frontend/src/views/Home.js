@@ -96,7 +96,7 @@ class Home extends Component {
               {/* Menu Drawer */}
               <Drawer></Drawer>
               {/* MAIN CONTENT */}
-              <GridContainer nowrap>
+              <GridContainer>
                 {/* main content */}
                 <GridItem xs={12} sm={12} md={12}>
                   <GridContainer spacing={3} direction="row">
@@ -109,7 +109,7 @@ class Home extends Component {
                         <GridItem xs={12} sm={12} md={9} lg={10}>
                             <GridContainer spacing={3} direction="row">
                             {(loading ? Array.from(new Array(8)) : data).map((item, index) => (
-                              <GridItem xs={12} sm={4} md={4} lg={3}>
+                              <GridItem key={index} xs={12} sm={4} md={4} lg={3}>
                                 <Card className={classes.card}>
                                     {item ? (
                                       <React.Fragment>

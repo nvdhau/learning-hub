@@ -9,11 +9,6 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import styles from '../../assets/jss/views/sideBar';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import ImageIcon from '@material-ui/icons/Image';
-import WorkIcon from '@material-ui/icons/Work';
-import BeachAccessIcon from '@material-ui/icons/BeachAccess';
 
 function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
@@ -26,7 +21,7 @@ class SideBar extends Component {
         return (
             <React.Fragment>
                 {/* TODO LOAD ALL CATEGORIES, TAGS, Subscriptions from API */}
-                <Paper className={[classes.paper, classes.root]}>
+                <Paper className={classes.paper}>
                     <Typography variant="subtitle1" gutterBottom>
                         Trending tags
                     </Typography>
@@ -59,9 +54,9 @@ class SideBar extends Component {
                     <Divider />
                 </Paper>  
                 {/* LOAD FOLLOWS FROM API */}
-                <Paper className={[classes.paper, classes.root]}>
+                {/* <Paper className={[classes.paper, classes.root]}>
                     
-                </Paper>  
+                </Paper>   */}
             </React.Fragment>
         )
     }

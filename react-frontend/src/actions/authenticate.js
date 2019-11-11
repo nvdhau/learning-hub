@@ -30,7 +30,6 @@ export const doSignInWithEmailAndPassword = (email, password) => {
         fireBaseApp.auth().signInWithEmailAndPassword(email, password)
             .then(res => {
                 console.log("AUTHENTICATED");
-                console.log("ReS", res);
                 const message = 'Successfully signin account';
                 dispatch({
                     type: AUTH_LOGIN_USER,
