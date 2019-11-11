@@ -8,11 +8,11 @@ insert into USERS (id, full_name, username, is_active) values ('user8@lh.com', '
 insert into USERS (id, full_name, username, is_active) values ('user9@lh.com', 'Zacharie Wagge', 'user9', 1);
 insert into USERS (id, full_name, username, is_active) values ('user10@lh.com', 'Genia Widdocks', 'user10', 1);*/
 
-insert into CATEGORIES (id, name) values (1, 'Computer Science');
+/*insert into CATEGORIES (id, name) values (1, 'Computer Science');
 insert into CATEGORIES (id, name) values (2, 'Information System');
 insert into CATEGORIES (id, name) values (3, 'Accounting');
 insert into CATEGORIES (id, name) values (4, 'Finance');
-insert into CATEGORIES (id, name) values (5, 'Business');
+insert into CATEGORIES (id, name) values (5, 'Business');*/
 
 /*insert into POSTS (post_id, author, category_id, title, tags, description, created_at, updated_at, deleted) values (1, 'user3@lh.com', 4, 'platea dictumst morbi vestibulum velit id', 'css,csis4175', 'Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.
 

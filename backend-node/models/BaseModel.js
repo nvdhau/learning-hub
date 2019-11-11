@@ -101,7 +101,6 @@ class BaseModel {
     ).then(([rows]) => {
       if (rows.length <= 0)
         throw `Table ${this.table} with ${propertyName} = ${value} not deleted`;
-      console.log(rows);
       return rows;
     });
   }
