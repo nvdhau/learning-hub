@@ -1,5 +1,4 @@
-import { API_CREATE_POST } from '../config/endpoints-conf';
-// import { getCurrentUserAuth } from './authenticate'
+import { API_CREATE_POST, API_GET_POSTS, API_GET_TAGS } from '../config/endpoints-conf';
 import axios from 'axios';
 
 // firebase sign up account
@@ -19,5 +18,24 @@ export const createPost = (getUserIdToken) => (json) =>  {
                     }).catch(err => {
                         console.log("ERR: " + err);
                     })
+        })
+}
+
+export const getAllPosts = (getUserIdToken) => () => {
+    return getUserIdToken()
+        .then(data => {
+            const idToken = data.idToken;
+            return axios.get(API_GET_POSTS, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': idToken
+                        }
+                    }).then(res => {
+                        return res.data
+                    }).catch(err => {
+                        console.log("ERR: " + err);
+                    })
+        }).catch(err => {
+            console.log(err);
         })
 }

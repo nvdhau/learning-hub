@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // firebase sign up account
 export const getTags = () =>  {
-    return axios.get(API_GET_TAGS, null , {
+    return axios.get(API_GET_TAGS, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'

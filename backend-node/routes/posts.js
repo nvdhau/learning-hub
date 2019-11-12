@@ -7,7 +7,7 @@ const { check, validationResult } = require('express-validator');
 const { isAuthenticated } = require('../middlewares/auth');
 const uploadImageService = require('../utils/uploadImageService');
 
-router.get('/', (req, res, next) => {
+router.get('/', isAuthenticated, (req, res, next) => {
   Post.get().then(post => {
     res.status(200).json(post);
   });

@@ -34,6 +34,8 @@ class BaseModel {
           return Promise.all(values);
         else 
           return values;
+      }).catch(err => {
+        return null;
       });
   }
 

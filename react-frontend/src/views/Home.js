@@ -9,88 +9,37 @@ import GridItem from "../components/Grid/GridItem";
 import GridContainer from "../components/Grid/GridContainer";
 import styles from '../assets/jss/views/generalStyle';
 import { getCurrentUserAuth, doSignOut } from '../actions/authenticate';
+import { getAllPosts } from '../actions/post';
+import { getUserIdToken } from '../actions/authenticate'
 import Typography from '@material-ui/core/Typography';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 
-const data = [
-  {
-    src:
-      'https://i.ytimg.com/vi/pLqipJNItIo/hqdefault.jpg?sqp=-oaymwEYCNIBEHZIVfKriqkDCwgBFQAAiEIYAXAB&rs=AOn4CLBkklsyaw9FxDmMKapyBYCn9tbPNQ',
-    title: 'Don Diablo @ Tomorrowland Main Stage 2019 | Official…',
-    channel: 'Don Diablo',
-    views: '396 k views',
-    createdAt: 'a week ago',
-  },
-  {
-    src:
-      'https://i.ytimg.com/vi/ycHr1G0Gffg/hqdefault.jpg?sqp=-oaymwEYCNIBEHZIVfKriqkDCwgBFQAAiEIYAXAB&rs=AOn4CLAS6ZJ5RYa2R3Ksp9d8cLzY_8DMOA',
-    title: 'Top Latino Songs 2019 - Luis Fonsi, Ozuna, Nicky Jam…',
-    channel: 'Dj Yanky Plus',
-    views: '2.1 M views',
-    createdAt: '4 months ago',
-  },
-  {
-    src:
-      'https://i.ytimg.com/vi/kkLk2XWMBf8/hqdefault.jpg?sqp=-oaymwEYCNIBEHZIVfKriqkDCwgBFQAAiEIYAXAB&rs=AOn4CLB4GZTFu1Ju2EPPPXnhMZtFVvYBaw',
-    title: 'Calvin Harris, Sam Smith - Promises (Official Video)',
-    channel: 'Calvin Harris',
-    views: '130 M views',
-    createdAt: '10 months ago',
-  },
-  {
-    src:
-      'https://i.ytimg.com/vi/pLqipJNItIo/hqdefault.jpg?sqp=-oaymwEYCNIBEHZIVfKriqkDCwgBFQAAiEIYAXAB&rs=AOn4CLBkklsyaw9FxDmMKapyBYCn9tbPNQ',
-    title: 'Don Diablo @ Tomorrowland Main Stage 2019 | Official…',
-    channel: 'Don Diablo',
-    views: '396 k views',
-    createdAt: 'a week ago',
-  },
-  {
-    src:
-      'https://i.ytimg.com/vi/ycHr1G0Gffg/hqdefault.jpg?sqp=-oaymwEYCNIBEHZIVfKriqkDCwgBFQAAiEIYAXAB&rs=AOn4CLAS6ZJ5RYa2R3Ksp9d8cLzY_8DMOA',
-    title: 'Top Latino Songs 2019 - Luis Fonsi, Ozuna, Nicky Jam…',
-    channel: 'Dj Yanky Plus',
-    views: '2.1 M views',
-    createdAt: '4 months ago',
-  },
-  {
-    src:
-      'https://i.ytimg.com/vi/kkLk2XWMBf8/hqdefault.jpg?sqp=-oaymwEYCNIBEHZIVfKriqkDCwgBFQAAiEIYAXAB&rs=AOn4CLB4GZTFu1Ju2EPPPXnhMZtFVvYBaw',
-    title: 'Calvin Harris, Sam Smith - Promises (Official Video)',
-    channel: 'Calvin Harris',
-    views: '130 M views',
-    createdAt: '10 months ago',
-  },
-  {
-    src:
-      'https://i.ytimg.com/vi/ycHr1G0Gffg/hqdefault.jpg?sqp=-oaymwEYCNIBEHZIVfKriqkDCwgBFQAAiEIYAXAB&rs=AOn4CLAS6ZJ5RYa2R3Ksp9d8cLzY_8DMOA',
-    title: 'Top Latino Songs 2019 - Luis Fonsi, Ozuna, Nicky Jam…',
-    channel: 'Dj Yanky Plus',
-    views: '2.1 M views',
-    createdAt: '4 months ago',
-  },
-  {
-    src:
-      'https://i.ytimg.com/vi/kkLk2XWMBf8/hqdefault.jpg?sqp=-oaymwEYCNIBEHZIVfKriqkDCwgBFQAAiEIYAXAB&rs=AOn4CLB4GZTFu1Ju2EPPPXnhMZtFVvYBaw',
-    title: 'Calvin Harris, Sam Smith - Promises (Official Video)',
-    channel: 'Calvin Harris',
-    views: '130 M views',
-    createdAt: '10 months ago',
-  },
-];
-
 class Home extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      posts: [],
+      loading: true
+    }
+  }
+
+  componentDidMount() {
+    getAllPosts(getUserIdToken)()
+      .then(posts => {
+        this.setState({
+          posts: posts,
+          loading: false
+        })
+      }).catch(err => {
+        console.log(err);
+      })
   }
   
   render() {
     const { classes } = this.props;
-    const { loading = false } = this.props;
-    
     return (
         <React.Fragment>
               {/* Menu Drawer */}
@@ -108,7 +57,48 @@ class Home extends Component {
                         </GridItem>
                         <GridItem xs={12} sm={12} md={9} lg={10}>
                             <GridContainer spacing={3} direction="row">
-                            {(loading ? Array.from(new Array(8)) : data).map((item, index) => (
+                              {
+                                (this.state.loading ? Array.from(new Array(8)) : this.state.posts).map(
+                                  (item, index) => (
+                                    <GridItem key={index} xs={12} sm={4} md={4} lg={3}>
+                                      <Card className={classes.card}>
+                                        {
+                                          item ? (
+                                            <React.Fragment>
+                                              <CardMedia
+                                                className={classes.media}
+                                                image={'http://127.0.0.1:5000/' + item.imageUrl}
+                                                title={item.title}
+                                              />
+                                              <CardContent>
+                                                <Typography gutterBottom variant="subtitle2" component="h2">
+                                                  {item.title}
+                                                </Typography>
+                                                <Typography gutterBottom variant="subtitle2" component="h2">
+                                                  @{item.user.username}
+                                                </Typography>
+                                                <Typography gutterBottom variant="subtitle2" component="h2">
+                                                  {item.category.name}
+                                                </Typography>
+                                                <Typography variant="body2" color="textSecondary" component="p">
+                                                  {item.createdAt}
+                                                </Typography>
+                                              </CardContent>
+                                            </React.Fragment>
+                                          ) : (
+                                          <React.Fragment>
+                                            <LinearProgress color="secondary"></LinearProgress>
+                                            <Skeleton />
+                                            <Skeleton width="60%" variant="rect" height={118}/>
+                                          </React.Fragment>
+                                          )
+                                        }
+                                      </Card>
+                                    </GridItem>
+                                  )
+                                )
+                              }
+                            {/* {(loading ? Array.from(new Array(8)) : this.state.posts).map((item, index) => (
                               <GridItem key={index} xs={12} sm={4} md={4} lg={3}>
                                 <Card className={classes.card}>
                                     {item ? (
@@ -139,14 +129,12 @@ class Home extends Component {
                                     )}
                                 </Card>
                               </GridItem>
-                            ))}
+                            ))} */}
                           </GridContainer>
                         </GridItem>
                       </GridContainer>
                     </GridItem>
                   </GridContainer>
-                  
-                  
                 </GridItem>
               </GridContainer>
         </React.Fragment>

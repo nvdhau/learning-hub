@@ -28,6 +28,8 @@ class SideBar extends Component {
         getTags()
             .then(tags => {
                 this.setState({tags: tags})
+            }).catch(err => {
+                console.log(err)
             })
     }
 
