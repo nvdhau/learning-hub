@@ -27,6 +27,7 @@ CREATE TABLE POSTS (
     title TEXT,
     description TEXT,
     tags TEXT,
+    image_url TEXT,
     created_at DATETIME,
     updated_at DATETIME,
     deleted BOOLEAN NOT NULL DEFAULT 0,

@@ -16,6 +16,7 @@ class Post extends BaseModel {
     this.title = "";
     this.description = "";
     this.tags = "";
+    this.imageUrl = "";
     this.createdAt = (new Date()).toISOString().slice(0, 19).replace('T', ' ');
     this.updatedAt = (new Date()).toISOString().slice(0, 19).replace('T', ' ');
     this.deleted = false;
@@ -31,6 +32,7 @@ class Post extends BaseModel {
       title: row.title,
       description: row.description,
       tags: row.tags,
+      imageUrl: row.image_url,
       createdAt: row.created_at.toISOString().slice(0, 19).replace('T', ' '),
       updatedAt: row.updated_at.toISOString().slice(0, 19).replace('T', ' '),
       deleted: Boolean(row.deleted),

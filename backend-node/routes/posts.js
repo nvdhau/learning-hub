@@ -98,23 +98,25 @@ router.post('/create', uploadImageService.single('image'), isAuthenticated, [
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.array() });
-  } /*else if (!req.file) {
+  } else if (!req.file) {
     console.log(req.files);
     return res.status(422).json({
         message: "missing an upload file"
     });
-  }*/
-
+  }
+  
+  req.body.imageURLs = process.env.UPLOAD_IMAGE_FOLDER + req.file.filename;
   const post = new Post();
   let postWithId;
-  const { categoryId, title, description, tags, isBlog } = req.body;
+  const { categoryId, title, description, tags, isBlog, imageURLs } = req.body;
   Object.assign(post, {
     userId: req.user.id,
     categoryId: categoryId,
     title: title,
     description: description,
     tags: tags,
-    isBlog: isBlog
+    isBlog: isBlog,
+    imageUrl: imageURLs
   });
   Post.create(post)
     .then(postWithIdTemp => {
