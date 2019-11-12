@@ -82,19 +82,7 @@ describe("Categories tests", () => {
 
 describe("Posts tests", () => {
   describe('Creating Posts', () => {
-    const posts = [
-      { 
-        id: 1,
-        categoryId: 1,
-        title: 'title test',
-        description: 'description test',
-        tags: '#test1 #test2',
-        createdAt: '2019-11-11 06:57:19',
-        updatedAt: '2019-11-11 06:57:19',
-        deleted: false,
-        isBlog: true
-      }
-    ];
+    const posts = require('./posts');
     posts.forEach((post, index) => {
       it(`should create post ${post.title}`, done => {
         post.userId = usersCreated[(Math.floor((Math.random() * usersCreated.length)))].id;
