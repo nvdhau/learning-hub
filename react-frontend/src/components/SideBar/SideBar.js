@@ -9,6 +9,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import styles from '../../assets/jss/views/sideBar';
+import { getTags } from '../../actions/tags';
 
 function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
@@ -16,8 +17,23 @@ function ListItemLink(props) {
 
 class SideBar extends Component {
     
+    constructor(props) {
+        super(props);
+        this.state = {
+            tags: []
+        }
+    }
+
+    componentDidMount() {
+        getTags()
+            .then(tags => {
+                this.setState({tags: tags})
+            })
+    }
+
     render () {
         const { classes } = this.props;
+        console.log(this.state.tags);
         return (
             <React.Fragment>
                 {/* TODO LOAD ALL CATEGORIES, TAGS, Subscriptions from API */}
@@ -25,38 +41,19 @@ class SideBar extends Component {
                     <Typography variant="subtitle1" gutterBottom>
                         Trending tags
                     </Typography>
-                    <List component="nav" dense={true} aria-label="secondary">
-                        <ListItemLink href="#simple-list">
-                            <ListItemText primary="webserver" className={classes.tag} />
-                        </ListItemLink>
-                        <ListItemLink href="#simple-list" className={classes.tag}>
-                            <ListItemText primary="linux" />
-                        </ListItemLink>
-                        <ListItemLink href="#simple-list" className={classes.tag}>
-                            <ListItemText primary="accounttax" />
-                        </ListItemLink>
-                        <ListItemLink href="#simple-list" className={classes.tag}>
-                            <ListItemText primary="excelmaster" />
-                        </ListItemLink>
-                        <ListItemLink href="#simple-list">
-                            <ListItemText primary="webserver" className={classes.tag} />
-                        </ListItemLink>
-                        <ListItemLink href="#simple-list" className={classes.tag}>
-                            <ListItemText primary="linux" />
-                        </ListItemLink>
-                        <ListItemLink href="#simple-list" className={classes.tag}>
-                            <ListItemText primary="accounttax" />
-                        </ListItemLink>
-                        <ListItemLink href="#simple-list" className={classes.tag}>
-                            <ListItemText primary="excelmaster" />
-                        </ListItemLink>
-                    </List>
+                    {
+                        this.state.tags.length > 0 && (
+                            <List component="nav" dense={true} aria-label="secondary">
+                                {this.state.tags.map((tag, index) =>
+                                    <ListItemLink key={index} href={'/tags/' + tag.name}>
+                                        <ListItemText primary={tag.name} className={classes.tag} />
+                                    </ListItemLink>
+                                )}
+                            </List>
+                        )
+                    }
                     <Divider />
                 </Paper>  
-                {/* LOAD FOLLOWS FROM API */}
-                {/* <Paper className={[classes.paper, classes.root]}>
-                    
-                </Paper>   */}
             </React.Fragment>
         )
     }
