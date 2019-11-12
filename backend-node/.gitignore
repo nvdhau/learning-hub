@@ -63,3 +63,4 @@ firebaseConfig.js
 
 # next.js build output
 .next
+public/images
