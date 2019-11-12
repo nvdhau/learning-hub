@@ -16,6 +16,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
+import { API_ROOT_URL } from '../config/endpoints-conf';
 
 class Home extends Component {
   constructor(props) {
@@ -67,7 +68,7 @@ class Home extends Component {
                                             <React.Fragment>
                                               <CardMedia
                                                 className={classes.media}
-                                                image={'http://127.0.0.1:5000/' + item.imageUrl}
+                                                image={API_ROOT_URL + item.imageUrl}
                                                 title={item.title}
                                               />
                                               <CardContent>
