@@ -6,7 +6,6 @@ const rootReducer = combineReducers({
     auth: AuthReducer
 });
 
-
 const store = createStore(
     rootReducer,
     compose(

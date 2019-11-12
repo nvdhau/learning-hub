@@ -91,6 +91,28 @@ export const getCurrentUserAuth = () => {
     })
 }
 
+export const getUserIdToken = () => {
+    return new Promise ((resolve, reject) => {
+        fireBaseApp.auth().currentUser.getIdToken(true)
+            .then(idToken => {
+                resolve({idToken})
+            }).catch(err => {
+                resolve(null);
+            });
+
+        // fireBaseApp.auth().onAuthStateChanged(user => {
+        //     if (user) {
+        //         resolve({
+        //             displayName: user.displayName,
+        //             email: user.email
+        //         })
+        //     } else {
+        //         resolve(null);
+        //     }
+        // });
+    })
+}
+
 // firebase sign up account
 export const accountSignUp = (json) =>  {
     return dispatch => {

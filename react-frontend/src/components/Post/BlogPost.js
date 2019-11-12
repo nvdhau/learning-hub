@@ -15,25 +15,22 @@ class BlogPost extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        mdeValue: '',
         showInfoForm: false
     }
     this.toggleInfoForm = this.toggleInfoForm.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange = value => {
-    this.setState({ mdeValue: value });
-  };
+  componentDidMount() {
+    console.log("didmount", this.props.resetForm)
+  }
 
-  handleSubmit (e) {
-      console.log(e.target.category_id.value);
-      console.log(e.target.title.value);
-      console.log(this.state.mdeValue);
-
-      // call to API to create a blog
-      e.preventDefault();
+  componentDidUpdate(prevProps) {
+    console.log("didupdate", this.props.resetForm)
+    if (prevProps.resetForm !== this.props.resetForm) {
+      this.setState({
+        showInfoForm: false
+      })
+    }
   }
 
   toggleInfoForm () {
@@ -46,104 +43,98 @@ class BlogPost extends Component {
     const { classes } = this.props;
     return (
         <React.Fragment>
-            <Grid item xs={12} md={12}>
-                <form className={classes.form} noValidate onSubmit={this.handleSubmit}>
-                    {
-                      !this.state.showInfoForm ? (
-                        <React.Fragment>
-                          <SimpleMDE 
-                            id="editorPostDescription"
-                            name="postDecription"
-                            onChange={this.handleChange} 
-                            value={this.state.mdeValue}
+            <form className={classes.form} noValidate onSubmit={this.props.submitHandler}>
+                {
+                  !this.state.showInfoForm ? (
+                    <React.Fragment>
+                      <SimpleMDE 
+                        id="editorPostDescription"
+                        name="postDecription"
+                        onChange={this.props.editorChangeHandler} 
+                        value={this.props.editorText}
+                      />
+                      <Button
+                          fullWidth
+                          variant="contained"
+                          color="secondary"
+                          onClick={this.toggleInfoForm}
+                      >
+                      Finish editing
+                      </Button>
+                    </React.Fragment>
+                  ) : (
+                    <React.Fragment>
+                      <Container component="main" maxWidth="sm">
+                      <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                          <MySelect 
+                          id="category_id"
+                          name="category_id"
+                          label="Category" 
+                          required
+                          data={this.props.categories}/>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <TextField
+                              variant="outlined"
+                              required
+                              fullWidth
+                              name="title"
+                              label="Title"
+                              type="text"
+                              id="title"
                           />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <TextField
+                              variant="outlined"
+                              required
+                              fullWidth
+                              name="tags"
+                              label="Tags Ex: #tag #tag"
+                              type="text"
+                              id="tags"
+                          />
+                        </Grid> 
+                        <Grid item xs={12}>
+                          <TextField
+                              variant="outlined"
+                              fullWidth
+                              name="image"
+                              type="file"
+                              id="image"
+                          />
+                          <Typography variant="caption" display="block" gutterBottom>
+                            *** Please select an thumbnail image for you blog.
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                        </Grid>
+                        <Grid item xs={12}>
                           <Button
+                              type="submit"
                               fullWidth
                               variant="contained"
                               color="secondary"
+                              style={{'marginBottom': '10px'}}
+                          >
+                            Save Post
+                          </Button>  
+                          <Button
+                              fullWidth
+                              variant="contained"
+                              color="default"
                               onClick={this.toggleInfoForm}
                           >
-                          Finish editing
-                          </Button>
-                        </React.Fragment>
-                      ) : (
-                        <React.Fragment>
-                          <Container component="main" maxWidth="sm">
-                          <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                              <MySelect 
-                              id="category_id"
-                              name="category_id"
-                              label="Category" 
-                              required
-                              data={[
-                                  {key: 1, value: 'Cat 1'},
-                                  {key: 2, value: 'Cat 2'},
-                                  {key: 3, value: 'Cat 3'}
-                              ]}/>
-                            </Grid>
-                            <Grid item xs={12}>
-                              <TextField
-                                  variant="outlined"
-                                  required
-                                  fullWidth
-                                  name="title"
-                                  label="Title"
-                                  type="text"
-                                  id="title"
-                              />
-                            </Grid>
-                            <Grid item xs={12}>
-                              <TextField
-                                  variant="outlined"
-                                  required
-                                  fullWidth
-                                  name="tags"
-                                  label="Tags Ex: #tag #tag"
-                                  type="text"
-                                  id="tags"
-                              />
-                            </Grid> 
-                            <Grid item xs={12}>
-                              <TextField
-                                  variant="outlined"
-                                  fullWidth
-                                  name="fileimage"
-                                  type="file"
-                                  id="fileimage"
-                              />
-                              <Typography variant="caption" display="block" gutterBottom>
-                                *** Please select an thumbnail image for you blog.
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={12}>
-                            </Grid>
-                            <Grid item xs={12}>
-                              <Button
-                                  type="submit"
-                                  fullWidth
-                                  variant="contained"
-                                  color="secondary"
-                                  style={{'marginBottom': '10px'}}
-                              >
-                                Save Post
-                              </Button>  
-                              <Button
-                                  fullWidth
-                                  variant="contained"
-                                  color="default"
-                                  onClick={this.toggleInfoForm}
-                              >
-                              Back to editor
-                              </Button>  
-                            </Grid> 
-                          </Grid>  
-                          </Container>
-                        </React.Fragment>
-                      )
-                    }
-                </form>
-            </Grid>
+                          Back to editor
+                          </Button>  
+                        </Grid> 
+                      </Grid>  
+                      </Container>
+                    </React.Fragment>
+                  )
+                }
+            </form>
         </React.Fragment>
     )
   }

@@ -1,117 +1,92 @@
 import React from 'react';
 import { Component } from 'react';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Drawer from "../components/Drawer";
 import styles from '../assets/jss/views/upload';
-import { getCurrentUserAuth, doSignOut } from '../actions/authenticate';
+import { getCategories } from '../actions/categories';
 import GridContainer from "../components/Grid/GridContainer";
 import MySelect from "../components/Form/Select";
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import Link from '@material-ui/core/Link';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Avatar from '@material-ui/core/Avatar';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import ReactMarkdown from 'react-markdown';
-import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 import BlogPost from '../components/Post/BlogPost';
 import VideoPost from '../components/Post/VideoPost';
 import { ToastContainer } from 'react-toastify';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import { createPost } from '../actions/post';
+import { getUserIdToken } from '../actions/authenticate';
+import { toast } from 'react-toastify';
 
 class Upload extends Component {
   constructor(props) {
     super(props);
     this.formType = this.props.match.params.type == 'blog' ? true : false;
+    this.handleBlogSubmit = this.handleBlogSubmit.bind(this);
+    this.handleEditorChange = this.handleEditorChange.bind(this);
+    this.state = {
+      categories: [],
+      loading: false,
+      mdeValue: '',
+      resetForm: false
+    }
   }
 
-//   author: tutorialRequest.author,
-//         category_id: tutorialRequest.category_id,
-//         title: tutorialRequest.title,
-//         description: tutorialRequest.description,
-//         tags: tutorialRequest.tags
+  componentDidMount() {
+    // call api to get categories
+    getCategories()
+      .then(data => {
+        this.setState({
+          categories: data
+        })
+      });
+  }
 
-//   renderBlogForm () {
-//         const input = '# This is a header\n\nAnd this is a paragraph'
-//         return (
-//             <React.Fragment>
-//                 <Grid container spacing={2}>
-//                     {/* <Grid item xs={12}>
-//                         <ReactMarkdown source={input} />
-//                     </Grid> */}
+  handleEditorChange = value => {
+    this.setState({ mdeValue: value });
+  };
 
-//                     <Grid item xs={12} md={12}>
-//                         <SimpleMDE onChange={this.handleChange} />
-//                     </Grid>    
-
-//                     <Grid item xs={12}>
-//                         <MySelect 
-//                             id="category_id"
-//                             name="category_id"
-//                             label="Category" 
-//                             required
-//                             data={[
-//                                 {key: 1, value: 'Cat 1'},
-//                                 {key: 2, value: 'Cat 2'},
-//                                 {key: 3, value: 'Cat 3'}
-//                             ]}/>
-//                     </Grid>
-//                     <Grid item xs={12}>
-//                         <TextField
-//                             variant="outlined"
-//                             required
-//                             fullWidth
-//                             name="title"
-//                             label="Title"
-//                             type="text"
-//                             id="title"
-//                         />
-//                     </Grid>
-//                     <Grid item xs={12}>
-//                         <TextField
-//                             variant="outlined"
-//                             required
-//                             fullWidth
-//                             name="tags"
-//                             label="Tags Ex: #tag #tag"
-//                             type="text"
-//                             id="tags"
-//                         />
-//                     </Grid> 
-//                     <Grid item xs={12}>
-//                     </Grid>
-//                 </Grid>
-//                 <Button
-//                     type="submit"
-//                     fullWidth
-//                     variant="contained"
-//                     color="primary"
-//                 >
-//                     Save
-//                 </Button>
-//             </React.Fragment>
-//       )
-//   }
-
+  handleBlogSubmit(e) {
+    let formData = new FormData();
+    formData.append('categoryId', e.target.category_id.value);
+    formData.append('title', e.target.title.value);
+    formData.append('description', this.state.mdeValue);
+    formData.append('tags', e.target.tags.value);
+    formData.append('isBlog', 1);
+    formData.append('image', e.target.image.files[0]);
+    this.setState({
+      loading: true
+    })
+    createPost(getUserIdToken)(formData)
+      .then(res => {
+        console.log('res', res);
+        this.setState({
+          loading: false,
+          resetForm: true,
+          mdeValue: ''
+        })
+        toast.success('Post is created successfully');
+      }).catch(err => {
+        console.log('err', err);
+        toast.error('Unable to create your post');
+      })
+    e.preventDefault();
+  }
 
   render() {
     const { classes } = this.props;
     return (
+        
         <React.Fragment>
               {/* Menu Drawer */}
               <Drawer></Drawer>
               {/* MAIN CONTENT */}
-              <Container component="main" maxWidth="md">
+              { this.state.loading && <LinearProgress color="secondary" /> }
+              <Container component="main" maxWidth="lg">
                 <ToastContainer />
                 <CssBaseline />
                 <div className={classes.paper}>
@@ -121,15 +96,21 @@ class Upload extends Component {
                     <Typography component="h1" variant="h5" style={{ marginBottom: '10px'}}>
                         Upload your {this.props.match.params.type}
                     </Typography>
-                    {/* <form className={classes.form} noValidate onSubmit={this.handleSubmit}> */}
                     <Grid container spacing={2}>
+                      <Grid item xs={12} md={12}>
                         { this.formType ?
-                            <BlogPost />
+                            <BlogPost 
+                              categories={this.state.categories}
+                              submitHandler={this.handleBlogSubmit}
+                              editorChangeHandler={this.handleEditorChange}
+                              editorText={this.state.mdeValue}
+                              resetForm={this.state.resetForm}
+                              />
                             : <VideoPost />
                         }
+                      </Grid>
+                      
                     </Grid>
-                    
-                    {/* </form> */}
                 </div>
             </Container> 
         </React.Fragment>
@@ -137,4 +118,16 @@ class Upload extends Component {
   }
 }
 
-export default withStyles(styles)(Upload);
+const mapStateToProps = state => {
+  return {
+      loading: state.auth.auth_processing,
+  }
+}
+
+// const mapDispatchtoProps = dispatch => {
+//   return {
+//       getCategories: () => dispatch(getCategories())
+//   }
+// }
+
+export default connect(null)((withStyles(styles)(Upload)));
