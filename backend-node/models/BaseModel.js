@@ -1,4 +1,4 @@
-const mysql = require('mysql2');
+const connection = require('../utils/db');
 
 class BaseModel {
 
@@ -7,14 +7,7 @@ class BaseModel {
   }
 
   static get connection() {
-    return mysql.createPool({
-      host     : process.env.DB_HOST,
-      user     : process.env.DB_USER,
-      password : process.env.DB_PASS,
-      database : process.env.DB_DATABASE,
-      waitForConnections: true,
-      connectionLimit: 10,
-    }).promise();
+    return connection;
   }
 
   static fromDB(row) {
@@ -26,8 +19,8 @@ class BaseModel {
     return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
   }
 
-  static get() {
-    return this.connection.execute(`SELECT * FROM ${this.table}`)
+  static async get() {
+    return await this.connection.execute(`SELECT * FROM ${this.table}`)
       .then(([rows]) => rows.map(row => this.fromDB(row)))
       .then(values => {
         if (Object.prototype.toString.call(values[0]) === "[object Promise]")
@@ -39,12 +32,12 @@ class BaseModel {
       });
   }
 
-  static createWithId(instance) {
+  static async createWithId(instance) {
     let instancePropertiesArray = Object.getOwnPropertyNames(instance);
     let instancePropertiesArraySnakeCase = instancePropertiesArray.map(string => this.camelToSnakeCase(string));
     let questionMarksArray = instancePropertiesArray.map(string => '?');
     
-    return this.connection.execute(
+    return await this.connection.execute(
       `INSERT INTO ${this.table} (${instancePropertiesArraySnakeCase}) VALUES (${questionMarksArray})`,
       Object.values(instance)
     ).catch(error => {
@@ -52,7 +45,7 @@ class BaseModel {
     });
   }
 
-  static create(instance) {
+  static async create(instance) {
     let instancePropertiesArray = Object.getOwnPropertyNames(instance);
     instancePropertiesArray.shift();
     let instancePropertiesArraySnakeCase = instancePropertiesArray.map(string => this.camelToSnakeCase(string));
@@ -60,7 +53,7 @@ class BaseModel {
     let valuesWithoutId = Object.values(instance);
     valuesWithoutId.shift();
     
-    return this.connection.execute(
+    return await this.connection.execute(
       `INSERT INTO ${this.table} (${instancePropertiesArraySnakeCase}) VALUES (${questionMarksArray})`,
       valuesWithoutId
     ).then(([rows,fields]) => {
@@ -69,8 +62,8 @@ class BaseModel {
     });
   }
 
-  static findBy(propertyName, value) {
-    return this.connection.execute(
+  static async findBy(propertyName, value) {
+    return await this.connection.execute(
       `SELECT * FROM ${this.table} WHERE ${propertyName} = ?`,
       [value]
     ).then(([rows]) => {
@@ -86,8 +79,8 @@ class BaseModel {
       .catch(error => null);
   }
 
-  static deleteBy(propertyName, value) {
-    return this.connection.execute(
+  static async deleteBy(propertyName, value) {
+    return await this.connection.execute(
       `DELETE FROM ${this.table} WHERE ${propertyName} = ?`,
       [value]
     ).then(([rows]) => {
@@ -97,8 +90,8 @@ class BaseModel {
     });
   }
 
-  static deleteAll() {
-    return this.connection.execute(
+  static async deleteAll() {
+    return await this.connection.execute(
       `DELETE FROM ${this.table}`
     ).then(([rows]) => {
       if (rows.length <= 0)
@@ -107,13 +100,13 @@ class BaseModel {
     });
   }
 
-  static update(instance) {
+  static async update(instance) {
     let instancePropertiesArray = Object.getOwnPropertyNames(instance);
     let instancePropertiesArraySnakeCase = instancePropertiesArray.map(string => `${this.camelToSnakeCase(string)} = ?`);
     let values = Object.values(instance);
     values.push(values[0]);
     
-    return this.connection.execute(
+    return await this.connection.execute(
       `UPDATE ${this.table} SET ${instancePropertiesArraySnakeCase.toString()} WHERE ${instancePropertiesArraySnakeCase[0]}`,
       values
     ).then(([rows]) => {
