@@ -68,7 +68,7 @@ class Home extends Component {
                                             <React.Fragment>
                                               <CardMedia
                                                 className={classes.media}
-                                                image={API_ROOT_URL + item.imageUrl}
+                                                image={API_ROOT_URL + "/" + item.imageUrl}
                                                 title={item.title}
                                               />
                                               <CardContent>
