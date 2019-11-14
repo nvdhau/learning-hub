@@ -10,17 +10,18 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import styles from '../../assets/jss/views/sideBar';
 import { getTags } from '../../actions/tags';
+import { NavLink } from 'react-router-dom';
 
 function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
 }
 
 class SideBar extends Component {
-    
+
     constructor(props) {
         super(props);
         this.state = {
-            tags: []
+          tags: []
         }
     }
 
@@ -35,7 +36,6 @@ class SideBar extends Component {
 
     render () {
         const { classes } = this.props;
-        console.log(this.state.tags);
         return (
             <React.Fragment>
                 {/* TODO LOAD ALL CATEGORIES, TAGS, Subscriptions from API */}
@@ -47,7 +47,7 @@ class SideBar extends Component {
                         this.state.tags.length > 0 && (
                             <List component="nav" dense={true} aria-label="secondary">
                                 {this.state.tags.map((tag, index) =>
-                                    <ListItemLink key={index} href={'/tags/' + tag.name}>
+                                    <ListItemLink key={index} href={'/' + tag.name.slice(1) + '/' + this.props.selectedFilter.value}>
                                         <ListItemText primary={tag.name} className={classes.tag} />
                                     </ListItemLink>
                                 )}

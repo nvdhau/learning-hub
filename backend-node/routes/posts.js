@@ -8,6 +8,8 @@ const { isAuthenticated } = require('../middlewares/auth');
 const uploadImageService = require('../utils/uploadImageService');
 
 router.get('/', isAuthenticated, (req, res, next) => {
+  const filter = req.query.filter;
+  // TODO use findby to query post. It seems findby is not working properly
   Post.get().then(post => {
     res.status(200).json(post);
   });

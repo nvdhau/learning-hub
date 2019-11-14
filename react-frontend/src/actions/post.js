@@ -21,11 +21,12 @@ export const createPost = (getUserIdToken) => (json) =>  {
         })
 }
 
-export const getAllPosts = (getUserIdToken) => () => {
+export const getAllPosts = (getUserIdToken) => (filter) => {
+    console.log('my filter', filter);
     return getUserIdToken()
         .then(data => {
             const idToken = data.idToken;
-            return axios.get(API_GET_POSTS, {
+            return axios.get(API_GET_POSTS + '?filter=' + filter, {
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': idToken
