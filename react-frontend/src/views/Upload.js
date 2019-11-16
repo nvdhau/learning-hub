@@ -5,8 +5,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Drawer from "../components/Drawer";
 import styles from '../assets/jss/views/upload';
 import { getCategories } from '../actions/categories';
-import GridContainer from "../components/Grid/GridContainer";
-import MySelect from "../components/Form/Select";
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';

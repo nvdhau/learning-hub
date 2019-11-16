@@ -1,11 +1,16 @@
 const BaseModel = require('../models/BaseModel');
 const User = require('../models/User');
 const Category = require('../models/Category');
+const connection = require('../utils/db');
 
 class Post extends BaseModel {
 
   static get table() {
     return 'POSTS';
+  }
+
+  static get connection() {
+    return connection;
   }
 
   constructor() {
@@ -43,6 +48,23 @@ class Post extends BaseModel {
     return post;
   }
 
+  static async findByFilterAndTag(conditions) {
+    const queryConditions = conditions.map((data, index) => {
+      return data.value
+    })
+    return await this.connection.execute(
+        `SELECT * 
+        FROM ${this.table} 
+        WHERE is_blog = ? AND tags LIKE ?;`,
+        [...queryConditions]
+      ).then(([rows]) => rows.map(row => this.fromDB(row)))
+       .then(values => {
+          if (Object.prototype.toString.call(values[0]) === "[object Promise]")
+            return Promise.all(values);
+          else
+            return values;
+        });
+  }
 }
 
 module.exports = Post;

@@ -12,7 +12,7 @@ class Bootstrap extends Component {
         <Drawer></Drawer>
         <GridItem xs={12} sm={12} md={12}>
           <GridContainer spacing={3} direction="row">
-              {this.props.children}
+            {this.props.children}
           </GridContainer>
         </GridItem>
       </React.Fragment>

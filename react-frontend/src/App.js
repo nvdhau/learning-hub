@@ -4,7 +4,6 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import Login from './views/Login';
 import Home from './views/Home';
 import Upload from './views/Upload';
-import Tag from './views/Tag';
 import SignUp from './views/SignUp';
 import Bootstrap from './Bootstrap';
 import { doSignOut } from './actions/authenticate';
@@ -20,7 +19,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
         if (test_if_home)
           return <Home {...props} />
         else
-          return props.location.pathname.slice(1) ? <Component {...props} /> : <Redirect to="/blog"/>
+          return props.location.pathname.slice(1) ? <Component {...props} /> : <Redirect to="/blog/"/>
       } else {
         return <Redirect to={{pathname: '/login', state: { from: props.location }}} />
       }
@@ -29,7 +28,6 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 )
 
 class App extends Component {
-
   render () {
     return (
       <React.Fragment>
@@ -38,11 +36,11 @@ class App extends Component {
               <Route path="/login" exact component={Login}/>
               <Route path="/signup" exact component={SignUp}/>
               <Route path="/logout" exact render={(props) => doSignOut(props)} />
+              <PrivateRoute path='/upload/:type' exact component={Upload} />
               <Bootstrap>
                 <Switch>
-                  <PrivateRoute path='/upload/:type' exact component={Upload} />
-                  <PrivateRoute path='/:tag/:filter' component={Tag} />
-                  <PrivateRoute path='/:filter?' component={Home} />
+                  <PrivateRoute path='/:filter?/:tag?' component={Home} />
+                  {/* <PrivateRoute path='/:filter?' component={Home} /> */}
                 </Switch>
               </Bootstrap>
             </Switch>
