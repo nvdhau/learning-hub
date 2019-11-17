@@ -301,10 +301,6 @@ export default function PersistentDrawerLeft() {
                 <ListItemIcon><VideoCallIcon/></ListItemIcon>
                 <ListItemText primary="Add video" />
             </ListItemLink>
-            <ListItem button key="subscription">
-                <ListItemIcon><SubscriptionsIcon/></ListItemIcon>
-                <ListItemText primary="Subscriptions" />
-            </ListItem> 
         </List>
         <Divider />
         <List>
@@ -315,7 +311,11 @@ export default function PersistentDrawerLeft() {
             <ListItem button key="yourupload">
                 <ListItemIcon><PublishIcon/></ListItemIcon>
                 <ListItemText primary="Your uploads" />
-            </ListItem> 
+            </ListItem>
+            {/* <ListItem button key="subscription">
+                <ListItemIcon><SubscriptionsIcon/></ListItemIcon>
+                <ListItemText primary="Subscriptions" />
+            </ListItem>   */}
         </List>
         <Divider />
         <List>

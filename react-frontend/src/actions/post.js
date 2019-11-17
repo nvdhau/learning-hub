@@ -1,4 +1,4 @@
-import { API_CREATE_POST, API_GET_POSTS, API_GET_TAGS } from '../config/endpoints-conf';
+import { API_CREATE_POST, API_GET_POSTS } from '../config/endpoints-conf';
 import axios from 'axios';
 
 // firebase sign up account
@@ -21,20 +21,26 @@ export const createPost = (getUserIdToken) => (json) =>  {
         })
 }
 
-export const getAllPosts = (getUserIdToken) => () => {
+export const getAllPosts = (getUserIdToken) => (queryString) => {
+    const params = {
+        is_blog: queryString.filter,
+        tags: queryString.tag,
+    };
+    
     return getUserIdToken()
         .then(data => {
             const idToken = data.idToken;
             return axios.get(API_GET_POSTS, {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': idToken
-                        }
-                    }).then(res => {
-                        return res.data
-                    }).catch(err => {
-                        console.log("ERR: " + err);
-                    })
+                params,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': idToken
+                }
+            }).then(res => {
+                return res.data
+            }).catch(err => {
+                console.log("ERR: " + err);
+            })
         }).catch(err => {
             console.log(err);
         })
