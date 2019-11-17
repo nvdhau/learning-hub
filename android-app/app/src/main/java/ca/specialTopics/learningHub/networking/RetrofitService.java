@@ -6,14 +6,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitService {
 
     private static Retrofit retrofit = null;
+    public static String BASE_URL = "http://10.0.2.2:8000/";
 
     public static WebService get() {
         if (retrofit == null) {
-            String BASE_URL = "http://10.0.2.2:8000/api/";
 
             retrofit = new Retrofit
                     .Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(BASE_URL + "api/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }

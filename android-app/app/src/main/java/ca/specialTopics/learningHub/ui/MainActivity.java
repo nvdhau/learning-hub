@@ -1,7 +1,6 @@
 package ca.specialTopics.learningHub.ui;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import ca.specialTopics.learningHub.R;
+import ca.specialTopics.learningHub.ui.postList.PostListFragment;
 
 public class MainActivity extends BaseActivity implements LoginFragment.OnFragmentInteractionListener {
     private FirebaseAuth mAuth;
@@ -61,10 +61,10 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
 
         navigationView.getMenu().clear();
+        menuImageView.setVisibility(View.GONE);
         if (firebaseUser == null) {
             emailInTheMenu.setText("");
             emailInTheMenu.setVisibility(View.GONE);
-            menuImageView.setVisibility(View.GONE);
 
             navigationView.inflateMenu(R.menu.guest);
             navigationView.setCheckedItem(R.id.login);
@@ -83,6 +83,9 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
     private void itemSelectedOnMenu(MenuItem menuItem) {
         Fragment fragmentToShow = null;
         switch (menuItem.getItemId()) {
+            case R.id.posts:
+                fragmentToShow = new PostListFragment();
+                break;
             case R.id.login:
                 fragmentToShow = new LoginFragment();
                 break;

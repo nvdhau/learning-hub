@@ -18,15 +18,15 @@ public abstract class BaseFragment extends Fragment {
         ((BaseActivity) requireActivity()).hideProgressBar();
     }
 
-    void showProgressBar() {
+    protected void showProgressBar() {
         ((BaseActivity) requireActivity()).showProgressBar();
     }
 
-    void hideProgressBar() {
+    protected void hideProgressBar() {
         ((BaseActivity) requireActivity()).hideProgressBar();
     }
 
-    void pushFragment(Fragment fragment) {
+    protected void pushFragment(Fragment fragment) {
         requireActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentDisplay, fragment)
                 .addToBackStack(null)
@@ -34,14 +34,14 @@ public abstract class BaseFragment extends Fragment {
     }
 
     //Hide keyboard for fragment
-    void hideKeyboard() {
+    protected void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
         if (imm != null)
             imm.hideSoftInputFromWindow(requireView().getWindowToken(), 0);
     }
 
     //Set the action bar title
-    void setTitle(String title) {
+    protected void setTitle(String title) {
         ((BaseActivity) requireActivity()).setTitle(title);
     }
 }

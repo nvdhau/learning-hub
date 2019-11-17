@@ -14,14 +14,18 @@
     <string name="withoutAccount">You do not have an account.</string>
     <string name="register">Register</string>
 
+    <!-- Models -->
+    <string name="edit">Edit %1$s</string>
+    <string name="updated">%1$s updated successfully</string>
+
     <!-- User -->
     <string name="profile">Profile</string>
     <string name="username">Username</string>
     <string name="fullName">Full name</string>
 
-    <!-- Models -->
-    <string name="edit">Edit %1$s</string>
-    <string name="updated">%1$s updated successfully</string>
+    <!-- Posts -->
+    <string name="posts">Posts</string>
+    <string name="usernameMask">\@%1$s</string>
 
     <!-- Validation -->
     <string name="someErrors">There are some errors</string>
