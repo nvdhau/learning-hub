@@ -24,7 +24,7 @@
     <string name="fullName">Full name</string>
 
     <!-- Posts -->
-    <string name="posts">Posts</string>
+    <string name="posts">Blogs</string>
     <string name="usernameMask">\@%1$s</string>
 
     <!-- Validation -->

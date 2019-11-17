@@ -73,7 +73,7 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
             emailInTheMenu.setVisibility(View.VISIBLE);
 
             navigationView.inflateMenu(R.menu.logged);
-            navigationView.setCheckedItem(R.id.profile);
+            navigationView.setCheckedItem(R.id.posts);
         }
 
         if (navigationView.getCheckedItem() != null)
