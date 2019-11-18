@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ public class PostListFragment extends BaseFragment {
     private int mColumnCount = 1;
     private PostListViewModel postListViewModel;
     private PostRecyclerViewAdapter postRecyclerViewAdapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     // private OnListFragmentInteractionListener mListener;
 
@@ -54,18 +56,19 @@ public class PostListFragment extends BaseFragment {
 
         setTitle(getString(R.string.posts));
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            postRecyclerViewAdapter = new PostRecyclerViewAdapter(requireContext(), null);
-            recyclerView.setAdapter(postRecyclerViewAdapter);
+        // Set Recycler View
+        Context context = view.getContext();
+        RecyclerView recyclerView = view.findViewById(R.id.list);
+        if (mColumnCount <= 1) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
+        postRecyclerViewAdapter = new PostRecyclerViewAdapter(requireContext(), null);
+        recyclerView.setAdapter(postRecyclerViewAdapter);
+
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh);
+
         return view;
     }
 
@@ -87,6 +90,11 @@ public class PostListFragment extends BaseFragment {
             } else {
                 hideProgressBar();
             }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            swipeRefreshLayout.setRefreshing(false);
+            postListViewModel.loadPostList();
         });
     }
 

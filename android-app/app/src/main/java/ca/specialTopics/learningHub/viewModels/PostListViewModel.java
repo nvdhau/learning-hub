@@ -27,7 +27,7 @@ public class PostListViewModel extends BaseViewModel {
         return postListResource;
     }
 
-    private void loadPostList() {
+    public void loadPostList() {
         isLoading.setValue(true);
         getAuthorizationToken(task -> {
             String token = task.getResult() != null ? task.getResult().getToken() : "";
