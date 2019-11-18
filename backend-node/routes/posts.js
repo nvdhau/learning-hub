@@ -15,10 +15,17 @@ router.get('/', isAuthenticated, (req, res, next) => {
     {value: is_blog}, 
     {value: '%' + tags + '%'}
   ];
-  Post.findByFilterAndTag(conditions).then(post => {
+
+  let postClosure = post => {
     const posts = post || [];
     res.status(200).json(posts);
-  });
+  };
+
+  if (filter === '' && tags === '') {
+    Post.get().then(postClosure);
+  } else {
+    Post.findByFilterAndTag(conditions).then(postClosure);
+  }
 });
 
 router.get('/:id', (req, res, next) => {

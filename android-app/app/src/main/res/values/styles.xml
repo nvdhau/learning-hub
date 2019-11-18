@@ -6,9 +6,6 @@
         <item name="colorPrimaryDark">@color/colorAccentDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
-        <!-- Remove default action bar -->
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
         <!-- Prevent text from being capitalized -->
         <item name="textAllCaps">false</item>
 
