@@ -3,6 +3,7 @@ package ca.specialTopics.learningHub.networking;
 import java.util.List;
 
 import ca.specialTopics.learningHub.models.Post;
+import ca.specialTopics.learningHub.models.Tag;
 import ca.specialTopics.learningHub.models.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -25,5 +26,8 @@ public interface WebService {
 
     @GET("posts")
     Call<List<Post>> getPostList(@Header("Authorization") String authorization);
+
+    @GET("tags")
+    Call<List<Tag>> getTagList(@Header("Authorization") String authorization);
 
 }

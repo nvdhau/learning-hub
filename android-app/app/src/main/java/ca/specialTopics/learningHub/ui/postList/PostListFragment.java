@@ -17,15 +17,19 @@ import android.view.ViewGroup;
 
 import ca.specialTopics.learningHub.R;
 import ca.specialTopics.learningHub.models.Post;
+import ca.specialTopics.learningHub.models.Tag;
 import ca.specialTopics.learningHub.ui.BaseFragment;
 import ca.specialTopics.learningHub.viewModels.PostListViewModel;
 
 public class PostListFragment extends BaseFragment {
     private static final String TAG = PostListFragment.class.getSimpleName();
     private static final String ARG_COLUMN_COUNT = "column-count";
+    private static final String ARG_TAG = "tag";
 
     private int mColumnCount = 1;
     private PostListViewModel postListViewModel;
+    private Tag tag;
+
     private PostRecyclerViewAdapter postRecyclerViewAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -40,12 +44,21 @@ public class PostListFragment extends BaseFragment {
         return fragment;
     }
 
+    public static PostListFragment newInstance(Tag tag) {
+        PostListFragment fragment = new PostListFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_TAG, tag);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            tag = (Tag) getArguments().getSerializable(ARG_TAG);
         }
     }
 
@@ -77,8 +90,8 @@ public class PostListFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         postListViewModel = ViewModelProviders.of(requireActivity()).get(PostListViewModel.class);
 
-        postListViewModel.getPostListResource().observe(getViewLifecycleOwner(), postListResource -> {
-            Log.d(TAG, "userNetworkResource code:" + postListResource.code);
+        postListViewModel.getPostListResource(tag).observe(getViewLifecycleOwner(), postListResource -> {
+            Log.d(TAG, "postListNetworkResource code:" + postListResource.code);
             if (postListResource.data != null) {
                 postRecyclerViewAdapter.setData(postListResource.data);
             }
@@ -94,7 +107,7 @@ public class PostListFragment extends BaseFragment {
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
             swipeRefreshLayout.setRefreshing(false);
-            postListViewModel.loadPostList();
+            postListViewModel.loadPostList(tag);
         });
     }
 

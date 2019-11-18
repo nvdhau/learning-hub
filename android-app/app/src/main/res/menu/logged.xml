@@ -13,15 +13,15 @@
             android:id="@+id/logout"
             android:icon="@drawable/baseline_power_settings_new_white_24"
             android:title="@string/logout" />
-        <!-- <item
-            android:id="@+id/subheader"
-            android:title="Subheader">
+        <item
+            android:id="@+id/tags"
+            android:title="@string/trendingTags">
             <menu>
-                <group android:checkableBehavior="single">
-                    <item android:id="@+id/test"
-                        android:title="test"/>
+                <group
+                    android:id="@+id/trendingTags"
+                    android:checkableBehavior="single">
                 </group>
             </menu>
-        </item> -->
+        </item>
     </group>
 </menu>

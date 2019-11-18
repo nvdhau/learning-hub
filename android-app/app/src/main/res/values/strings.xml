@@ -27,6 +27,9 @@
     <string name="posts">Blogs</string>
     <string name="usernameMask">\@%1$s</string>
 
+    <!-- Tags -->
+    <string name="trendingTags">Trending tags</string>
+
     <!-- Validation -->
     <string name="someErrors">There are some errors</string>
     <string name="required">This field is required</string>

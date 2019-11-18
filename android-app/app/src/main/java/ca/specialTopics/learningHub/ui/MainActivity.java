@@ -2,7 +2,10 @@ package ca.specialTopics.learningHub.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,19 +14,27 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.List;
+
 import ca.specialTopics.learningHub.R;
+import ca.specialTopics.learningHub.models.Tag;
 import ca.specialTopics.learningHub.ui.postList.PostListFragment;
+import ca.specialTopics.learningHub.viewModels.TagListViewModel;
 
 public class MainActivity extends BaseActivity implements LoginFragment.OnFragmentInteractionListener {
-    private FirebaseAuth mAuth;
-
+    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int TAG_MENU_ID = 10000;
     //TAB INDEX
     //public static final String ARG_TAB_ITEM_ID = "tabItemId";
+
+    private FirebaseAuth mAuth;
+    private List<Tag> tagList;
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
@@ -54,6 +65,23 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
             return true;
         });
 
+        TagListViewModel tagListViewModel = ViewModelProviders.of(this).get(TagListViewModel.class);
+        if (mAuth.getCurrentUser() != null) {
+            tagListViewModel.getTagListResource().observe(this, tagListResource -> {
+                Log.d(TAG, "tagListNetworkResource code:" + tagListResource.code);
+                if (tagListResource.data != null) {
+                    SubMenu subMenu = navigationView.getMenu().findItem(R.id.tags).getSubMenu();
+                    tagList = tagListResource.data;
+                    for (int i = 0; i < tagList.size(); i++) {
+                        Tag tag = tagList.get(i);
+                        int tagMenuId = TAG_MENU_ID + 1;
+                        MenuItem menuItem = subMenu.add(R.id.trendingTags, tagMenuId, Menu.NONE, tag.getName());
+                        menuItem.setCheckable(true);
+                    }
+                }
+            });
+        }
+
         setMenu();
     }
 
@@ -82,21 +110,25 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
 
     private void itemSelectedOnMenu(MenuItem menuItem) {
         Fragment fragmentToShow = null;
-        switch (menuItem.getItemId()) {
-            case R.id.posts:
-                fragmentToShow = new PostListFragment();
-                break;
-            case R.id.login:
-                fragmentToShow = new LoginFragment();
-                break;
-            case R.id.profile:
-                fragmentToShow = new UserFragment();
-                break;
-            case R.id.logout:
-                mAuth.signOut();
-                startActivity(new Intent(this, MainActivity.class));
-                finish();
+
+        int itemId = menuItem.getItemId();
+        if (itemId == R.id.posts) {
+            fragmentToShow = new PostListFragment();
+        } else if (itemId == R.id.login) {
+            fragmentToShow = new LoginFragment();
+        } else if (itemId == R.id.profile) {
+            fragmentToShow = new UserFragment();
+        } else if (itemId == R.id.logout) {
+            mAuth.signOut();
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        } else if (itemId >= TAG_MENU_ID) {
+            int positionInTagList = itemId - TAG_MENU_ID;
+            Tag tag = tagList.get(positionInTagList);
+
+            fragmentToShow = PostListFragment.newInstance(tag);
         }
+
         if (fragmentToShow != null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragmentDisplay, fragmentToShow)
