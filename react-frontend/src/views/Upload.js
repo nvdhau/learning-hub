@@ -2,7 +2,6 @@ import React from 'react';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import Drawer from "../components/Drawer";
 import styles from '../assets/jss/views/upload';
 import { getCategories } from '../actions/categories';
 import Container from '@material-ui/core/Container';
@@ -16,7 +15,7 @@ import BlogPost from '../components/Post/BlogPost';
 import VideoPost from '../components/Post/VideoPost';
 import { ToastContainer } from 'react-toastify';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { createPost } from '../actions/post';
+import { createPost, createVideoPost } from '../actions/post';
 import { getUserIdToken } from '../actions/authenticate';
 import { toast } from 'react-toastify';
 
@@ -30,7 +29,8 @@ class Upload extends Component {
       categories: [],
       loading: false,
       mdeValue: '',
-      resetForm: false
+      resetForm: false,
+      formType: ''
     }
   }
 
@@ -42,13 +42,18 @@ class Upload extends Component {
           categories: data
         })
       });
+
+    this.setState({
+      formType: this.props.match.params.type
+    })  
   }
 
   handleEditorChange = value => {
     this.setState({ mdeValue: value });
   };
 
-  handleBlogSubmit(e) {
+  handleBlogSubmit = (e) => {
+    console.log("Blog submit called");
     let formData = new FormData();
     formData.append('categoryId', e.target.category_id.value);
     formData.append('title', e.target.title.value);
@@ -75,13 +80,34 @@ class Upload extends Component {
     e.preventDefault();
   }
 
+  handleVideoSubmit = (e) => {
+    const formData = {
+      'categoryId': e.target.category_id.value,
+      'title': e.target.title.value,
+      'description': '',
+      'tags': e.target.tags.value,
+      'isBlog': 0,
+      'videourl': e.target.videourl.value
+    };
+    createVideoPost(getUserIdToken)(formData)
+      .then(res => {
+        console.log('res', res);
+        this.setState({
+          resetForm: true
+        })
+        toast.success('Post is created successfully');
+      }).catch(err => {
+        console.log('err', err);
+        toast.error('Unable to create your post');
+      })
+
+    e.preventDefault();
+  }
+
   render() {
     const { classes } = this.props;
     return (
-        
         <React.Fragment>
-              {/* Menu Drawer */}
-              <Drawer></Drawer>
               {/* MAIN CONTENT */}
               { this.state.loading && <LinearProgress color="secondary" /> }
               <Container component="main" maxWidth="lg">
@@ -96,7 +122,7 @@ class Upload extends Component {
                     </Typography>
                     <Grid container spacing={2}>
                       <Grid item xs={12} md={12}>
-                        { this.formType ?
+                        { this.state.formType == 'blog' ?
                             <BlogPost 
                               categories={this.state.categories}
                               submitHandler={this.handleBlogSubmit}
@@ -104,10 +130,13 @@ class Upload extends Component {
                               editorText={this.state.mdeValue}
                               resetForm={this.state.resetForm}
                               />
-                            : <VideoPost />
+                            : <VideoPost 
+                                categories={this.state.categories}
+                                submitHandler={this.handleVideoSubmit}
+                                resetForm={this.state.resetForm}
+                              />
                         }
                       </Grid>
-                      
                     </Grid>
                 </div>
             </Container> 
@@ -115,17 +144,5 @@ class Upload extends Component {
     )
   }
 }
-
-const mapStateToProps = state => {
-  return {
-      loading: state.auth.auth_processing,
-  }
-}
-
-// const mapDispatchtoProps = dispatch => {
-//   return {
-//       getCategories: () => dispatch(getCategories())
-//   }
-// }
 
 export default connect(null)((withStyles(styles)(Upload)));

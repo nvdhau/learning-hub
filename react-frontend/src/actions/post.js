@@ -1,4 +1,4 @@
-import { API_CREATE_POST, API_GET_POSTS } from '../config/endpoints-conf';
+import { API_CREATE_POST, API_GET_POSTS, API_CREATE_VIDEOPOST, API_UPLOAD_POST_VIDEO } from '../config/endpoints-conf';
 import axios from 'axios';
 
 // firebase sign up account
@@ -43,5 +43,23 @@ export const getAllPosts = (getUserIdToken) => (queryString) => {
             })
         }).catch(err => {
             console.log(err);
+        })
+}
+
+export const createVideoPost = (getUserIdToken) => (json) =>  {
+    return getUserIdToken()
+        .then(data => {
+            const idToken = data.idToken;
+            return axios.post(API_CREATE_VIDEOPOST, json , {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'Authorization': idToken
+                        }
+                    }).then(res => {
+                        console.log("res", res);
+                    }).catch(err => {
+                        console.log("ERR: " + err);
+                    })
         })
 }

@@ -36,11 +36,11 @@ class App extends Component {
               <Route path="/login" exact component={Login}/>
               <Route path="/signup" exact component={SignUp}/>
               <Route path="/logout" exact render={(props) => doSignOut(props)} />
-              <PrivateRoute path='/upload/:type' exact component={Upload} />
+              
               <Bootstrap>
                 <Switch>
+                  <PrivateRoute path='/upload/:type' exact component={Upload} />
                   <PrivateRoute path='/:filter?/:tag?' component={Home} />
-                  {/* <PrivateRoute path='/:filter?' component={Home} /> */}
                 </Switch>
               </Bootstrap>
             </Switch>

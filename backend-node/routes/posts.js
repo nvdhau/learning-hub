@@ -138,4 +138,45 @@ router.post('/create', uploadImageService.single('image'), isAuthenticated, [
     });
 });
 
+router.post('/video-upload', uploadImageService.single('video'), (req, res, next) => {
+  // return url file name
+  const imageURLs = process.env.UPLOAD_VIDEO_FOLDER + req.file.filename;
+  res.status(200).json({
+    url: imageURLs,
+    file: req.file
+  });
+});
+
+router.post('/create-video', isAuthenticated, [
+  check('categoryId').isLength({min: 1}),
+  check('title').isLength({min: 1}),
+  check('tags').isLength({min: 1}),
+  check('isBlog').isLength({min: 1}),
+  check('videourl').isLength({min: 1}),
+], (req, res, next) => {
+
+  const post = new Post();
+  let postWithId;
+  const { categoryId, title, description, tags, isBlog, videourl } = req.body;
+  Object.assign(post, {
+    userId: req.user.id,
+    categoryId: categoryId,
+    title: title,
+    description: description,
+    tags: tags,
+    isBlog: isBlog,
+    imageUrl: videourl
+  });
+  Post.create(post)
+    .then(postWithIdTemp => {
+      postWithId = postWithIdTemp;
+      return Tag.checkIfAdd(tags);
+    }).then(_ => {
+      res.status(201).json(postWithId);
+    }).catch(error => {
+      console.log(error);
+      res.status(500).json({error: error});
+    });
+});
+
 module.exports = router;

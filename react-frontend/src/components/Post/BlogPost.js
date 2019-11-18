@@ -25,7 +25,6 @@ class BlogPost extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log("didupdate", this.props.resetForm)
     if (prevProps.resetForm !== this.props.resetForm) {
       this.setState({
         showInfoForm: false
