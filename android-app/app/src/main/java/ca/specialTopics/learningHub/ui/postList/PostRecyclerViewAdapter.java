@@ -56,6 +56,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             .into(holder.imgPost);
 
         holder.txtTitle.setText(post.getTitle());
+        holder.txtTags.setText(post.getTags());
         holder.txtUsername.setText(context.getString(R.string.usernameMask, post.getUser().getUsername()));
         holder.txtCategory.setText(post.getCategory().getName());
         holder.txtDate.setText(post.getCreatedAt());
@@ -76,6 +77,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         final View mView;
         final ImageView imgPost;
         final TextView txtTitle;
+        final TextView txtTags;
         final TextView txtUsername;
         final TextView txtCategory;
         final TextView txtDate;
@@ -87,6 +89,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             mView = view;
             imgPost = view.findViewById(R.id.imgPost);
             txtTitle = view.findViewById(R.id.txtTitle);
+            txtTags = view.findViewById(R.id.txtTags);
             txtUsername = view.findViewById(R.id.txtUsername);
             txtCategory = view.findViewById(R.id.txtCategory);
             txtDate = view.findViewById(R.id.txtDate);
