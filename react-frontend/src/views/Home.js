@@ -19,6 +19,8 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import YouTubeIcon from '@material-ui/icons/YouTube';
 import PostAddIcon from '@material-ui/icons/PostAdd';
+import ReactPlayer from 'react-player'
+import Link from '@material-ui/core/Link';
 
 class Home extends Component {
   constructor(props) {
@@ -111,11 +113,25 @@ class Home extends Component {
                                 {
                                   item ? (
                                     <React.Fragment>
-                                      <CardMedia
-                                        className={classes.media}
-                                        image={API_ROOT_URL + "/" + item.imageUrl}
-                                        title={item.title}
-                                      />
+                                      {
+                                        item.isBlog ? 
+                                        (
+                                          <CardMedia
+                                            className={classes.media}
+                                            image={API_ROOT_URL + "/" + item.imageUrl}
+                                            title={item.title}
+                                          />
+                                        ) : (
+                                          <Link href={'/posts/' + item.id}>
+                                          <ReactPlayer key={item.id} 
+                                            width={'100%'} height={'50%'} 
+                                            url={API_ROOT_URL + "/" + item.imageUrl + '#t=0.5'}
+                                            playing={false}
+                                          />
+                                          </Link>
+                                        )
+                                      }
+                                      
                                       <CardContent>
                                         <Typography gutterBottom variant="subtitle2" component="h2">
                                           {item.title}
