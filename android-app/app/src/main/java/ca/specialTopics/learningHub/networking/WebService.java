@@ -12,6 +12,7 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface WebService {
 
@@ -25,7 +26,7 @@ public interface WebService {
     Call<User> updateUser(@Header("Authorization") String authorization, @Body User user);
 
     @GET("posts")
-    Call<List<Post>> getPostList(@Header("Authorization") String authorization);
+    Call<List<Post>> getPostList(@Header("Authorization") String authorization, @Query("is_blog") String filter, @Query("tags") String tag);
 
     @GET("tags")
     Call<List<Tag>> getTagList(@Header("Authorization") String authorization);

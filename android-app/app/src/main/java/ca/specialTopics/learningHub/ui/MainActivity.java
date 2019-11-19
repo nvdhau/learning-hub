@@ -74,7 +74,7 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
                     tagList = tagListResource.data;
                     for (int i = 0; i < tagList.size(); i++) {
                         Tag tag = tagList.get(i);
-                        int tagMenuId = TAG_MENU_ID + 1;
+                        int tagMenuId = TAG_MENU_ID + i;
                         MenuItem menuItem = subMenu.add(R.id.trendingTags, tagMenuId, Menu.NONE, tag.getName());
                         menuItem.setCheckable(true);
                     }

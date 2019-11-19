@@ -26,6 +26,10 @@ public class PostListViewModel extends BaseViewModel {
         if (postListResource == null) {
             postListResource = new MutableLiveData<>();
             loadPostList(tag);
+
+        } else if (this.tag != tag) {
+            this.tag = tag;
+            loadPostList(tag);
         }
         return postListResource;
     }
@@ -34,7 +38,8 @@ public class PostListViewModel extends BaseViewModel {
         isLoading.setValue(true);
         getAuthorizationToken(task -> {
             String token = task.getResult() != null ? task.getResult().getToken() : "";
-            webService.getPostList(token).enqueue(new Callback<List<Post>>() {
+            String tagName = tag != null ? tag.getName() : "";
+            webService.getPostList(token, "blog", tagName).enqueue(new Callback<List<Post>>() {
                 @Override
                 public void onResponse(@NonNull Call<List<Post>> call, @NonNull Response<List<Post>> response) {
                     if (response.isSuccessful()) {
