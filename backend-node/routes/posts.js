@@ -8,6 +8,7 @@ const { isAuthenticated } = require('../middlewares/auth');
 const uploadImageService = require('../utils/uploadImageService');
 
 router.get('/', isAuthenticated, (req, res, next) => {
+// router.get('/', (req, res, next) => {
   const filter = req.query.is_blog || '';
   const is_blog = filter == 'blog' ? 1 : 0;
   const tags = req.query.tags || '';
@@ -28,11 +29,40 @@ router.get('/', isAuthenticated, (req, res, next) => {
   }
 });
 
+// router.get('/:id', (req, res, next) => {
+//   let id = req.params.id;
+//   Post.findBy('id', id)
+//     .then(post => {
+//       res.status(200).json(post);
+//     }).catch(error => {
+//       console.log(error);
+//       res.status(404).json({});
+//     });
+// });
+
+//Post with related posts by tags
+//update posts tags
+//update posts set tags = '#bctax #nicepicture' where id=2;
+//update posts set tags = '#supplychain #computer #nicepicture' where id=6;
 router.get('/:id', (req, res, next) => {
   let id = req.params.id;
+  let postDetails;// final returned post
+
+  let postClosure = post => {
+    const posts = post || [];
+
+    postDetails.relatedPosts = posts;
+
+    res.status(200).json(postDetails);
+  };
+
   Post.findBy('id', id)
     .then(post => {
-      res.status(200).json(post);
+
+      postDetails = post;
+      //get all post details (related posts)
+      Post.findRelatedPosts(post).then(postClosure);
+
     }).catch(error => {
       console.log(error);
       res.status(404).json({});
