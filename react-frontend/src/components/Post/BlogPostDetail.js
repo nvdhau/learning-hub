@@ -35,6 +35,7 @@ class BlogPostDetail extends Component {
                 this.props.post && (
                     <React.Fragment>
                     <GridItem xs={12} sm={12} md={9} lg={9}>
+                      <Paper>
                         <GridContainer spacing={3} direction="row">
                             <GridItem xs={12} sm={12} md={12} lg={12}>
                               <Card className={classes.cardDetail}>
@@ -46,47 +47,50 @@ class BlogPostDetail extends Component {
                               </Card>
                             </GridItem>
                             <GridItem xs={12} sm={12} md={12} lg={12}>
-                                <Paper className={classes.postDetail}>
-                                    <Typography variant="h6" component="h2">
-                                        {this.props.post.title}
-                                    </Typography>
-                                    <Typography variant="subtitle1" gutterBottom>
-                                        {this.props.post.category.name}
-                                    </Typography>
-                                    <ChipsArray tags={this.props.post.tags}/>
-                                    <Divider style={{'margin': '5px auto'}}/>
-                                    <GridContainer spacing={1} direction="row">
-                                        <Grid xs={12} sm={12} md={12} lg={12}>
-                                          <ReactMarkdown source={this.props.post.description} />
-                                        </Grid>
-                                    </GridContainer>
-                                    <Divider style={{'margin': '5px auto'}}/>
-                                    <Typography variant="subtitle1" gutterBottom>
-                                    Comments
-                                    </Typography>
-                                    <Comment author={this.props.appUser.fullName}/>
-                                </Paper>
+                                <Typography variant="h6" component="h2">
+                                    {this.props.post.title}
+                                </Typography>
+                                <Typography variant="subtitle1" gutterBottom>
+                                    {this.props.post.category.name}
+                                </Typography>
+                                <ChipsArray tags={this.props.post.tags}/>
+                                <Divider style={{'margin': '5px auto'}}/>
+                                <GridContainer spacing={1} direction="row">
+                                    <Grid xs={12} sm={12} md={12} lg={12}>
+                                      <ReactMarkdown source={this.props.post.description} />
+                                    </Grid>
+                                </GridContainer>
+                                <Divider style={{'margin': '5px auto'}}/>
+                                <Typography variant="subtitle1" gutterBottom>
+                                Comments
+                                </Typography>
+                                <Comment author={this.props.appUser.fullName}/>
                             </GridItem>
                         </GridContainer>
+                      </Paper>  
                     </GridItem>
                     <GridItem xs={12} sm={12} md={3} lg={3}>
                         {
                             this.props.post && this.props.post.relatedPosts.length > 0 ? (
                                 <React.Fragment>
+                                    <Typography variant="h6" gutterBottom>
+                                        Related Blogs
+                                    </Typography>
                                     {
                                         this.props.post.relatedPosts.map((p, index) => 
                                         <React.Fragment key={'container' + index}>
-                                            <Grid container>
-                                                <Grid item xs={4} sm={4} md={12} lg={12}>
-                                                <Link key={'linkpost' + index} href={'/post/video/' + p.id}>
-                                                        <ReactPlayer key={'player' + index} 
-                                                            width={'100%'} height={'100%'} 
-                                                            url={API_ROOT_URL + "/" + p.imageUrl + '#t=0.5'}
-                                                            playing={false}
-                                                        />
-                                                    </Link>
-                                                </Grid>
-                                                <Grid item xs={8} sm={8} md={12} lg={12}>
+                                          <Paper>
+                                            <GridContainer spacing={2} >
+                                                <GridItem item xs={4} sm={4} md={12} lg={12}>
+                                                  <Link key={'linkpost' + index} href={'/post/video/' + p.id}>
+                                                    <CardMedia
+                                                      className={classes.media}
+                                                      image={API_ROOT_URL + "/" + p.imageUrl}
+                                                      title={p.title}
+                                                    />
+                                                  </Link>
+                                                </GridItem>
+                                                <GridItem item xs={8} sm={8} md={12} lg={12}>
                                                     <Typography variant="subtitle2" component="h6">
                                                         {p.title}
                                                     </Typography>
@@ -96,9 +100,10 @@ class BlogPostDetail extends Component {
                                                     <Typography variant="caption" display="block" gutterBottom style={{'marginTop': '0px'}}>
                                                     @{p.user.username}
                                                     </Typography>
-                                                </Grid>
-                                            </Grid>
+                                                </GridItem>
+                                            </GridContainer>
                                             <Divider style={{'margin': '5px auto'}}/>
+                                            </Paper>
                                         </React.Fragment>    
                                         )
                                     }
