@@ -1,5 +1,6 @@
 import { AUTH_SIGNUP_USER, 
-    API_CREATE_USER, AUTH_LOGIN_USER, AUTH_PROCESSING 
+    API_CREATE_USER, AUTH_LOGIN_USER, AUTH_PROCESSING,
+    API_GET_USER
 } from '../config/endpoints-conf';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -80,6 +81,8 @@ export const getCurrentUserAuth = () => {
     return new Promise ((resolve, reject) => {
         fireBaseApp.auth().onAuthStateChanged(user => {
             if (user) {
+                console.log('user', user);
+
                 resolve({
                     displayName: user.displayName,
                     email: user.email
@@ -151,6 +154,24 @@ export const accountSignUp = (json) =>  {
             toast.error(message);
         })
     }
+}
+
+export const getUserDetails = (getUserIdToken) => (id) =>  {
+    
+    return getUserIdToken()
+        .then(data => {
+            const idToken = data.idToken;
+            return axios.get(API_GET_USER + id, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': idToken
+                }
+            }).then(res => {
+                return res.data
+            }).catch(err => {
+                console.log("ERR: " + err);
+            })
+        })
 }
 
 export default fireBaseApp;
