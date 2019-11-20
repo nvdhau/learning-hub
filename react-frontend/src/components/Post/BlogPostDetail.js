@@ -82,7 +82,7 @@ class BlogPostDetail extends Component {
                                           <Paper>
                                             <GridContainer spacing={2} >
                                                 <GridItem item xs={4} sm={4} md={12} lg={12}>
-                                                  <Link key={'linkpost' + index} href={'/post/video/' + p.id}>
+                                                  <Link key={'linkpost' + index} href={'/post/blog/' + p.id}>
                                                     <CardMedia
                                                       className={classes.media}
                                                       image={API_ROOT_URL + "/" + p.imageUrl}
