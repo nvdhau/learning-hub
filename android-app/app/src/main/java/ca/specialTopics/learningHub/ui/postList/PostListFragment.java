@@ -28,7 +28,7 @@ public class PostListFragment extends BaseFragment {
 
     private int mColumnCount = 1;
     private PostListViewModel postListViewModel;
-    private Tag tag;
+    private @Nullable Tag tag;
 
     private PostRecyclerViewAdapter postRecyclerViewAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
