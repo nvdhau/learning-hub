@@ -37,6 +37,7 @@ export const getAllPosts = (getUserIdToken) => (queryString) => {
                     'Authorization': idToken
                 }
             }).then(res => {
+                console.log("data", res.data);
                 return res.data
             }).catch(err => {
                 console.log("ERR: " + err);

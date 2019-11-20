@@ -15,6 +15,7 @@ class Bootstrap extends Component {
 
   componentDidMount() {
     const userObject = JSON.parse(localStorage.getItem("app_user"));
+    console.log(userObject);
     getUserDetails(getUserIdToken)(userObject.uid)
       .then(data => {
         this.setState({
@@ -27,6 +28,7 @@ class Bootstrap extends Component {
   }
 
   render() {
+    console.log('render Bootstrap');
     const children = React.Children.map(this.props.children, child => {
       return React.cloneElement(child, {
         appUser: this.state.appUser ? this.state.appUser : null,

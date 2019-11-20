@@ -168,7 +168,7 @@ class Home extends Component {
                         }
 
                         {
-                          this.state.posts.length <= 0 && (
+                          this.state.posts && this.state.posts.length <= 0 && (
                             <React.Fragment>
                               <GridItem xs={12} sm={12} md={12} lg={12}>
                                 <Typography gutterBottom variant="subtitle2" component="h2" style={{'textAlign': 'center'}}>

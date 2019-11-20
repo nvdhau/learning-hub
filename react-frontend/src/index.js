@@ -11,6 +11,7 @@ import SignUp from './views/SignUp';
 import Post from './views/Post';
 import Bootstrap from './Bootstrap';
 import { doSignOut } from './actions/authenticate';
+import 'react-toastify/dist/ReactToastify.css';
 require('dotenv').config();
 
 // use this route for protected pages
