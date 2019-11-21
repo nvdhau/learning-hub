@@ -80,14 +80,20 @@ router.put('/comment/:comment_id/reply', (req, res, next) => {
 });
 
 router.get('/:id/comments', (req, res, next) => {
-
-  // res.status(200).json("List of comments of the post");
-
   Comment.getCommentsOfPost(req.params.id)
     .then(comments => {
-
-      console.log(comments);
-      res.status(201).json(comments);
+      const newComments = comments.map((value, index) => {
+        let comment = {};
+        comment = JSON.parse(value.comment);
+        return {
+          id: value.id,
+          post_id: value.post_id,
+          comment: comment,
+          replies: value.replies
+        }
+      })
+      console.log(newComments);
+      res.status(201).json(newComments);
     }).catch(error => {
 
       console.log(error);

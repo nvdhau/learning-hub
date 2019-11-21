@@ -41,7 +41,8 @@ class Comment extends BaseModel {
     return await this.connection.execute(
         `SELECT * 
         FROM ${this.table}  
-        WHERE post_id=${postId};`
+        WHERE post_id=${postId} 
+        ORDER BY id DESC;`
       )
       .then(([rows]) => 
         rows.map(row => this.fromDB(row)))
