@@ -61,37 +61,38 @@ router.post('/:id/comment', (req, res, next) => {
 
 //update comment: add new reply for a comment
 router.put('/comment/:comment_id/reply', (req, res, next) => {
+  const { content, authorId, authorFullName, 
+                  receiverId, receiveFullName} = req.body;
 
+  var replyDetails = {
+    "id": req.params.comment_id,
+    "content": content,
+    "authorId": authorId,
+    "authorFullName": authorFullName,
+    "receiverId": receiverId,
+    "receiveFullName": receiveFullName,
+  };
 
+  Comment.addReplyToComment(replyDetails);
+
+  res.status(201).json(replyDetails);
 
 });
 
 router.get('/:id/comments', (req, res, next) => {
 
-  res.status(200).json("List of comments of the post");
-  
-  // let id = req.params.id;
-  // let postDetails;// final returned post
+  // res.status(200).json("List of comments of the post");
 
-  // let postClosure = post => {
-  //   const posts = post || [];
+  Comment.getCommentsOfPost(req.params.id)
+    .then(comments => {
 
-  //   postDetails.relatedPosts = posts;
+      console.log(comments);
+      res.status(201).json(comments);
+    }).catch(error => {
 
-  //   res.status(200).json(postDetails);
-  // };
-
-  // Post.findBy('id', id)
-  //   .then(post => {
-
-  //     postDetails = post;
-  //     //get all post details (related posts)
-  //     Post.findRelatedPosts(post).then(postClosure);
-
-  //   }).catch(error => {
-  //     console.log(error);
-  //     res.status(404).json({});
-  //   });
+      console.log(error);
+      res.status(404).json({});
+    }) 
 });
 
 // router.get('/:id', (req, res, next) => {
