@@ -20,6 +20,8 @@ import com.squareup.picasso.Picasso;
 import ca.specialTopics.learningHub.R;
 import ca.specialTopics.learningHub.models.Post;
 import ca.specialTopics.learningHub.viewModels.PostViewModel;
+import io.noties.markwon.Markwon;
+import io.noties.markwon.image.picasso.PicassoImagesPlugin;
 
 public class PostFragment extends BaseFragment {
     private static final String TAG = PostFragment.class.getSimpleName();
@@ -31,6 +33,7 @@ public class PostFragment extends BaseFragment {
 
     private TextView txtTitle, txtUsername, txtDate, txtDescription, txtCategory, txtTags;
     private ImageView imgPost;
+    private Markwon markwon;
 
     public static PostFragment newInstance(int postId) {
         PostFragment postFragment = new PostFragment();
@@ -62,6 +65,10 @@ public class PostFragment extends BaseFragment {
         txtTags = view.findViewById(R.id.txtTags);
         imgPost = view.findViewById(R.id.imgPost);
 
+        markwon = Markwon.builder(requireContext())
+                .usePlugin(PicassoImagesPlugin.create(Picasso.get()))
+                .build();
+
         return view;
     }
 
@@ -78,9 +85,10 @@ public class PostFragment extends BaseFragment {
                 txtTitle.setText(post.getTitle());
                 txtUsername.setText(requireContext().getString(R.string.usernameMask, post.getUser().getUsername()));
                 txtDate.setText(post.getCreatedAt());
-                txtDescription.setText(post.getDescription());
                 txtCategory.setText(post.getCategory().getName());
                 txtTags.setText(post.getTags());
+
+                markwon.setMarkdown(txtDescription, post.getDescription());
 
                 Picasso.get()
                         .load(post.getImageUrl())
