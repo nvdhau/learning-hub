@@ -22,7 +22,7 @@ import { toast } from 'react-toastify';
 class Upload extends Component {
   constructor(props) {
     super(props);
-    this.formType = this.props.match.params.type == 'blog' ? true : false;
+    this.formType = this.props.match.params.type === 'blog' ? true : false;
     this.handleBlogSubmit = this.handleBlogSubmit.bind(this);
     this.handleEditorChange = this.handleEditorChange.bind(this);
     this.state = {
@@ -122,7 +122,7 @@ class Upload extends Component {
                     </Typography>
                     <Grid container spacing={2}>
                       <Grid item xs={12} md={12}>
-                        { this.state.formType == 'blog' ?
+                        { this.state.formType === 'blog' ?
                             <BlogPost 
                               categories={this.state.categories}
                               submitHandler={this.handleBlogSubmit}

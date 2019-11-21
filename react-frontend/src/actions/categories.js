@@ -1,4 +1,4 @@
-import { SET_CATEGORIES, API_GET_CATEGORIES } from '../config/endpoints-conf';
+import { API_GET_CATEGORIES } from '../config/endpoints-conf';
 import axios from 'axios';
 
 // firebase sign up account

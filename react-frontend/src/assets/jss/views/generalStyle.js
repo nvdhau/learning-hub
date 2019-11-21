@@ -20,6 +20,9 @@ const generalStyle = theme => ({
   card: {
     maxWidth: 345,
   },
+  cardDetail: {
+    maxWidth: '100%',
+  },
   media: {
     height: 0,
     paddingTop: '56.25%', // 16:9
@@ -37,6 +40,13 @@ const generalStyle = theme => ({
   avatar: {
     backgroundColor: "red",
   },
+  postDetail: {
+    padding: '5px 10px'
+  },
+  btnFollow: {
+    backgroundColor: 'red',
+    justifyContent: 'left',
+  }
 });
 
 export default generalStyle;
