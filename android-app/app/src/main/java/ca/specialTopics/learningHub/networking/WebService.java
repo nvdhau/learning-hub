@@ -28,6 +28,9 @@ public interface WebService {
     @GET("posts")
     Call<List<Post>> getPostList(@Header("Authorization") String authorization, @Query("is_blog") String filter, @Query("tags") String tag);
 
+    @GET("posts/{id}")
+    Call<Post> getPost(@Header("Authorization") String authorization, @Path("id") int id);
+
     @GET("tags")
     Call<List<Tag>> getTagList(@Header("Authorization") String authorization);
 
