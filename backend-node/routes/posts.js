@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const Post = require('../models/Post');
+const Comment = require('../models/Comment');
 const Tag = require('../models/Tag');
 const { check, validationResult } = require('express-validator');
 const { isAuthenticated } = require('../middlewares/auth');
@@ -27,6 +28,70 @@ router.get('/', isAuthenticated, (req, res, next) => {
   } else {
     Post.findByFilterAndTag(conditions).then(postClosure);
   }
+});
+
+//add new comment
+router.post('/:id/comment', (req, res, next) => {
+
+  const newComment = new Comment();
+  let commentWithId;
+  const { content, authorId, authorFullName} = req.body;
+  Object.assign(newComment, {
+      post_id: req.params.id,
+      comment: JSON.stringify(
+        {
+          createdAt: Math.round((new Date()).getTime() / 1000),
+			    content: content,
+			    authorId: authorId,
+          authorFullName: authorFullName
+        }
+      ),
+      replies: "[]"
+  });
+
+  Comment.create(newComment)
+    .then(commentWithId => {
+      res.status(201).json(commentWithId);
+    }).catch(error => {
+      console.log(error);
+      res.status(500).json({error: error});
+  });
+
+});
+
+//update comment: add new reply for a comment
+router.put('/comment/:comment_id/reply', (req, res, next) => {
+
+
+
+});
+
+router.get('/:id/comments', (req, res, next) => {
+
+  res.status(200).json("List of comments of the post");
+  
+  // let id = req.params.id;
+  // let postDetails;// final returned post
+
+  // let postClosure = post => {
+  //   const posts = post || [];
+
+  //   postDetails.relatedPosts = posts;
+
+  //   res.status(200).json(postDetails);
+  // };
+
+  // Post.findBy('id', id)
+  //   .then(post => {
+
+  //     postDetails = post;
+  //     //get all post details (related posts)
+  //     Post.findRelatedPosts(post).then(postClosure);
+
+  //   }).catch(error => {
+  //     console.log(error);
+  //     res.status(404).json({});
+  //   });
 });
 
 // router.get('/:id', (req, res, next) => {
