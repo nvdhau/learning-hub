@@ -8,31 +8,43 @@ import MyAvatar from "../../components/Avatar/Avatar";
 import TextField from '@material-ui/core/TextField';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 
 class Comment extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        commentText: ''
+        commentText: '',
+        displayCommentButtons: false
     }
     this.renderCommentBox = this.renderCommentBox.bind(this);
+    this.handleOnFocus = this.handleOnFocus.bind(this);
+    this.toggleCommentButtons = this.toggleCommentButtons.bind(this);
+    this.handleCommentSubmit = this.handleCommentSubmit.bind(this);
   }
 
   componentDidMount() {
-    // // get post details
-    // this.setState({
-    //   loading: true
-    // })
-    // getPostDetail(getUserIdToken)(this.props.match.params.postid)
-    //   .then(post => {
-    //     console.log('post', post);
-    //     this.setState({
-    //       post: post,
-    //       loading: false
-    //     })
-    //   }).catch(err => {
-    //     console.log(err);
-    //   })
+    
+  }
+
+  handleOnFocus() {
+    this.setState({
+      displayCommentButtons: true
+    })
+  }
+
+  toggleCommentButtons() {
+    this.setState({
+      displayCommentButtons: false
+    })
+  }
+
+  handleCommentSubmit(e) {
+    console.log(e.target.commentText.value);
+    this.setState({
+      displayCommentButtons: false
+    })
+    e.preventDefault();
   }
 
   renderCommentBox() {
@@ -43,16 +55,39 @@ class Comment extends Component {
                 <MyAvatar author={this.props.author}/>
             </Grid>
             <Grid item xs={12} sm={11} md={11} lg={11}>
-                <form className={classes.container} noValidate autoComplete="off">
+                <form className={classes.container} noValidate autoComplete="off" onSubmit={this.handleCommentSubmit}>
                     <TextField
                         id="standard-multiline-flexible"
                         label="Leave your comment here"
                         multiline
-                        value={this.state.commentText}
                         fullWidth
+                        name='commentText'
+                        onFocus={this.handleOnFocus}
                         // onChange={handleChange}
                         className={classes.textField}
                         />
+                    {
+                      this.state.displayCommentButtons && (
+                        <React.Fragment>
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            color="default"
+                            style={{'float': 'right', 'marginTop': '5px', 'marginLeft': '5px'}}
+                          >
+                            Submit
+                          </Button>
+                          <Button
+                            variant="text"
+                            color="default"
+                            style={{'float': 'right', 'marginTop': '5px'}}
+                            onClick={this.toggleCommentButtons}
+                          >
+                            Cancel
+                          </Button>
+                        </React.Fragment>
+                      )
+                    }  
                 </form>
             </Grid>
         </Grid>

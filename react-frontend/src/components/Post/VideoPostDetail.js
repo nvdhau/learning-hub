@@ -25,6 +25,7 @@ class VideoPostDetail extends Component {
   }
 
   render() {
+    console.log('render Video post detail');
     const { classes } = this.props;
     return (
         <GridContainer spacing={3} direction="row">

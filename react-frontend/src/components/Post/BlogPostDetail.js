@@ -28,6 +28,7 @@ class BlogPostDetail extends Component {
   }
 
   render() {
+    console.log('render Blog post detail');
     const { classes } = this.props;
     return (
         <GridContainer spacing={3} direction="row">
@@ -56,7 +57,7 @@ class BlogPostDetail extends Component {
                                 <ChipsArray tags={this.props.post.tags}/>
                                 <Divider style={{'margin': '5px auto'}}/>
                                 <GridContainer spacing={1} direction="row">
-                                    <Grid xs={12} sm={12} md={12} lg={12}>
+                                    <Grid item xs={12} sm={12} md={12} lg={12}>
                                       <ReactMarkdown source={this.props.post.description} />
                                     </Grid>
                                 </GridContainer>
