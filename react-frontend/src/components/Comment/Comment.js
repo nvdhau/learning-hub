@@ -9,6 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 import { getPostComments, createPostComment } from '../../actions/post';
 import { getUserIdToken } from '../../actions/authenticate';
 
@@ -25,6 +26,7 @@ class Comment extends Component {
     this.toggleCommentButtons = this.toggleCommentButtons.bind(this);
     this.handleCommentSubmit = this.handleCommentSubmit.bind(this);
     this.handleCommentTextChange = this.handleCommentTextChange.bind(this);
+    this.renderCommentList = this.renderCommentList.bind(this);
   }
 
   componentDidMount() {
@@ -32,6 +34,9 @@ class Comment extends Component {
     getPostComments(getUserIdToken)(this.props.post.id)
       .then(data => {
         console.log("comments", data);
+        this.setState({
+          comments: data
+        })
       }).catch(err => {
         console.log("err", err);
       })
@@ -63,6 +68,16 @@ class Comment extends Component {
           commentText: '',
           displayCommentButtons: false
         })
+      }).then(_ => {
+        getPostComments(getUserIdToken)(this.props.post.id)
+        .then(data => {
+          console.log("comments", data);
+          this.setState({
+            comments: data
+          })
+        }).catch(err => {
+          console.log("err", err);
+        })
       }).catch(err => {
         console.log("err", err);
       })
@@ -78,12 +93,66 @@ class Comment extends Component {
     })
   }
 
-  renderCommentBox() {
+  renderCommentList() {
+    return (
+        <React.Fragment>
+          {
+            this.state.comments.map(
+              (Comment) => 
+              <Grid key={'comment-' + Comment.id} container spacing={1} direction="row">
+                <Grid item xs={12} sm={1} md={1} lg={1}>
+                    <MyAvatar author={Comment.comment.authorFullName}/>
+                </Grid>
+                <Grid item xs={12} sm={11} md={11} lg={11}>
+                  <Typography gutterBottom variant="subtitle2" component="h2">
+                    @{Comment.comment.authorFullName.replace(/\s+/g, '').toLowerCase()}
+                  </Typography>
+                  <Typography variant="body2" gutterBottom>
+                    {Comment.comment.content}
+                  </Typography>
+                  <Grid container spacing={3} direction="row">
+                    {/* TODO: load reply box when user click on reply of a specific comment */}
+                    {/* {
+                      this.renderCommentBox(false)
+                    } */}
+                    <Grid item xs={12} sm={6} md={6} lg={6}>
+                      <Button
+                        variant="text"
+                        color="primary"
+                        size="small"
+                        style={{'margin': '5px -3px', 'fontSize': '11px', 'fontWeight': 'bold'}}
+                      >
+                        {/* display number of replies, if replies is empty hide this button */}
+                        View replies
+                      </Button>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={6} lg={6}>
+                      <Button
+                          variant="text"
+                          color="default"
+                          size="small"
+                          style={{'float': 'right', 'marginTop': '5px'}}
+                        >
+                          Reply
+                        </Button>
+                    </Grid>
+                  </Grid>
+                  
+                  {/* TODO: should have delete comment if author is the same with author's comment*/}
+                </Grid>
+              </Grid> 
+            )
+          }
+        </React.Fragment>
+    )
+  }
+
+  renderCommentBox(isComment = true) {
     const { classes } = this.props;
     return (
-        <Grid container spacing={1} direction="row">
+        <Grid container spacing={1} direction="row" style={{'margin': '10px auto'}}>
             <Grid item xs={12} sm={1} md={1} lg={1}>
-                <MyAvatar author={this.props.author}/>
+                <MyAvatar author={this.props.author} sizeAvatar={isComment ? "avatar" : "smallAvatar"}/>
             </Grid>
             <Grid item xs={12} sm={11} md={11} lg={11}>
                 <form className={classes.container} noValidate autoComplete="off" onSubmit={this.handleCommentSubmit}>
@@ -132,6 +201,9 @@ class Comment extends Component {
         <React.Fragment>
           <GridItem xs={12} sm={12} md={12}>
             {this.renderCommentBox()}
+          </GridItem>
+          <GridItem xs={12} sm={12} md={12}>
+            {this.renderCommentList()}
           </GridItem>
         </React.Fragment>
     )

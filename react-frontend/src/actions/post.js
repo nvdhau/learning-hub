@@ -107,7 +107,6 @@ export const createPostComment = (getUserIdToken) => (id, json) =>  {
 
 export const getPostComments = (getUserIdToken) => (id) =>  {
     const API_GET_POSTCOMMENTS = API_GET_POSTS + id + '/comments';
-    console.log(API_GET_POSTCOMMENTS);
     return getUserIdToken()
         .then(data => {
             const idToken = data.idToken;

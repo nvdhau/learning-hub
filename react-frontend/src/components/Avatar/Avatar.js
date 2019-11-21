@@ -7,14 +7,13 @@ import Grid from '@material-ui/core/Grid';
 const useStyles = makeStyles({
   avatar: {
     margin: 10,
-  },
-  orangeAvatar: {
-    margin: 10,
     color: '#fff',
     backgroundColor: deepOrange[500],
   },
-  purpleAvatar: {
+  smallAvatar: {
     margin: 10,
+    width: 35,
+    height: 35,
     color: '#fff',
     backgroundColor: deepPurple[500],
   },
@@ -25,9 +24,19 @@ export default function LetterAvatars(props) {
   const avatarShortName = props.author.split(" ").reduce((acc, value) => {
     return acc + value.charAt(0);
   }, "");
+  let avatarClass = props.sizeAvatar || 'avatar';
+  
   return (
     <Grid container justify="flex-start" alignItems="center">
-        <Avatar className={classes.orangeAvatar}>{avatarShortName}</Avatar>
+        {
+          avatarClass === 'avatar' ?
+          (
+            <Avatar className={classes.avatar}>{avatarShortName}</Avatar>
+          ) : (
+            <Avatar className={classes.smallAvatar}>{avatarShortName}</Avatar>
+          )
+        }
+        
     </Grid>
   );
 }
