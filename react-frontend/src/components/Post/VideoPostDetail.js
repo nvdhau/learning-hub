@@ -83,7 +83,7 @@ class VideoPostDetail extends Component {
                                 <Typography variant="subtitle1" gutterBottom>
                                 Comments
                                 </Typography>
-                                <Comment author={this.props.appUser.fullName}/>
+                                <Comment appUser={this.props.appUser} author={this.props.appUser.fullName} post={this.props.post}/>
                             </GridItem>
                         </GridContainer>
                     </Paper>    

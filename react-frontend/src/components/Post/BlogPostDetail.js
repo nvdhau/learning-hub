@@ -65,7 +65,10 @@ class BlogPostDetail extends Component {
                                 <Typography variant="subtitle1" gutterBottom>
                                 Comments
                                 </Typography>
-                                <Comment author={this.props.appUser.fullName}/>
+                                <Comment 
+                                  appUser={this.props.appUser}
+                                  post={this.props.post}
+                                  author={this.props.appUser.fullName}/>
                             </GridItem>
                         </GridContainer>
                       </Paper>  
