@@ -26,7 +26,6 @@ import PostAddIcon from '@material-ui/icons/PostAdd';
 import PublishIcon from '@material-ui/icons/Publish';
 import PersonIcon from '@material-ui/icons/Person';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
 import VideoCallIcon from '@material-ui/icons/VideoCall';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 

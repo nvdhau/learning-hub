@@ -4,15 +4,12 @@ import { withStyles } from '@material-ui/core/styles';
 import Dropzone from 'react-dropzone';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import styles from '../../assets/jss/views/upload';
 import DragHandleIcon from '@material-ui/icons/DragHandle';
 import { toast } from 'react-toastify';
-import { uploadPostVideo } from '../../actions/post';
 import { API_UPLOAD_POST_VIDEO } from '../../config/endpoints-conf';
 import axios from 'axios';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { timingSafeEqual } from 'crypto';
 import GridItem from "../../components/Grid/GridItem";
 import GridContainer from "../../components/Grid/GridContainer";
 import Button from '@material-ui/core/Button';
@@ -20,10 +17,6 @@ import { API_ROOT_URL } from '../../config/endpoints-conf';
 import Container from '@material-ui/core/Container';
 import MySelect from "../../components/Form/Select";
 import TextField from '@material-ui/core/TextField';
-import { createVideoPost } from '../../actions/post';
-import { getUserIdToken } from '../../actions/authenticate';
-
-// import { Player } from 'video-react';
 import { Player, BigPlayButton } from 'video-react'
 
 class VideoPost extends Component {

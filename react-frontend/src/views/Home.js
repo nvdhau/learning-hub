@@ -7,6 +7,7 @@ import GridItem from "../components/Grid/GridItem";
 import GridContainer from "../components/Grid/GridContainer";
 import styles from '../assets/jss/views/generalStyle';
 import { getAllPosts } from '../actions/post';
+import { getTags } from '../actions/tags';
 import { getUserIdToken } from '../actions/authenticate'
 import Typography from '@material-ui/core/Typography';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -29,7 +30,8 @@ class Home extends Component {
       posts: [],
       loading: true,
       filter: {},
-      selectedTag: ''
+      selectedTag: '',
+      tags: []
     }
     this.setFilter = this.setFilter.bind(this);
   }
@@ -43,6 +45,8 @@ class Home extends Component {
       case 'video':
         filter = {key: 1, value: blogType, tag};
         break;
+      default:
+        break; 
     } 
     this.setState({
       filter: filter,
@@ -55,9 +59,14 @@ class Home extends Component {
       this.setFilter(this.props.match.params.filter, this.props.match.params.tag);
       getAllPosts(getUserIdToken)({filter: this.props.match.params.filter, tag: this.props.match.params.tag})
       .then(posts => {
-        this.setState({
-          posts: posts,
-          loading: false
+        getTags().then(data => {
+          this.setState({
+            tags: data,
+            posts: posts,
+            loading: false
+          })
+        }).catch(err => {
+
         })
       }).catch(err => {
         console.log(err);
@@ -69,114 +78,118 @@ class Home extends Component {
     const selectedTag = this.state.filter.tag || '';
     return (
         <React.Fragment>
-        <GridItem xs={12} sm={12} md={12}>
-          <GridContainer spacing={3} direction="row">
-              <GridItem xs={12} sm={12} md={3} lg={2}>
-                  <SideBar filterType={this.state.filter.value}/>
-              </GridItem>
-              {
-                this.state.loading ? (
-                  <GridItem xs={12} sm={12} md={9} lg={10}>
-                    <LinearProgress color="secondary"></LinearProgress>
-                    <p style={{'textAlign': 'center'}}>Loading ...</p>
-                    <GridContainer spacing={3} direction="row">
-                      { Array.from(new Array(8)).map(
-                          (item, index) => (
-                            <GridItem key={index} xs={12} sm={4} md={4} lg={3}>
-                              <Skeleton />
-                              <Skeleton width="60%" variant="rect" height={118}/>
-                            </GridItem>
+          { !this.state.loading ? (
+            <GridItem xs={12} sm={12} md={12}>
+            <GridContainer spacing={3} direction="row">
+                <GridItem xs={12} sm={12} md={3} lg={2}>
+                    <SideBar tags={this.state.tags.length > 0 ? this.state.tags : []} filterType={this.state.filter.value}/>
+                </GridItem>
+                {
+                  this.state.loading ? (
+                    <GridItem xs={12} sm={12} md={9} lg={10}>
+                      <LinearProgress color="secondary"></LinearProgress>
+                      <p style={{'textAlign': 'center'}}>Loading ...</p>
+                      <GridContainer spacing={3} direction="row">
+                        { Array.from(new Array(8)).map(
+                            (item, index) => (
+                              <GridItem key={index} xs={12} sm={4} md={4} lg={3}>
+                                <Skeleton />
+                                <Skeleton width="60%" variant="rect" height={118}/>
+                              </GridItem>
+                            )
                           )
-                        )
-                      }
-                    </GridContainer>
-                  </GridItem>
-                ) : (
-                  <GridItem xs={12} sm={12} md={9} lg={10}>
-                    <Paper className={classes.root}>
-                      <Tabs
-                        value={this.state.filter.key}
-                        indicatorColor="primary"
-                        textColor="primary"
-                        centered
-                      >
-                        <Tab label="Blogs" icon={<PostAddIcon />} component="a" href={'/blog' + '/' + selectedTag} />
-                        <Tab label="Videos" icon={<YouTubeIcon />} component="a" href={'/video' + '/' + selectedTag} />
-                      </Tabs>
-                    </Paper>
-                    <GridContainer spacing={3} direction="row">
-                      {
-                        this.state.posts.length > 0 && this.state.posts.map(
-                          (item, index) => (
-                            <GridItem key={index} xs={12} sm={4} md={4} lg={3}>
-                              <Card className={classes.card}>
-                                {
-                                  item ? (
-                                    <React.Fragment>
-                                      {
-                                        item.isBlog ? 
-                                        (
-                                          <CardMedia
-                                            className={classes.media}
-                                            image={API_ROOT_URL + "/" + item.imageUrl}
-                                            title={item.title}
-                                          />
-                                        ) : (
-                                          <Link href={'/posts/' + item.id}>
-                                          <ReactPlayer key={item.id} 
-                                            width={'100%'} height={'50%'} 
-                                            url={API_ROOT_URL + "/" + item.imageUrl + '#t=0.5'}
-                                            playing={false}
-                                          />
-                                          </Link>
-                                        )
-                                      }
-                                      
-                                      <CardContent>
-                                        <Typography gutterBottom variant="subtitle2" component="h2">
-                                          {item.title}
-                                        </Typography>
-                                        <Typography gutterBottom variant="subtitle2" component="h2">
-                                          @{item.user.username}
-                                        </Typography>
-                                        <Typography gutterBottom variant="subtitle2" component="h2">
-                                          {item.category.name}
-                                        </Typography>
-                                        <Typography variant="body2" color="textSecondary" component="p">
-                                          {item.createdAt}
-                                        </Typography>
-                                      </CardContent>
-                                    </React.Fragment>
-                                  ) : null
-                                }
-                              </Card>
-                            </GridItem>
+                        }
+                      </GridContainer>
+                    </GridItem>
+                  ) : (
+                    <GridItem xs={12} sm={12} md={9} lg={10}>
+                      <Paper className={classes.root}>
+                        <Tabs
+                          value={this.state.filter.key}
+                          indicatorColor="primary"
+                          textColor="primary"
+                          centered
+                        >
+                          <Tab label="Blogs" icon={<PostAddIcon />} component="a" href={'/blog' + '/' + selectedTag} />
+                          <Tab label="Videos" icon={<YouTubeIcon />} component="a" href={'/video' + '/' + selectedTag} />
+                        </Tabs>
+                      </Paper>
+                      <GridContainer spacing={3} direction="row">
+                        {
+                          this.state.posts.length > 0 && this.state.posts.map(
+                            (item, index) => (
+                              <GridItem key={index} xs={12} sm={4} md={4} lg={3}>
+                                <Card className={classes.card}>
+                                  {
+                                    item ? (
+                                      <React.Fragment>
+                                        {
+                                          item.isBlog ? 
+                                          (
+                                            <Link href={'/post/' + this.state.filter.value + '/' + item.id}>
+                                            <CardMedia
+                                              className={classes.media}
+                                              image={API_ROOT_URL + "/" + item.imageUrl}
+                                              title={item.title}
+                                            />
+                                            </Link>
+                                          ) : (
+                                            <Link href={'/post/' + this.state.filter.value + '/' + item.id}>
+                                            <ReactPlayer key={item.id} 
+                                              width={'100%'} height={'50%'} 
+                                              url={API_ROOT_URL + "/" + item.imageUrl + '#t=0.5'}
+                                              playing={false}
+                                            />
+                                            </Link>
+                                          )
+                                        }
+                                        
+                                        <CardContent>
+                                          <Typography gutterBottom variant="subtitle2" component="h2">
+                                            {item.title}
+                                          </Typography>
+                                          <Typography gutterBottom variant="subtitle2" component="h2">
+                                            @{item.user.username}
+                                          </Typography>
+                                          <Typography gutterBottom variant="subtitle2" component="h2">
+                                            {item.category.name}
+                                          </Typography>
+                                          <Typography variant="body2" color="textSecondary" component="p">
+                                            {item.createdAt}
+                                          </Typography>
+                                        </CardContent>
+                                      </React.Fragment>
+                                    ) : null
+                                  }
+                                </Card>
+                              </GridItem>
+                            )
                           )
-                        )
-                      }
+                        }
 
-                      {
-                        this.state.posts.length <= 0 && (
-                          <React.Fragment>
-                            <GridItem xs={12} sm={12} md={12} lg={12}>
-                              <Typography gutterBottom variant="subtitle2" component="h2" style={{'textAlign': 'center'}}>
-                                There is no records for this type of blog
-                              </Typography>
-                            </GridItem>
-                          </React.Fragment>
-                        )
-                      }
-                    </GridContainer>
-                  </GridItem>
-                )
-              }
-              </GridContainer>
-          </GridItem>
+                        {
+                          this.state.posts && this.state.posts.length <= 0 && (
+                            <React.Fragment>
+                              <GridItem xs={12} sm={12} md={12} lg={12}>
+                                <Typography gutterBottom variant="subtitle2" component="h2" style={{'textAlign': 'center'}}>
+                                  There is no records for this type of blog
+                                </Typography>
+                              </GridItem>
+                            </React.Fragment>
+                          )
+                        }
+                      </GridContainer>
+                    </GridItem>
+                  )
+                }
+                </GridContainer>
+            </GridItem>
+            ) : null
+          }
+          
         </React.Fragment>
     )
   }
 }
-
-
 
 export default withStyles(styles)(Home);

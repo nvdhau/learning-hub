@@ -1,4 +1,7 @@
-import { API_CREATE_POST, API_GET_POSTS, API_CREATE_VIDEOPOST, API_UPLOAD_POST_VIDEO } from '../config/endpoints-conf';
+import { API_CREATE_POST, 
+    API_GET_POSTS, 
+    API_CREATE_VIDEOPOST
+} from '../config/endpoints-conf';
 import axios from 'axios';
 
 // firebase sign up account
@@ -37,6 +40,7 @@ export const getAllPosts = (getUserIdToken) => (queryString) => {
                     'Authorization': idToken
                 }
             }).then(res => {
+                console.log("data", res.data);
                 return res.data
             }).catch(err => {
                 console.log("ERR: " + err);
@@ -61,5 +65,60 @@ export const createVideoPost = (getUserIdToken) => (json) =>  {
                     }).catch(err => {
                         console.log("ERR: " + err);
                     })
+        })
+}
+
+export const getPostDetail = (getUserIdToken) => (id) =>  {
+    
+    return getUserIdToken()
+        .then(data => {
+            const idToken = data.idToken;
+            return axios.get(API_GET_POSTS + id, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': idToken
+                }
+            }).then(res => {
+                return res.data
+            }).catch(err => {
+                console.log("ERR: " + err);
+            })
+        })
+}
+
+export const createPostComment = (getUserIdToken) => (id, json) =>  {
+    const API_CREATE_POSTCOMMENTS = API_GET_POSTS + id + '/comment';
+    return getUserIdToken()
+        .then(data => {
+            const idToken = data.idToken;
+            return axios.post(API_CREATE_POSTCOMMENTS, json , {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'Authorization': idToken
+                        }
+                    }).then(res => {
+                        console.log("res", res);
+                    }).catch(err => {
+                        console.log("ERR: " + err);
+                    })
+        })
+}
+
+export const getPostComments = (getUserIdToken) => (id) =>  {
+    const API_GET_POSTCOMMENTS = API_GET_POSTS + id + '/comments';
+    return getUserIdToken()
+        .then(data => {
+            const idToken = data.idToken;
+            return axios.get(API_GET_POSTCOMMENTS, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': idToken
+                }
+            }).then(res => {
+                return res.data
+            }).catch(err => {
+                console.log("ERR: " + err);
+            })
         })
 }
