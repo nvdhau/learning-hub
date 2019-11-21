@@ -59,9 +59,8 @@ CREATE TABLE ATTACHMENTS(
 CREATE TABLE COMMENTS(
     id INTEGER AUTO_INCREMENT PRIMARY KEY,
     post_id INTEGER NOT NULL,
-    reply_id INTEGER,
-    content TEXT NOT NULL,
+    comment TEXT NOT NULL, -- JSON {created_at: timestamp, content: string, author_id: uid, author_full_name: string}
+    replies TEXT, -- JSON [{created_at: timestamp, content: string, author_id: uid, author_full_name: string, receiver_id: uid, receiver_full_name: string}]
 
-    FOREIGN KEY (post_id) REFERENCES POSTS(id),
-    FOREIGN KEY (reply_id) REFERENCES COMMENTS(id)
+    FOREIGN KEY (post_id) REFERENCES POSTS(id)
 );
