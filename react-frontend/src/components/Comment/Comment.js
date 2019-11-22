@@ -10,7 +10,7 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { getPostComments, createPostComment } from '../../actions/post';
+import { getPostComments, createPostComment, createPostReplyComment } from '../../actions/post';
 import { getUserIdToken } from '../../actions/authenticate';
 
 class Comment extends Component {
@@ -19,7 +19,9 @@ class Comment extends Component {
     this.state = {
         commentText: '',
         displayCommentButtons: false,
-        comments: []
+        comments: [],
+        replyTarget: {commentId: ''},
+        replyBody: ''
     }
     this.renderCommentBox = this.renderCommentBox.bind(this);
     this.handleOnFocus = this.handleOnFocus.bind(this);
@@ -27,6 +29,10 @@ class Comment extends Component {
     this.handleCommentSubmit = this.handleCommentSubmit.bind(this);
     this.handleCommentTextChange = this.handleCommentTextChange.bind(this);
     this.renderCommentList = this.renderCommentList.bind(this);
+    this.renderReplyBox = this.renderReplyBox.bind(this);
+    this.setReplyTarget = this.setReplyTarget.bind(this);
+    this.handleReplySubmit = this.handleReplySubmit.bind(this);
+    this.handleReplyTextChange = this.handleReplyTextChange.bind(this);
   }
 
   componentDidMount() {
@@ -93,6 +99,83 @@ class Comment extends Component {
     })
   }
 
+  handleReplyTextChange(e) {
+    this.setState({
+      replyBody: e.target.value
+    })
+  }
+  setReplyTarget(Comment) {
+    this.setState({
+      replyTarget: Comment
+    })
+  }
+
+  handleReplySubmit(e) {
+    // TODO: reply in side nested commment should have receiverId and ReceiverFullName
+    const jsonData = {
+      content: e.target.commentText.value,
+      authorId: this.state.replyTarget.comment.authorId,
+      authorFullName: this.state.replyTarget.comment.authorFullName,
+      receiverId: null,
+      receiveFullName: null
+    }
+    
+    createPostReplyComment(getUserIdToken)(this.state.replyTarget.id, jsonData)
+      .then(data => {
+        console.log('data', data)
+      }).catch(err => {
+        console.log('err', err)
+      })
+
+    e.preventDefault();
+  }
+
+  renderReplyBox(Comment) {
+    const { classes } = this.props;
+    console.log("Comment reply", Comment);
+    return (
+      <Grid container spacing={1} direction="row" style={{'margin': '10px auto'}}>
+        <Grid item xs={12} sm={1} md={1} lg={1}>
+            <MyAvatar author={this.props.author} sizeAvatar={"smallAvatar"}/>
+        </Grid>
+        <Grid item xs={12} sm={11} md={11} lg={11}>
+            <form className={classes.container} noValidate autoComplete="off" onSubmit={this.handleReplySubmit}>
+                <TextField
+                    id="standard-multiline-flexible"
+                    label="Leave your comment here"
+                    multiline
+                    fullWidth
+                    value={this.state.replyBody}
+                    name='commentText'
+                    onChange={this.handleReplyTextChange}
+                    className={classes.textField}
+                    />
+                  <React.Fragment>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="default"
+                      style={{'float': 'right', 'marginTop': '5px', 'marginLeft': '5px'}}
+                    >
+                      Submit
+                    </Button>
+                    <Button
+                      variant="text"
+                      color="default"
+                      style={{'float': 'right', 'marginTop': '5px'}}
+                      onClick={() => this.setState({
+                        replyTarget: {}
+                      })}
+                    >
+                      Cancel
+                    </Button>
+                  </React.Fragment>
+            </form>
+        </Grid>
+      </Grid>
+    )
+  }
+
   renderCommentList() {
     return (
         <React.Fragment>
@@ -112,9 +195,13 @@ class Comment extends Component {
                   </Typography>
                   <Grid container spacing={3} direction="row">
                     {/* TODO: load reply box when user click on reply of a specific comment */}
-                    {/* {
-                      this.renderCommentBox(false)
-                    } */}
+                    {/* { this.renderReplyBox(Comment) } */}
+                    { 
+                      this.state.replyTarget.id === Comment.id ?
+                      (
+                        <React.Fragment>{this.renderReplyBox(Comment)}</React.Fragment>
+                      ) : null
+                    }
                     <Grid item xs={12} sm={6} md={6} lg={6}>
                       <Button
                         variant="text"
@@ -127,14 +214,20 @@ class Comment extends Component {
                       </Button>
                     </Grid>
                     <Grid item xs={12} sm={6} md={6} lg={6}>
-                      <Button
+                    {
+                      this.state.replyTarget.commentId !== Comment.id ?
+                      (
+                        <Button
                           variant="text"
                           color="default"
                           size="small"
                           style={{'float': 'right', 'marginTop': '5px'}}
+                          onClick={() => this.setReplyTarget(Comment)}
                         >
                           Reply
                         </Button>
+                      ) : null
+                    } 
                     </Grid>
                   </Grid>
                   

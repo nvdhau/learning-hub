@@ -122,3 +122,23 @@ export const getPostComments = (getUserIdToken) => (id) =>  {
             })
         })
 }
+
+export const createPostReplyComment = (getUserIdToken) => (comment_id, json) =>  {
+    const API_CREATE_POSTREPLYCOMMENTS = API_GET_POSTS + "comment/" + comment_id + '/reply';
+    console.log("api endpoint", API_CREATE_POSTREPLYCOMMENTS);
+    return getUserIdToken()
+        .then(data => {
+            const idToken = data.idToken;
+            return axios.put(API_CREATE_POSTREPLYCOMMENTS, json , {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'Authorization': idToken
+                        }
+                    }).then(res => {
+                        console.log("res", res);
+                    }).catch(err => {
+                        console.log("ERR: " + err);
+                    })
+        })
+}
