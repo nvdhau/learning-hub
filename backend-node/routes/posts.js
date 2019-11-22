@@ -89,7 +89,7 @@ router.get('/:id/comments', (req, res, next) => {
           id: value.id,
           post_id: value.post_id,
           comment: comment,
-          replies: value.replies
+          replies: JSON.parse(value.replies)
         }
       })
       console.log(newComments);
