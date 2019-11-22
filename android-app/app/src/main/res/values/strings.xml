@@ -26,6 +26,7 @@
     <!-- Posts -->
     <string name="posts">Blogs</string>
     <string name="usernameMask">\@%1$s</string>
+    <string name="commentsTitle">Comments</string>
 
     <!-- Tags -->
     <string name="trendingTags">Trending tags</string>

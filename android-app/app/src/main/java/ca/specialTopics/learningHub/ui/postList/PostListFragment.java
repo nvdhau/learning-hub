@@ -19,6 +19,7 @@ import ca.specialTopics.learningHub.R;
 import ca.specialTopics.learningHub.models.Post;
 import ca.specialTopics.learningHub.models.Tag;
 import ca.specialTopics.learningHub.ui.BaseFragment;
+import ca.specialTopics.learningHub.ui.PostFragment;
 import ca.specialTopics.learningHub.viewModels.PostListViewModel;
 
 public class PostListFragment extends BaseFragment {
@@ -77,7 +78,10 @@ public class PostListFragment extends BaseFragment {
         } else {
             recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
-        postRecyclerViewAdapter = new PostRecyclerViewAdapter(requireContext(), null);
+        postRecyclerViewAdapter = new PostRecyclerViewAdapter(requireContext(), post -> {
+            PostFragment postFragment = PostFragment.newInstance(post.getId());
+            pushFragment(postFragment);
+        });
         recyclerView.setAdapter(postRecyclerViewAdapter);
 
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh);
