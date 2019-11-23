@@ -57,6 +57,29 @@ class BlogPostDetail extends Component {
                                 <ChipsArray tags={this.props.post.tags}/>
                                 <Divider style={{'margin': '5px auto'}}/>
                                 <GridContainer spacing={1} direction="row">
+                                    <GridItem xs={12} sm={1} md={1} lg={1}>
+                                        <MyAvatar author={this.props.post.user.fullName}/>
+                                    </GridItem>
+                                    <GridItem xs={12} sm={11} md={11} lg={11}>
+                                        <Grid container spacing={3}>
+                                        <Grid item xs={12} sm={10} md={10} lg={10}>
+                                            <Typography variant="subtitle1" gutterBottom>
+                                            {this.props.post.user.fullName}
+                                            </Typography>
+                                            <Typography variant="caption" display="block" gutterBottom style={{'marginTop': '0px'}}>
+                                            @{this.props.post.user.username}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={12} sm={2} md={2} lg={2}>
+                                            <Button variant="contained" color="secondary" className={classes.btnFollow}>
+                                            Subscribe
+                                            </Button>
+                                        </Grid>
+                                        </Grid>
+                                    </GridItem>
+                                </GridContainer>
+                                <Divider style={{'margin': '5px auto'}}/>
+                                <GridContainer spacing={1} direction="row">
                                     <Grid item xs={12} sm={12} md={12} lg={12}>
                                       <ReactMarkdown source={this.props.post.description} />
                                     </Grid>
