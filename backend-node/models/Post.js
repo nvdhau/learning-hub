@@ -90,6 +90,24 @@ class Post extends BaseModel {
            return values;
        });
   }
+
+  static async findPostsOfUser(uid) {
+
+    //Query sample: 
+    //select * from posts where deleted=0 and user_id='lh4kA3NG88WTJHVfztpVyzsn81v1';
+
+    return await this.connection.execute(
+        `SELECT * 
+        FROM ${this.table}  
+        WHERE deleted=0 AND user_id='${uid}';`
+      ).then(([rows]) => rows.map(row => this.fromDB(row)))
+      .then(values => {
+         if (Object.prototype.toString.call(values[0]) === "[object Promise]")
+           return Promise.all(values);
+         else
+           return values;
+       });
+  }
 }
 
 module.exports = Post;

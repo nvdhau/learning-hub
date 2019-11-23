@@ -30,6 +30,18 @@ router.get('/', isAuthenticated, (req, res, next) => {
   }
 });
 
+//get all posts by userId
+// router.get('/user/:uid', isAuthenticated, (req, res, next) => {
+router.get('/user/:uid', (req, res, next) => {
+
+  // console.log(req.params.uid);
+
+  Post.findPostsOfUser(req.params.uid)
+    .then( posts => {
+      res.status(200).json(posts);
+    });
+});
+
 //add new comment
 router.post('/:id/comment', (req, res, next) => {
 
