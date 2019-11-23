@@ -7,15 +7,24 @@ import Grid from '@material-ui/core/Grid';
 const useStyles = makeStyles({
   avatar: {
     margin: 10,
+    width: 55,
+    height: 55,
     color: '#fff',
     backgroundColor: deepOrange[500],
   },
   smallAvatar: {
     margin: 10,
+    width: 45,
+    height: 45,
+    color: '#fff',
+    backgroundColor: deepOrange[500],
+  },
+  xsAvatar: {
+    margin: 10,
     width: 35,
     height: 35,
     color: '#fff',
-    backgroundColor: deepPurple[500],
+    backgroundColor: deepOrange[500],
   },
 });
 
@@ -27,14 +36,18 @@ export default function LetterAvatars(props) {
   let avatarClass = props.sizeAvatar || 'avatar';
   
   return (
-    <Grid container justify="flex-start" alignItems="center">
+    <Grid key={Math.random()} container justify="flex-start" alignItems="center">
         {
           avatarClass === 'avatar' ?
           (
-            <Avatar className={classes.avatar}>{avatarShortName}</Avatar>
-          ) : (
-            <Avatar className={classes.smallAvatar}>{avatarShortName}</Avatar>
-          )
+            <Avatar key={Math.random()} className={classes.avatar}>{avatarShortName}</Avatar>
+          ) : [
+            ( avatarClass === 'smallAvatar' ?
+              <Avatar key={Math.random()} className={classes.smallAvatar}>{avatarShortName}</Avatar>
+            : 
+              <Avatar key={Math.random()} className={classes.xsAvatar}>{avatarShortName}</Avatar>
+            )
+          ]
         }
         
     </Grid>
