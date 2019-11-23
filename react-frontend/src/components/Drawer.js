@@ -28,6 +28,8 @@ import PersonIcon from '@material-ui/icons/Person';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import VideoCallIcon from '@material-ui/icons/VideoCall';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
+
 
 function ListItemLink(props) {
   return <ListItem button component="a" {...props} />;
@@ -306,15 +308,15 @@ export default function PersistentDrawerLeft() {
             <ListItem button key="myprofile">
                 <ListItemIcon><PersonIcon/></ListItemIcon>
                 <ListItemText primary="My Profile" />
-            </ListItem>  
-            <ListItem button key="yourupload">
+            </ListItem>
+            <ListItemLink button key="yourupload" href="/uploads">
                 <ListItemIcon><PublishIcon/></ListItemIcon>
                 <ListItemText primary="Your uploads" />
-            </ListItem>
-            {/* <ListItem button key="subscription">
-                <ListItemIcon><SubscriptionsIcon/></ListItemIcon>
-                <ListItemText primary="Subscriptions" />
-            </ListItem>   */}
+            </ListItemLink>
+            <ListItemLink button key="subscription" href="/subscriptions" >
+              <ListItemIcon><SubscriptionsIcon/></ListItemIcon>
+              <ListItemText primary="Subscriptions" />
+            </ListItemLink>
         </List>
         <Divider />
         <List>
