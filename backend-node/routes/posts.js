@@ -13,11 +13,12 @@ router.get('/', isAuthenticated, (req, res, next) => {
   const filter = req.query.is_blog || '';
   const is_blog = filter == 'blog' ? 1 : 0;
   const tags = req.query.tags || '';
+  const search = req.query.search || '';
+
   const conditions = [
     {value: is_blog}, 
     {value: '%' + tags + '%'}
   ];
-
   let postClosure = post => {
     const posts = post || [];
     res.status(200).json(posts);
@@ -25,7 +26,15 @@ router.get('/', isAuthenticated, (req, res, next) => {
 
   if (filter === '' && tags === '') {
     Post.get().then(postClosure);
-  } else {
+  } else if(search != ''){
+    Post.searchByTitleAndTags( 
+      {
+        "isBlog": is_blog,
+        "search": search
+      }
+    ).then(postClosure);
+  }
+  else {
     Post.findByFilterAndTag(conditions).then(postClosure);
   }
 });

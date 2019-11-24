@@ -66,6 +66,30 @@ class Post extends BaseModel {
         });
   }
 
+  static async searchByTitleAndTags(conditions){
+    // console.log(conditions);
+
+    //select * from posts where deleted=0 and is_blog=1 and 
+    //(title like '%Mobile Dev%' or tags like '%Mobile%' or tags like '%Dev%');
+    return await this.connection.execute(
+      `SELECT * 
+      FROM ${this.table}  
+      WHERE deleted=0 AND is_blog=${conditions.isBlog} AND 
+      (title LIKE ${"'%" + conditions.search + "%'"} OR
+      ${conditions.search.split(" ")
+        .map((e) => "tags LIKE '%" + e + "%'")
+        .join(" OR ")}
+      );`
+    ).then(([rows]) => rows.map(row => this.fromDB(row)))
+    .then(values => {
+        console.log(values);
+       if (Object.prototype.toString.call(values[0]) === "[object Promise]")
+         return Promise.all(values);
+       else
+         return values;
+     });
+  }
+
   static async findRelatedPosts(post) {
 
     //Query sample: 
