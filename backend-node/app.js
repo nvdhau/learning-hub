@@ -10,8 +10,10 @@ let testRouter = require('./routes/test');
 let categoriesRouter = require('./routes/categories');
 let postsRouter = require('./routes/posts');
 let tagsRouter = require('./routes/tags');
+let chatsRouter = require('./routes/chats');
 
 var app = express();
+app.io = require('socket.io')();
 
 app.use(logger('dev'));
 app.use(cors()); // allow request comming from anywhere !!! DEV ONLY
@@ -26,5 +28,6 @@ app.use('/api/test', testRouter);
 app.use('/api/categories', categoriesRouter);
 app.use('/api/posts', postsRouter);
 app.use('/api/tags', tagsRouter);
+app.use('/api/chats', chatsRouter(app.io));
 
 module.exports = app;
