@@ -48,6 +48,13 @@ router.get('/user/:uid', (req, res, next) => {
     });
 });
 
+router.get('/user/:uid/favorites', (req, res, next) => {
+  Post.findFavoritePostsOfUser(req.params.uid)
+    .then( posts => {
+      res.status(200).json(posts);
+    });
+});
+
 //add new comment
 router.post('/:id/comment', (req, res, next) => {
 
@@ -159,7 +166,8 @@ router.get('/:id', (req, res, next) => {
     });
 });
 
-router.delete('/:id', isAuthenticated, [
+// router.delete('/:id', isAuthenticated, [
+router.delete('/:id', [
   check('id').isLength({min: 1}),
 ], (req, res, next) => {
   //Forward the errors
@@ -169,12 +177,12 @@ router.delete('/:id', isAuthenticated, [
   }
 
   let id = req.params.id;
-  Post.findBy('id', id)
-    .then(post => {
-      post.deleted = true;
-      return Post.update(post);
-    }).then(post => {
-      res.status(200).json(post);
+  Post.softDeleteById(id)
+    .then(result => {
+
+      success = result[0].changedRows == 1? true : false;
+
+      res.status(200).json({"deleted": success});
     }).catch(error => {
       console.log(error);
       res.status(404).json({});
