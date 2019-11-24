@@ -91,7 +91,7 @@ class Post extends BaseModel {
        });
   }
 
-  static async findPostsOfUser(uid) {
+  static async findPostsOfUser(uid, isBlog) {
 
     //Query sample: 
     //select * from posts where deleted=0 and user_id='lh4kA3NG88WTJHVfztpVyzsn81v1';
@@ -99,7 +99,7 @@ class Post extends BaseModel {
     return await this.connection.execute(
         `SELECT * 
         FROM ${this.table}  
-        WHERE deleted=0 AND user_id='${uid}';`
+        WHERE deleted=0 AND user_id='${uid}' AND is_blog='${isBlog}';`
       ).then(([rows]) => rows.map(row => this.fromDB(row)))
       .then(values => {
          if (Object.prototype.toString.call(values[0]) === "[object Promise]")

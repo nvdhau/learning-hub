@@ -50,6 +50,33 @@ export const getAllPosts = (getUserIdToken) => (queryString) => {
         })
 }
 
+export const getUserUploadPosts = (getUserIdToken) => (queryString) => {
+    
+    const params = {
+        is_blog: queryString.filter,
+        uid: queryString.uid,
+    };
+    const API_GET_USER_UPLOADS = API_GET_POSTS + 'user/' + params.uid
+    
+    return getUserIdToken()
+        .then(data => {
+            const idToken = data.idToken;
+            return axios.get(API_GET_USER_UPLOADS, {
+                params,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': idToken
+                }
+            }).then(res => {
+                return res.data
+            }).catch(err => {
+                console.log("ERR: " + err);
+            })
+        }).catch(err => {
+            console.log(err);
+        })
+}
+
 export const createVideoPost = (getUserIdToken) => (json) =>  {
     return getUserIdToken()
         .then(data => {

@@ -33,10 +33,7 @@ router.get('/', isAuthenticated, (req, res, next) => {
 //get all posts by userId
 // router.get('/user/:uid', isAuthenticated, (req, res, next) => {
 router.get('/user/:uid', (req, res, next) => {
-
-  // console.log(req.params.uid);
-
-  Post.findPostsOfUser(req.params.uid)
+  Post.findPostsOfUser(req.params.uid, req.query.is_blog)
     .then( posts => {
       res.status(200).json(posts);
     });

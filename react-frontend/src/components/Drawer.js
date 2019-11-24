@@ -309,7 +309,7 @@ export default function PersistentDrawerLeft() {
                 <ListItemIcon><PersonIcon/></ListItemIcon>
                 <ListItemText primary="My Profile" />
             </ListItem>
-            <ListItemLink button key="yourupload" href="/uploads">
+            <ListItemLink button key="yourupload" href="/uploads/">
                 <ListItemIcon><PublishIcon/></ListItemIcon>
                 <ListItemText primary="Your uploads" />
             </ListItemLink>
