@@ -11,6 +11,8 @@ class User extends BaseModel {
     this.id = -1;
     this.username = "";
     this.fullName = "";
+    this.following = "";
+    this.followers = "";
     this.isActive = true;
   }
 
@@ -20,6 +22,8 @@ class User extends BaseModel {
       id: row.id,
       username: row.username,
       fullName: row.full_name,
+      following: row.following,
+      followers: row.followers,
       isActive: Boolean(row.is_active),
     });
     return user;

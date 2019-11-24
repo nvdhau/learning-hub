@@ -90,7 +90,10 @@ router.post('/create', uploadImageService.single('image'), [
       Object.assign(userDB, {
         id: userRecord.uid,
         username: userRequest.username,
-        fullName: userRequest.fullName
+        fullName: userRequest.fullName,
+        //update default value of following and followers
+        following: "[]",
+        followers: "[]"
       });
       return User.createWithId(userDB);
     })
@@ -106,6 +109,148 @@ router.post('/create', uploadImageService.single('image'), [
         message: err.errorInfo.message
       });
     });
+});
+
+
+
+// Edit current database schema
+// ALTER TABLE users ADD following TEXT;
+// ALTER TABLE users ADD followers TEXT;
+// UPDATE users SET following='[]';
+// UPDATE users SET followers='[]';
+
+//add unique object to a JSON array
+function addUniqueUserToArray(arr, user){
+
+  //remove
+  arr = arr.filter(e => e.id != user.id);
+  //add again
+  arr.push({
+    id: user.id,
+    username: user.username,
+    fullName: user.fullName
+  });
+
+  return arr;
+}
+
+//follow a user
+router.put('/:current_uid/follow/:uid', 
+// isAuthenticated, [
+//   check('id').isLength({min: 1}),
+//   check('username').isLength({min: 1}),
+//   check('fullName').isLength({min: 1}),
+//   check('isActive').isLength({min: 1}),
+// ], 
+(req, res, next) => {
+
+  let user1Id = req.params.current_uid;
+  let user2Id = req.params.uid;
+
+  if(user1Id == user2Id) 
+    return res.status(400).json({message: "2 user ids are the same!"});
+
+  let user1, user2;
+  let result = [];//updated user1 and user2
+
+  //find user1
+  User.findBy('id', user1Id)
+    .then(user => { user1 = user;
+
+      //find user2
+      User.findBy('id', user2Id)
+      .then(user => { user2 = user;
+         
+          //update user1: 
+          //add user2 to following list of user1: by remove then add
+          let followingOfUser1 = JSON.parse(user1.following);
+          user1.following = JSON.stringify(
+            addUniqueUserToArray(followingOfUser1, user2));
+
+          //update user2: 
+          //add user1 to followers list of user2: by remove then add
+          let followersOfUser2 = JSON.parse(user2.followers);
+          user2.followers = JSON.stringify(
+            addUniqueUserToArray(followersOfUser2, user1));
+
+          //update both user should use transaction 
+          User.update(user1)
+            .then(user => { result.push(user);
+
+              //update user2
+              User.update(user2)
+                .then(user => { result.push(user);
+
+                  res.status(200).json(result);
+                })
+            })
+      }).catch(error => {
+        console.log(error);
+        res.status(404).json({});
+      });
+    }).catch(error => {
+      console.log(error);
+      res.status(404).json({});
+  });
+});
+
+//unfollow a user (copy and edit from follow a user)
+router.put('/:current_uid/unfollow/:uid', 
+// isAuthenticated, [
+//   check('id').isLength({min: 1}),
+//   check('username').isLength({min: 1}),
+//   check('fullName').isLength({min: 1}),
+//   check('isActive').isLength({min: 1}),
+// ], 
+(req, res, next) => {
+
+  let user1Id = req.params.current_uid;
+  let user2Id = req.params.uid;
+
+  if(user1Id == user2Id) 
+    return res.status(400).json({message: "2 user ids are the same!"});
+
+  let user1, user2;
+  let result = [];
+
+  //find user1
+  User.findBy('id', user1Id)
+    .then(user => { user1 = user;
+
+      //find user2
+      User.findBy('id', user2Id).then(user => { user2 = user;
+
+          //update user1: 
+          //remove user2 from following list of user1
+          let followingOfUser1 = JSON.parse(user1.following);
+          followingOfUser1 = followingOfUser1.filter(e => e.id != user2.id);
+          user1.following = JSON.stringify(followingOfUser1);
+
+          //update user2: 
+          //remove user1 from followers list of user2
+          let followersOfUser2 = JSON.parse(user2.followers);
+          followersOfUser2 = followersOfUser2.filter(e => e.id != user1.id);
+          user2.followers = JSON.stringify(followersOfUser2);
+
+          //update both user should use transaction 
+          User.update(user1)
+            .then(user => { result.push(user);
+
+              //update user2
+              User.update(user2)
+                .then(user => { result.push(user);
+
+                  res.status(200).json(result);
+                })
+            })
+      }).catch(error => {
+        console.log(error);
+        res.status(404).json({});
+      });
+    }).catch(error => {
+      console.log(error);
+      res.status(404).json({});
+  });
 });
 
 module.exports = router;

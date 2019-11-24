@@ -8,6 +8,8 @@ CREATE TABLE USERS (
     id VARCHAR(200) PRIMARY KEY,   
     username VARCHAR(50),
     full_name TEXT,
+    following TEXT,
+    followers TEXT,
     is_active BOOLEAN NOT NULL DEFAULT 1
 );
 
