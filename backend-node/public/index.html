@@ -3,11 +3,66 @@
 <head>
   <title>Express</title>
   <link rel="stylesheet" href="/stylesheets/style.css">
+  <script src = "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+  <script  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+
+  <script>
+    // var socket = io('/api/chats');
+    var socket = io();
+    
+    var loggedInUid;
+
+    $(document).ready(function(){
+
+      //1.register with logged in uid automatically
+      $("#btnName").click(()=>{
+          
+          loggedInUid = $("#txtName").val();
+          // args are sent in order to acknowledgement function
+          socket.emit('init', loggedInUid, ()=>{});
+      });
+
+       $("#btn").click(()=>{
+           let msg = $("#msg").val();
+           let to = $("#txtId").val();
+           // args are sent in order to acknowledgement function
+           socket.emit('sendMsg', loggedInUid, to, msg);
+
+           let s = $("#e4").html() + "<br>" + loggedInUid + ": " + msg;
+          $("#e4").html(s);
+       });
+       
+    });
+    
+    socket.on('forwardMsg', function(data){
+        let s = $("#e4").html() + "<br>" + data['m'];
+        $("#e4").html(s);
+    });
+
+ </script>
 </head>
 
 <body>
   <h1>Express</h1>
   <p>Welcome to Express</p>
+  Socket template<br>
+      Name <input type=text id="txtName"><br>
+      <button id="btnName">Create Account</button><br>
+      
+      To <input type=text id="txtId"><br>
+      Message <input type=text id="msg"><br>
+      <button id="btn"> Send </button>
+      <div id="m1"></div>
+      <hr>
+      <div id="e1"></div>
+      <hr>
+      <div id="e2"></div>
+      <hr>
+      <div id="e3"></div>
+      <hr>
+      <div id="e4"></div>
 </body>
 
 </html>
