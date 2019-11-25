@@ -24,19 +24,31 @@ class Subscription extends Component {
       posts: [],
       loading: true,
       selectedBlogType: 0,
-      following: []
+      following: [],
+      followers: []
     }
     this.displayShortName = this.displayShortName.bind(this);
     this.handleSubscription = this.handleSubscription.bind(this);
+    this.handleTabChange = this.handleTabChange.bind(this);
   }
 
   componentDidMount() {
     const newFollowingUsers = JSON.parse(this.props.appUser.following).map(value => {
       return {...value, following: true}
     })
+    
     this.setState({
-      following: newFollowingUsers
+      following: newFollowingUsers,
+      followers: JSON.parse(this.props.appUser.followers)
     })
+  }
+
+  handleTabChange(e, value) {
+    this.setState({
+      selectedBlogType: value
+    })
+
+    console.log(this.props.appUser);
   }
 
   handleSubscription(user, index) {
@@ -88,10 +100,10 @@ class Subscription extends Component {
                 </Typography>
                 <Paper className={classes.root}>
                   <Tabs
-                    value={0}
+                    value={this.state.selectedBlogType}
                     indicatorColor="primary"
                     textColor="primary"
-                    // onChange={this.handleTabChange}
+                    onChange={this.handleTabChange}
                   >
                     <Tab label="Following" component="a" />
                     <Tab label="Follower" component="a"/>
@@ -100,7 +112,7 @@ class Subscription extends Component {
                 <Grid container spacing={3} style={{'margin': '10px auto'}}>
                   <Grid item xs={12} sm={12} md={12} lg={12}>
                     <Grid container spacing={3}>
-                      {
+                      { this.state.selectedBlogType === 0 &&
                         this.state.following.map((user, index) => 
                           <Grid key={"folowinguser-" + index} item xs={12} sm={2} md={3} lg={4} style={{'position': 'relative'}}>
                             <Card className={classes.card} style={{'textAlign': 'center'}}>
@@ -115,6 +127,20 @@ class Subscription extends Component {
                                 >
                                   {user.following ? 'Following' : 'Follow'}
                                 </Button>
+                              </CardContent>                
+                            </Card>
+                          </Grid>
+                        )
+                      }
+                      { this.state.selectedBlogType === 1 &&
+                        this.state.followers.map((user, index) => 
+                          <Grid key={"folowinguser-" + index} item xs={12} sm={2} md={3} lg={4} style={{'position': 'relative'}}>
+                            <Card className={classes.card} style={{'textAlign': 'center'}}>
+                              <CardContent>
+                                <Avatar className={classes.avatarSubcribe}>{this.displayShortName(user.fullName)}</Avatar>
+                                <Typography gutterBottom variant="subtitle2" component="h2">
+                                  {user.fullName}
+                                </Typography>
                               </CardContent>                
                             </Card>
                           </Grid>
