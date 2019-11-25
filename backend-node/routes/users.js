@@ -93,7 +93,8 @@ router.post('/create', uploadImageService.single('image'), [
         fullName: userRequest.fullName,
         //update default value of following and followers
         following: "[]",
-        followers: "[]"
+        followers: "[]",
+        favorites: "[]"
       });
       return User.createWithId(userDB);
     })
@@ -247,6 +248,80 @@ router.put('/:current_uid/unfollow/:uid',
         console.log(error);
         res.status(404).json({});
       });
+    }).catch(error => {
+      console.log(error);
+      res.status(404).json({});
+  });
+});
+
+
+// ALTER TABLE users ADD favorites TEXT;
+// UPDATE users SET favorites='[]';
+
+//favorites a post
+//NOTE: front end must check, authors cannot favorite their own posts
+//post.user.id != loggedInUser.id
+router.put('/:uid/favorites/:pid', 
+// isAuthenticated, [
+//   check('id').isLength({min: 1}),
+//   check('username').isLength({min: 1}),
+//   check('fullName').isLength({min: 1}),
+//   check('isActive').isLength({min: 1}),
+// ], 
+(req, res, next) => {
+
+  let uid = req.params.uid;
+  let postId = req.params.pid;
+
+  //find user
+  User.findBy('id', uid)
+    .then(user => { 
+
+      let favorites = JSON.parse(user.favorites);
+      console.log(favorites);
+      favorites = favorites.filter(e => e != postId);
+      favorites.push(postId);
+      user.favorites = JSON.stringify(favorites);
+
+      User.update(user)
+        .then( user => {
+          res.status(200).json(user);
+        }
+      );
+    
+    }).catch(error => {
+      console.log(error);
+      res.status(404).json({});
+  });
+
+});
+
+//unfavorites a post
+router.put('/:uid/unfavorites/:pid', 
+// isAuthenticated, [
+//   check('id').isLength({min: 1}),
+//   check('username').isLength({min: 1}),
+//   check('fullName').isLength({min: 1}),
+//   check('isActive').isLength({min: 1}),
+// ], 
+(req, res, next) => {
+  let uid = req.params.uid;
+  let postId = req.params.pid;
+
+  //find user
+  User.findBy('id', uid)
+    .then(user => { 
+
+      let favorites = JSON.parse(user.favorites);
+      favorites = favorites.filter(e => e != postId);
+      user.favorites = JSON.stringify(favorites);
+
+      User.update(user)
+        .then( user => {
+          res.status(200).json(user);
+        }
+      );
+    
     }).catch(error => {
       console.log(error);
       res.status(404).json({});
