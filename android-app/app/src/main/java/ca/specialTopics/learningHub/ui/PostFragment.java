@@ -2,11 +2,13 @@ package ca.specialTopics.learningHub.ui;
 
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,8 +19,14 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ca.specialTopics.learningHub.R;
+import ca.specialTopics.learningHub.models.Comment;
+import ca.specialTopics.learningHub.models.CommentServerAnswer;
 import ca.specialTopics.learningHub.models.Post;
+import ca.specialTopics.learningHub.viewModels.CommentListViewModel;
 import ca.specialTopics.learningHub.viewModels.PostViewModel;
 import io.noties.markwon.Markwon;
 import io.noties.markwon.image.picasso.PicassoImagesPlugin;
@@ -30,10 +38,13 @@ public class PostFragment extends BaseFragment {
     @SuppressWarnings("FieldCanBeLocal")
     private PostViewModel postViewModel;
     private int postId;
+    @SuppressWarnings("FieldCanBeLocal")
+    private CommentListViewModel commentListViewModel;
 
     private TextView txtTitle, txtUsername, txtDate, txtDescription, txtCategory, txtTags;
     private ImageView imgPost;
     private Markwon markwon;
+    private CommentsRecyclerViewAdapter commentsRecyclerViewAdapter;
 
     public static PostFragment newInstance(int postId) {
         PostFragment postFragment = new PostFragment();
@@ -68,6 +79,14 @@ public class PostFragment extends BaseFragment {
         markwon = Markwon.builder(requireContext())
                 .usePlugin(PicassoImagesPlugin.create(Picasso.get()))
                 .build();
+
+        // Set Comments
+        // Set Recycler View
+        Context context = view.getContext();
+        RecyclerView commentsRecyclerView = view.findViewById(R.id.commentsRecyclerView);
+        commentsRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        commentsRecyclerViewAdapter = new CommentsRecyclerViewAdapter();
+        commentsRecyclerView.setAdapter(commentsRecyclerViewAdapter);
 
         return view;
     }
@@ -107,6 +126,23 @@ public class PostFragment extends BaseFragment {
             } else {
                 //btnSubmit.setEnabled(true);
                 hideProgressBar();
+            }
+        });
+
+        commentListViewModel = ViewModelProviders.of(requireActivity()).get(CommentListViewModel.class);
+
+        commentListViewModel.getCommentServerAnswerResource(postId).observe(getViewLifecycleOwner(), commentServerAnswerResource -> {
+            Log.d(TAG, "commentServerAnswerResource code:" + commentServerAnswerResource.code);
+            if (commentServerAnswerResource.data != null) {
+                List<Comment> commentList = new ArrayList<>();
+                for (CommentServerAnswer commentServerAnswer : commentServerAnswerResource.data) {
+                    commentList.add(commentServerAnswer.getComment());
+                    for (Comment comment: commentServerAnswer.getCommentReplies().getComments()) {
+                        comment.setReply(true);
+                        commentList.add(comment);
+                    }
+                }
+                commentsRecyclerViewAdapter.setData(commentList);
             }
         });
     }
