@@ -7,6 +7,7 @@
     <color name="gray">#92898a</color>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
+    <color name="avatarBackground">#ff5722</color>
 
 <!--    <color name="pink">#c1a5a9</color>-->
 <!--    <color name="green">#7fbc52</color>-->

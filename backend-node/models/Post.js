@@ -115,6 +115,40 @@ class Post extends BaseModel {
        });
   }
 
+  static async findFavoritePostsOfUser(uid){
+
+    console.log(uid);
+
+    //get list of favorites post
+    let favoritePostIds = [1,2,3];
+
+    return await this.connection.execute(
+      `SELECT * 
+      FROM ${this.table}  
+      WHERE deleted=0 AND id IN (${favoritePostIds.join(",")});`
+    ).then(([rows]) => rows.map(row => this.fromDB(row)))
+    .then(values => {
+       if (Object.prototype.toString.call(values[0]) === "[object Promise]")
+         return Promise.all(values);
+       else
+         return values;
+     });
+  }
+
+  static async softDeleteById(id){
+
+    return await this.connection.execute(
+      `UPDATE ${this.table}
+      SET deleted=1
+      WHERE id=${id};`
+    ).then(values => {
+       if (Object.prototype.toString.call(values[0]) === "[object Promise]")
+         return Promise.all(values);
+       else
+         return values;
+     });
+  }
+
   static async findPostsOfUser(uid, isBlog) {
 
     //Query sample: 

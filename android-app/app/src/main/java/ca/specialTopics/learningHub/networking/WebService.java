@@ -2,6 +2,7 @@ package ca.specialTopics.learningHub.networking;
 
 import java.util.List;
 
+import ca.specialTopics.learningHub.models.CommentServerAnswer;
 import ca.specialTopics.learningHub.models.Post;
 import ca.specialTopics.learningHub.models.Tag;
 import ca.specialTopics.learningHub.models.User;
@@ -30,6 +31,9 @@ public interface WebService {
 
     @GET("posts/{id}")
     Call<Post> getPost(@Header("Authorization") String authorization, @Path("id") int id);
+
+    @GET("posts/{id}/comments")
+    Call<List<CommentServerAnswer>> getPostCommentList(@Header("Authorization") String authorization, @Path("id") int id);
 
     @GET("tags")
     Call<List<Tag>> getTagList(@Header("Authorization") String authorization);

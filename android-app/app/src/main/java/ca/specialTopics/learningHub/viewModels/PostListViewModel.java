@@ -26,7 +26,6 @@ public class PostListViewModel extends BaseViewModel {
         if (postListResource == null) {
             postListResource = new MutableLiveData<>();
             loadPostList(tag);
-
         } else if (this.tag != tag) {
             this.tag = tag;
             loadPostList(tag);

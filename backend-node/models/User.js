@@ -13,6 +13,7 @@ class User extends BaseModel {
     this.fullName = "";
     this.following = "";
     this.followers = "";
+    this.favorites = "";
     this.isActive = true;
   }
 
@@ -24,6 +25,7 @@ class User extends BaseModel {
       fullName: row.full_name,
       following: row.following,
       followers: row.followers,
+      favorites: row.favorites,
       isActive: Boolean(row.is_active),
     });
     return user;

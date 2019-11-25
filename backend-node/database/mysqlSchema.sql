@@ -10,6 +10,7 @@ CREATE TABLE USERS (
     full_name TEXT,
     following TEXT,
     followers TEXT,
+    favorites TEXT,
     is_active BOOLEAN NOT NULL DEFAULT 1
 );
 
