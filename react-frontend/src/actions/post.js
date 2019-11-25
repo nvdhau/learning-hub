@@ -245,3 +245,27 @@ export const getFavorites = (getUserIdToken) => (uid) =>  {
             })
         })
 }
+
+
+export const toggleFavorites = (getUserIdToken) => (uid, postId, action) =>  {
+    let API_PUT_POSTFAVORITE;
+    if (action === 'favorite') {
+        API_PUT_POSTFAVORITE = API_GET_USER + uid + '/favorites/' + postId;
+    } else {
+        API_PUT_POSTFAVORITE = API_GET_USER + uid + '/unfavorites/' + postId;
+    }
+    return getUserIdToken()
+        .then(data => {
+            const idToken = data.idToken;
+            return axios.put(API_PUT_POSTFAVORITE, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': idToken
+                }
+            }).then(res => {
+                return res.data
+            }).catch(err => {
+                console.log("ERR: " + err);
+            })
+        })
+}

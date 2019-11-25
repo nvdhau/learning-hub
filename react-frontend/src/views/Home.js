@@ -6,7 +6,7 @@ import SideBar from "../components/SideBar/SideBar";
 import GridItem from "../components/Grid/GridItem";
 import GridContainer from "../components/Grid/GridContainer";
 import styles from '../assets/jss/views/generalStyle';
-import { getAllPosts } from '../actions/post';
+import { getAllPosts, toggleFavorites } from '../actions/post';
 import { getTags } from '../actions/tags';
 import { getUserIdToken } from '../actions/authenticate'
 import Typography from '@material-ui/core/Typography';
@@ -22,6 +22,7 @@ import YouTubeIcon from '@material-ui/icons/YouTube';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import ReactPlayer from 'react-player'
 import Link from '@material-ui/core/Link';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 
 class Home extends Component {
   constructor(props) {
@@ -34,6 +35,7 @@ class Home extends Component {
       tags: []
     }
     this.setFilter = this.setFilter.bind(this);
+    this.handleFavorites = this.handleFavorites.bind(this);
   }
 
   setFilter(blogType, tag) {
@@ -54,15 +56,38 @@ class Home extends Component {
     })
   }
 
+  handleFavorites(item, index) {
+    const actionType = item.favorited ? 'unfavorite' : 'favorite';
+    const newItem = {...item, favorited: !item.favorited};
+    this.state.posts.splice(index, 1, newItem);
+
+    toggleFavorites(getUserIdToken)(this.props.appUser.id, item.id, actionType)
+      .then(_ => {
+        this.setState({
+          posts: this.state.posts
+        })
+      }).catch(err => {
+        console.log('err', err);
+      })
+  }
+
   componentDidMount() {
       if (!this.props.match.params.filter) this.props.history.push('blog');
       this.setFilter(this.props.match.params.filter, this.props.match.params.tag);
       getAllPosts(getUserIdToken)({filter: this.props.match.params.filter, tag: this.props.match.params.tag})
       .then(posts => {
+        const favorites = JSON.parse(this.props.appUser.favorites);
+        const newPosts = posts.map(value => {
+          let itemId = value.id;
+          return {
+            ...value, 
+            favorited: favorites.includes(itemId + "")}
+        })
+
         getTags().then(data => {
           this.setState({
             tags: data,
-            posts: posts,
+            posts: newPosts,
             loading: false
           })
         }).catch(err => {
@@ -156,6 +181,10 @@ class Home extends Component {
                                           </Typography>
                                           <Typography variant="body2" color="textSecondary" component="p">
                                             {item.createdAt}
+                                            <FavoriteIcon 
+                                              onClick={() => this.handleFavorites(item, index)}
+                                              style={item.favorited ? {'float' : 'right', 'color':'red'} : {'float': 'right'}}>
+                                            </FavoriteIcon>
                                           </Typography>
                                         </CardContent>
                                       </React.Fragment>

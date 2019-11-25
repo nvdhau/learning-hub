@@ -15,10 +15,12 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import { ToastContainer } from 'react-toastify';
 import Avatar from '@material-ui/core/Avatar';
-import { followUser, unfollowUser, getFavorites } from '../actions/post';
+import { followUser, unfollowUser, getFavorites, toggleFavorites } from '../actions/post';
 import { API_ROOT_URL } from '../config/endpoints-conf';
 import Link from '@material-ui/core/Link';
 import CardMedia from '@material-ui/core/CardMedia';
+import ReactPlayer from 'react-player';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 
 class Subscription extends Component {
   constructor(props) {
@@ -36,6 +38,7 @@ class Subscription extends Component {
     this.handleSubscription = this.handleSubscription.bind(this);
     this.handleTabChange = this.handleTabChange.bind(this);
     this.handleTabFavoriteChange = this.handleTabFavoriteChange.bind(this);
+    this.handleFavorites = this.handleFavorites.bind(this);
   }
 
   componentDidMount() {
@@ -50,12 +53,14 @@ class Subscription extends Component {
     
     getFavorites(getUserIdToken)(this.props.appUser.id)
       .then(data => {
-        console.log('data favorites', data)
-        const blogs = data.filter(value => {
+        const newFavorties = data.map(value => {
+          return {...value, favorited: true}
+        })
+        const blogs = newFavorties.filter(value => {
           return value.isBlog === true
         })
 
-        const videos = data.filter(value => {
+        const videos = newFavorties.filter(value => {
           return value.isBlog !== true
         })
         this.setState({
@@ -109,6 +114,25 @@ class Subscription extends Component {
     }
   }
 
+  handleFavorites(item, index) {
+    const actionType = item.favorited ? 'unfavorite' : 'favorite';
+    const newItem = {...item, favorited: !item.favorited};
+    if (item.isBlog) {
+      this.state.favorites.blogs.splice(index, 1, newItem);
+    } else {
+      this.state.favorites.videos.splice(index, 1, newItem);
+    }
+    
+    toggleFavorites(getUserIdToken)(this.props.appUser.id, item.id, actionType)
+      .then(_ => {
+        this.setState({
+          favorites: this.state.favorites
+        })
+      }).catch(err => {
+        console.log('err', err);
+      })
+  }
+
   displayShortName(userName) {
     const avatarShortName = userName.split(" ").reduce((acc, value) => {
       return acc + value.charAt(0);
@@ -118,13 +142,6 @@ class Subscription extends Component {
   
   render() {
     const { classes } = this.props;
-    console.log("favorites", this.state.favorites);
-    if (this.state.favorites.blogs) {
-      const test = this.state.favorites.blogs.map(value => {
-        console.log(value);
-      })
-    }
-    
     return (
         <React.Fragment>
           <GridContainer spacing={3} direction="row">
@@ -231,6 +248,10 @@ class Subscription extends Component {
                                   </Typography>
                                   <Typography variant="body2" color="textSecondary" component="p">
                                     {item.createdAt}
+                                    <FavoriteIcon 
+                                      onClick={() => this.handleFavorites(item, index)}
+                                      style={item.favorited ? {'float' : 'right', 'color':'red'} : {'float': 'right'}}>
+                                    </FavoriteIcon>
                                   </Typography>
                                 </CardContent>
                               </Card>
@@ -245,10 +266,10 @@ class Subscription extends Component {
                               <Card className={classes.card}>
                                 <Paper className={classes.root} key={index}>
                                   <Link href={'/post/video/' + item.id}>
-                                    <CardMedia
-                                      className={classes.media}
-                                      image={API_ROOT_URL + "/" + item.imageUrl}
-                                      title={item.title}
+                                    <ReactPlayer key={item.id}
+                                      width={'100%'} height={'50%'} 
+                                      url={API_ROOT_URL + "/" + item.imageUrl + '#t=0.5'}
+                                      playing={false}
                                     />
                                   </Link>
                                 </Paper>
@@ -264,6 +285,10 @@ class Subscription extends Component {
                                   </Typography>
                                   <Typography variant="body2" color="textSecondary" component="p">
                                     {item.createdAt}
+                                    <FavoriteIcon 
+                                      onClick={() => this.handleFavorites(item, index)}
+                                      style={item.favorited ? {'float' : 'right', 'color':'red'} : {'float': 'right'}}>
+                                    </FavoriteIcon>
                                   </Typography>
                                 </CardContent>
                               </Card>
