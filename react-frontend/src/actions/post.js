@@ -227,3 +227,21 @@ export const unfollowUser = (getUserIdToken) => (login_uid, uid) =>  {
                     })
         })
 }
+
+export const getFavorites = (getUserIdToken) => (uid) =>  {
+    const API_GET_POSTFAVORITE = API_GET_POSTS + 'user/' + uid + '/favorites';
+    return getUserIdToken()
+        .then(data => {
+            const idToken = data.idToken;
+            return axios.get(API_GET_POSTFAVORITE, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': idToken
+                }
+            }).then(res => {
+                return res.data
+            }).catch(err => {
+                console.log("ERR: " + err);
+            })
+        })
+}
