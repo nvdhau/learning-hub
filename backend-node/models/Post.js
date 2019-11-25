@@ -66,6 +66,30 @@ class Post extends BaseModel {
         });
   }
 
+  static async searchByTitleAndTags(conditions){
+    // console.log(conditions);
+
+    //select * from posts where deleted=0 and is_blog=1 and 
+    //(title like '%Mobile Dev%' or tags like '%Mobile%' or tags like '%Dev%');
+    return await this.connection.execute(
+      `SELECT * 
+      FROM ${this.table}  
+      WHERE deleted=0 AND is_blog=${conditions.isBlog} AND 
+      (title LIKE ${"'%" + conditions.search + "%'"} OR
+      ${conditions.search.split(" ")
+        .map((e) => "tags LIKE '%" + e + "%'")
+        .join(" OR ")}
+      );`
+    ).then(([rows]) => rows.map(row => this.fromDB(row)))
+    .then(values => {
+        console.log(values);
+       if (Object.prototype.toString.call(values[0]) === "[object Promise]")
+         return Promise.all(values);
+       else
+         return values;
+     });
+  }
+
   static async findRelatedPosts(post) {
 
     //Query sample: 
@@ -91,7 +115,41 @@ class Post extends BaseModel {
        });
   }
 
-  static async findPostsOfUser(uid) {
+  static async findFavoritePostsOfUser(uid){
+
+    console.log(uid);
+
+    //get list of favorites post
+    let favoritePostIds = [1,2,3];
+
+    return await this.connection.execute(
+      `SELECT * 
+      FROM ${this.table}  
+      WHERE deleted=0 AND id IN (${favoritePostIds.join(",")});`
+    ).then(([rows]) => rows.map(row => this.fromDB(row)))
+    .then(values => {
+       if (Object.prototype.toString.call(values[0]) === "[object Promise]")
+         return Promise.all(values);
+       else
+         return values;
+     });
+  }
+
+  static async softDeleteById(id){
+
+    return await this.connection.execute(
+      `UPDATE ${this.table}
+      SET deleted=1
+      WHERE id=${id};`
+    ).then(values => {
+       if (Object.prototype.toString.call(values[0]) === "[object Promise]")
+         return Promise.all(values);
+       else
+         return values;
+     });
+  }
+
+  static async findPostsOfUser(uid, isBlog) {
 
     //Query sample: 
     //select * from posts where deleted=0 and user_id='lh4kA3NG88WTJHVfztpVyzsn81v1';
@@ -99,7 +157,7 @@ class Post extends BaseModel {
     return await this.connection.execute(
         `SELECT * 
         FROM ${this.table}  
-        WHERE deleted=0 AND user_id='${uid}';`
+        WHERE deleted=0 AND user_id='${uid}' AND is_blog='${isBlog}';`
       ).then(([rows]) => rows.map(row => this.fromDB(row)))
       .then(values => {
          if (Object.prototype.toString.call(values[0]) === "[object Promise]")

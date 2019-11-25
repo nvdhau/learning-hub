@@ -13,11 +13,12 @@ router.get('/', isAuthenticated, (req, res, next) => {
   const filter = req.query.is_blog || '';
   const is_blog = filter == 'blog' ? 1 : 0;
   const tags = req.query.tags || '';
+  const search = req.query.search || '';
+
   const conditions = [
     {value: is_blog}, 
     {value: '%' + tags + '%'}
   ];
-
   let postClosure = post => {
     const posts = post || [];
     res.status(200).json(posts);
@@ -25,7 +26,15 @@ router.get('/', isAuthenticated, (req, res, next) => {
 
   if (filter === '' && tags === '') {
     Post.get().then(postClosure);
-  } else {
+  } else if(search != ''){
+    Post.searchByTitleAndTags( 
+      {
+        "isBlog": is_blog,
+        "search": search
+      }
+    ).then(postClosure);
+  }
+  else {
     Post.findByFilterAndTag(conditions).then(postClosure);
   }
 });
@@ -33,10 +42,14 @@ router.get('/', isAuthenticated, (req, res, next) => {
 //get all posts by userId
 // router.get('/user/:uid', isAuthenticated, (req, res, next) => {
 router.get('/user/:uid', (req, res, next) => {
+  Post.findPostsOfUser(req.params.uid, req.query.is_blog)
+    .then( posts => {
+      res.status(200).json(posts);
+    });
+});
 
-  // console.log(req.params.uid);
-
-  Post.findPostsOfUser(req.params.uid)
+router.get('/user/:uid/favorites', (req, res, next) => {
+  Post.findFavoritePostsOfUser(req.params.uid)
     .then( posts => {
       res.status(200).json(posts);
     });
@@ -153,7 +166,8 @@ router.get('/:id', (req, res, next) => {
     });
 });
 
-router.delete('/:id', isAuthenticated, [
+// router.delete('/:id', isAuthenticated, [
+router.delete('/:id', [
   check('id').isLength({min: 1}),
 ], (req, res, next) => {
   //Forward the errors
@@ -163,12 +177,12 @@ router.delete('/:id', isAuthenticated, [
   }
 
   let id = req.params.id;
-  Post.findBy('id', id)
-    .then(post => {
-      post.deleted = true;
-      return Post.update(post);
-    }).then(post => {
-      res.status(200).json(post);
+  Post.softDeleteById(id)
+    .then(result => {
+
+      success = result[0].changedRows == 1? true : false;
+
+      res.status(200).json({"deleted": success});
     }).catch(error => {
       console.log(error);
       res.status(404).json({});
