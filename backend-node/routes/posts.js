@@ -4,6 +4,7 @@ var router = express.Router();
 const Post = require('../models/Post');
 const Comment = require('../models/Comment');
 const Tag = require('../models/Tag');
+const User = require('../models/User');
 const { check, validationResult } = require('express-validator');
 const { isAuthenticated } = require('../middlewares/auth');
 const uploadImageService = require('../utils/uploadImageService');
@@ -49,10 +50,22 @@ router.get('/user/:uid', (req, res, next) => {
 });
 
 router.get('/user/:uid/favorites', (req, res, next) => {
-  Post.findFavoritePostsOfUser(req.params.uid)
-    .then( posts => {
-      res.status(200).json(posts);
+  
+  User.findBy('id', req.params.uid)
+    .then( user => {
+
+      let favoritePostIds = JSON.parse(user.favorites);
+
+      //no favorites, then at a invalid id
+      if(favoritePostIds.length == 0) 
+        favoritePostIds.push(-1);
+
+      Post.findPostsByIds(favoritePostIds)
+        .then( posts => {
+          res.status(200).json(posts);
+        })
     });
+
 });
 
 //add new comment

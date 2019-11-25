@@ -115,17 +115,14 @@ class Post extends BaseModel {
        });
   }
 
-  static async findFavoritePostsOfUser(uid){
+  static async findPostsByIds(postIds){
 
-    console.log(uid);
-
-    //get list of favorites post
-    let favoritePostIds = [1,2,3];
-
+    console.log(postIds);
+    
     return await this.connection.execute(
       `SELECT * 
       FROM ${this.table}  
-      WHERE deleted=0 AND id IN (${favoritePostIds.join(",")});`
+      WHERE deleted=0 AND id IN (${postIds.join(",")});`
     ).then(([rows]) => rows.map(row => this.fromDB(row)))
     .then(values => {
        if (Object.prototype.toString.call(values[0]) === "[object Promise]")
