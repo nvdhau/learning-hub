@@ -3,17 +3,14 @@ import { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import styles from '../../assets/jss/views/generalStyle';
 import GridItem from "../../components/Grid/GridItem";
-import GridContainer from "../../components/Grid/GridContainer";
 import MyAvatar from "../../components/Avatar/Avatar";
 import TextField from '@material-ui/core/TextField';
-import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { getPostComments, createPostComment, createPostReplyComment } from '../../actions/post';
 import { getUserIdToken } from '../../actions/authenticate';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import Chip from '@material-ui/core/Chip';
 
 class Comment extends Component {
   constructor(props) {
@@ -197,7 +194,6 @@ class Comment extends Component {
   }
 
   renderRepliesList(replies) {
-    console.log('replies', replies);
     const repliesData = replies.data;
     return (
       <React.Fragment>
@@ -495,7 +491,6 @@ class Comment extends Component {
   }
 
   render() {
-    const { classes } = this.props;
     return (
         <React.Fragment>
           <GridItem xs={12} sm={12} md={12}>

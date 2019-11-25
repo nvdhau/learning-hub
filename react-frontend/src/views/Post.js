@@ -3,20 +3,9 @@ import { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import styles from '../assets/jss/views/generalStyle';
 import GridItem from "../components/Grid/GridItem";
-import GridContainer from "../components/Grid/GridContainer";
-import ChipsArray from "../components/Chip/Chip";
-import MyAvatar from "../components/Avatar/Avatar";
-import Comment from "../components/Comment/Comment";
-import { Player, BigPlayButton } from 'video-react';
-import { API_ROOT_URL } from '../config/endpoints-conf';
-import { getPostDetail } from '../actions/post';
+import { getPostDetail, unfollowUser, followUser } from '../actions/post';
 import { getUserIdToken } from '../actions/authenticate'
 import LinearProgress from '@material-ui/core/LinearProgress';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
 import BlogPostDetail from "../components/Post/BlogPostDetail";
 import VideoPostDetail from "../components/Post/VideoPostDetail";
 
@@ -25,15 +14,18 @@ class Post extends Component {
     super(props);
     this.state = {
       post: null,
-      loading: ''
+      loading: '',
+      isFollow: false,
     }
+
+    this.handleFollow = this.handleFollow.bind(this);
   }
 
   componentDidMount() {
-    // get post details
     this.setState({
       loading: true
     })
+
     getPostDetail(getUserIdToken)(this.props.match.params.postid)
       .then(post => {
         console.log('post', post);
@@ -41,13 +33,45 @@ class Post extends Component {
           post: post,
           loading: false
         })
+      }).then(_ => {
+        const followingUsers = JSON.parse(this.props.appUser.following);
+        console.log("following Users", followingUsers);
+        const found = followingUsers.find(e => e.id === this.state.post.user.id);
+        this.setState({
+          isFollow: found ? true : false
+        })
       }).catch(err => {
         console.log(err);
       })
   }
 
+  handleFollow (followType) {
+    if (!followType) {
+      followUser(getUserIdToken)(this.props.appUser.id, this.state.post.user.id)
+      .then(data => {
+        console.log("data", data);
+        this.setState({
+          following: this.state.following,
+          isFollow: true
+        })
+      }).catch(err => {
+        console.log("err", err);
+      })
+    } else {
+      unfollowUser(getUserIdToken)(this.props.appUser.id, this.state.post.user.id)
+      .then(data => {
+        console.log("data", data);
+        this.setState({
+          following: this.state.following,
+          isFollow: false
+        })
+      }).catch(err => {
+        console.log("err", err);
+      })
+    }
+  }
+
   render() {
-    const { classes } = this.props;
     return (
       <React.Fragment>
         <GridItem xs={12} sm={12} md={12}>
@@ -63,6 +87,8 @@ class Post extends Component {
                       key={'blogpost'}
                       appUser={this.props.appUser}
                       post={this.state.post}
+                      onFollowToggle={this.handleFollow}
+                      isFollow={this.state.isFollow}
                     />
                   ) : null, 
                   this.state.post && this.state.post.isBlog === false ?
@@ -71,6 +97,8 @@ class Post extends Component {
                       key={'videopost'}
                       post={this.state.post} 
                       appUser={this.props.appUser}
+                      onFollowToggle={this.handleFollow}
+                      isFollow={this.state.isFollow}
                     />
                   ) : null
                 ]

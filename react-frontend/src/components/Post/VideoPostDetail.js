@@ -17,15 +17,9 @@ import Comment from "../../components/Comment/Comment";
 import ReactPlayer from 'react-player'
 import Link from '@material-ui/core/Link';
 
-
-
 class VideoPostDetail extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   render() {
-    console.log('render Video post detail');
     const { classes } = this.props;
     return (
         <GridContainer spacing={3} direction="row">
@@ -72,8 +66,11 @@ class VideoPostDetail extends Component {
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={12} sm={2} md={2} lg={2}>
-                                            <Button variant="contained" color="secondary" className={classes.btnFollow}>
-                                            Subscribe
+                                            <Button 
+                                              onClick={() => this.props.onFollowToggle(this.props.isFollow)}
+                                              variant="contained" color="secondary" 
+                                              className={classes.btnFollow}>
+                                                { this.props.isFollow ? 'Following': 'Follow'}
                                             </Button>
                                         </Grid>
                                         </Grid>

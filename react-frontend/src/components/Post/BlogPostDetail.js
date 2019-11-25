@@ -4,7 +4,6 @@ import { withStyles } from '@material-ui/core/styles';
 import styles from '../../assets/jss/views/generalStyle';
 import GridItem from "../../components/Grid/GridItem";
 import GridContainer from "../../components/Grid/GridContainer";
-import { Player, BigPlayButton } from 'video-react';
 import { API_ROOT_URL } from '../../config/endpoints-conf';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
@@ -14,21 +13,15 @@ import Grid from '@material-ui/core/Grid';
 import ChipsArray from "../../components/Chip/Chip";
 import MyAvatar from "../../components/Avatar/Avatar";
 import Comment from "../../components/Comment/Comment";
-import ReactPlayer from 'react-player'
 import Link from '@material-ui/core/Link';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
 import ReactMarkdown from 'react-markdown';
 
 
 class BlogPostDetail extends Component {
-  constructor(props) {
-    super(props);
-  }
-
+  
   render() {
-    console.log('render Blog post detail');
     const { classes } = this.props;
     return (
         <GridContainer spacing={3} direction="row">
@@ -71,8 +64,11 @@ class BlogPostDetail extends Component {
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={12} sm={2} md={2} lg={2}>
-                                            <Button variant="contained" color="secondary" className={classes.btnFollow}>
-                                            Subscribe
+                                            <Button 
+                                              onClick={() => this.props.onFollowToggle(this.props.isFollow)}
+                                              variant="contained" color="secondary" 
+                                              className={classes.btnFollow}>
+                                            { this.props.isFollow ? 'Following': 'Follow'}
                                             </Button>
                                         </Grid>
                                         </Grid>

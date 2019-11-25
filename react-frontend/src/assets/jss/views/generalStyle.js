@@ -1,3 +1,4 @@
+import { deepOrange } from '@material-ui/core/colors';
 const generalStyle = theme => ({
   root: {
     flexGrow: 1,
@@ -46,6 +47,14 @@ const generalStyle = theme => ({
   btnFollow: {
     backgroundColor: 'red',
     justifyContent: 'left',
+  },
+  avatarSubcribe: {
+    padding: 10,
+    display: 'inline-block',
+    width: 55,
+    height: 55,
+    color: '#fff',
+    backgroundColor: deepOrange[500],
   }
 });
 

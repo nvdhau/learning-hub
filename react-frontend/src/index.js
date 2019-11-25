@@ -10,6 +10,7 @@ import Upload from './views/Upload';
 import SignUp from './views/SignUp';
 import Post from './views/Post';
 import YourUpload from './views/YourUpload';
+import Subscription from './views/Subscription';
 import Bootstrap from './Bootstrap';
 import { doSignOut } from './actions/authenticate';
 import 'react-toastify/dist/ReactToastify.css';
@@ -44,6 +45,7 @@ ReactDOM.render((
                 <Route path="/signup" exact component={SignUp}/>
                 <Route path="/logout" exact render={(props) => doSignOut(props)} />
                 <PrivateRoute path='/uploads/' exact component={YourUpload} />
+                <PrivateRoute path='/subscriptions/' exact component={Subscription} />
                 <PrivateRoute path='/post/:filter/:postid' exact component={Post} />
                 <PrivateRoute path='/upload/:type' exact component={Upload} />
                 <PrivateRoute path='/:filter?/:tag?' component={Home}/>

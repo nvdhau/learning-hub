@@ -313,7 +313,7 @@ export default function PersistentDrawerLeft() {
                 <ListItemIcon><PublishIcon/></ListItemIcon>
                 <ListItemText primary="Your uploads" />
             </ListItemLink>
-            <ListItemLink button key="subscription" href="/subscriptions" >
+            <ListItemLink button key="subscription" href="/subscriptions/" >
               <ListItemIcon><SubscriptionsIcon/></ListItemIcon>
               <ListItemText primary="Subscriptions" />
             </ListItemLink>

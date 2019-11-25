@@ -11,15 +11,16 @@ import Grid from '@material-ui/core/Grid';
 import YouTubeIcon from '@material-ui/icons/YouTube';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import Typography from '@material-ui/core/Typography';
-import { getUserUploadPosts } from '../actions/post';
+import { getUserUploadPosts, deletePost } from '../actions/post';
 import { getUserIdToken } from '../actions/authenticate';
-import LinearProgress from '@material-ui/core/LinearProgress';
 import { API_ROOT_URL } from '../config/endpoints-conf';
 import Link from '@material-ui/core/Link';
 import CardMedia from '@material-ui/core/CardMedia';
 import ReactPlayer from 'react-player'
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
+import { ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 class YourUpload extends Component {
   constructor(props) {
@@ -32,6 +33,7 @@ class YourUpload extends Component {
 
     this.handleTabChange = this.handleTabChange.bind(this);
     this.loadUploadPosts = this.loadUploadPosts.bind(this);
+    this.handleDeletePost = this.handleDeletePost.bind(this);
   }
 
   loadUploadPosts() {
@@ -68,13 +70,25 @@ class YourUpload extends Component {
     })
   }
 
+  handleDeletePost(id) {
+    deletePost(getUserIdToken)(id)
+      .then(data => {
+        console.log('data', data);
+        this.loadUploadPosts();
+        toast.success('Successfully delete your post');
+      }).catch(err => {
+        console.log("err", err)
+        toast.error('Unable to delete your post');
+      })
+  }
+
   render() {
     const { classes } = this.props;
     console.log('posts', this.state.posts);
     return (
         <React.Fragment>
           <GridContainer spacing={3} direction="row">
-            
+            <ToastContainer />
             <GridItem xs={12} sm={12} md={12} lg={12}>
               <Paper className={classes.root}>
                 <Tabs
@@ -124,7 +138,12 @@ class YourUpload extends Component {
                         </Grid>
                         <Grid item xs={12} sm={8} md={9} lg={9}>
                           <CardContent>
-                          <Button variant="contained" color="secondary" style={{'float': 'right'}}>Delete</Button>
+                          <Button 
+                            variant="contained" 
+                            color="secondary" style={{'float': 'right'}}
+                            onClick={() => this.handleDeletePost(post.id)}
+                            >Delete
+                          </Button>
                             <Typography gutterBottom variant="subtitle2" component="h2">
                               {post.title}
                             </Typography>

@@ -110,8 +110,8 @@ class Home extends Component {
                           textColor="primary"
                           centered
                         >
-                          <Tab label="Blogs" icon={<PostAddIcon />} component="a" href={'/blog' + '/' + selectedTag} />
-                          <Tab label="Videos" icon={<YouTubeIcon />} component="a" href={'/video' + '/' + selectedTag} />
+                          <Tab label="Blogs" icon={<PostAddIcon />} component="a" href={'/blog/' + selectedTag} />
+                          <Tab label="Videos" icon={<YouTubeIcon />} component="a" href={'/video/' + selectedTag} />
                         </Tabs>
                       </Paper>
                       <GridContainer spacing={3} direction="row">

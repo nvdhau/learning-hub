@@ -1,6 +1,7 @@
 import { API_CREATE_POST, 
     API_GET_POSTS, 
-    API_CREATE_VIDEOPOST
+    API_CREATE_VIDEOPOST,
+    API_GET_USER
 } from '../config/endpoints-conf';
 import axios from 'axios';
 
@@ -95,6 +96,24 @@ export const createVideoPost = (getUserIdToken) => (json) =>  {
         })
 }
 
+export const deletePost = (getUserIdToken) => (id) =>  {
+    const API_DELETE_POST = API_GET_POSTS + id;
+    return getUserIdToken()
+        .then(data => {
+            const idToken = data.idToken;
+            return axios.delete(API_DELETE_POST, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'Authorization': idToken
+                        }
+                    }).then(res => {
+                        console.log("res", res);
+                    }).catch(err => {
+                        console.log("ERR: " + err);
+                    })
+        })
+}
 export const getPostDetail = (getUserIdToken) => (id) =>  {
     
     return getUserIdToken()
@@ -157,6 +176,45 @@ export const createPostReplyComment = (getUserIdToken) => (comment_id, json) => 
         .then(data => {
             const idToken = data.idToken;
             return axios.put(API_CREATE_POSTREPLYCOMMENTS, json , {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'Authorization': idToken
+                        }
+                    }).then(res => {
+                        console.log("res", res);
+                    }).catch(err => {
+                        console.log("ERR: " + err);
+                    })
+        })
+}
+
+export const followUser = (getUserIdToken) => (login_uid, uid) =>  {
+    const API_FOLLOW_USER = API_GET_USER + login_uid + '/follow/' + uid;
+    console.log("api endpoint", API_FOLLOW_USER);
+    return getUserIdToken()
+        .then(data => {
+            const idToken = data.idToken;
+            return axios.put(API_FOLLOW_USER , {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'Authorization': idToken
+                        }
+                    }).then(res => {
+                        console.log("res", res);
+                    }).catch(err => {
+                        console.log("ERR: " + err);
+                    })
+        })
+}
+
+export const unfollowUser = (getUserIdToken) => (login_uid, uid) =>  {
+    const API_UNFOLLOW_USER = API_GET_USER + login_uid + '/unfollow/' + uid;
+    return getUserIdToken()
+        .then(data => {
+            const idToken = data.idToken;
+            return axios.put(API_UNFOLLOW_USER , {
                         headers: {
                             'Content-Type': 'application/json',
                             'Accept': 'application/json',
