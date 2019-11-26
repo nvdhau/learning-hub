@@ -20,8 +20,11 @@
       $("#btnName").click(()=>{
           
           loggedInUid = $("#txtName").val();
+          console.log({loggedInUid});
           // args are sent in order to acknowledgement function
-          socket.emit('init', loggedInUid, ()=>{});
+          socket.emit('init', loggedInUid, data => {
+            console.log(data);
+          });
       });
 
        $("#btn").click(()=>{
@@ -35,8 +38,8 @@
        });
        
     });
-    
-    socket.on('forwardMsg', function(data){
+
+    socket.on('receiveMsg', function(data){
         let s = $("#e4").html() + "<br>" + data['m'];
         $("#e4").html(s);
     });
