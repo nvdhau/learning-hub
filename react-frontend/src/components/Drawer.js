@@ -234,7 +234,7 @@ export default function PersistentDrawerLeft() {
           
           <Link href="/" style={{ textDecoration: 'none', display: 'block', color: 'white'}}>
             <Typography variant="h6" noWrap>
-              Online Learning
+              Learning HUB
             </Typography>
           </Link>
           

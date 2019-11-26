@@ -29,6 +29,7 @@ class Bootstrap extends Component {
 
   render() {
     console.log('render Bootstrap');
+    console.log('Login', this.state.appUser);
     const children = React.Children.map(this.props.children, child => {
       return React.cloneElement(child, {
         appUser: this.state.appUser ? this.state.appUser : null,
