@@ -26,6 +26,7 @@ import ca.specialTopics.learningHub.R;
 import ca.specialTopics.learningHub.models.Comment;
 import ca.specialTopics.learningHub.models.CommentServerAnswer;
 import ca.specialTopics.learningHub.models.Post;
+import ca.specialTopics.learningHub.ui.chat.ChatFragment;
 import ca.specialTopics.learningHub.viewModels.CommentListViewModel;
 import ca.specialTopics.learningHub.viewModels.PostViewModel;
 import io.noties.markwon.Markwon;
@@ -115,7 +116,11 @@ public class PostFragment extends BaseFragment {
                         .error(android.R.drawable.ic_delete)
                         .into(imgPost);
 
-
+                // Chat
+                txtUsername.setOnClickListener(view1 -> {
+                    ChatFragment chatFragment = ChatFragment.newInstance(post.getUser());
+                    pushFragment(chatFragment);
+                });
             }
         });
 
