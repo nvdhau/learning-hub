@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.omadahealth.github.swipyrefreshlayout.library.SwipyRefreshLayout;
+import com.omadahealth.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -41,11 +43,13 @@ public class PostFragment extends BaseFragment {
     private int postId;
     @SuppressWarnings("FieldCanBeLocal")
     private CommentListViewModel commentListViewModel;
+    private boolean loadingComments;
 
     private TextView txtTitle, txtUsername, txtDate, txtDescription, txtCategory, txtTags;
     private ImageView imgPost;
     private Markwon markwon;
     private CommentsRecyclerViewAdapter commentsRecyclerViewAdapter;
+    private SwipyRefreshLayout swipeRefreshLayout;
 
     public static PostFragment newInstance(int postId) {
         PostFragment postFragment = new PostFragment();
@@ -89,6 +93,8 @@ public class PostFragment extends BaseFragment {
         commentsRecyclerViewAdapter = new CommentsRecyclerViewAdapter();
         commentsRecyclerView.setAdapter(commentsRecyclerViewAdapter);
 
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh);
+
         return view;
     }
 
@@ -131,6 +137,7 @@ public class PostFragment extends BaseFragment {
             } else {
                 //btnSubmit.setEnabled(true);
                 hideProgressBar();
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
@@ -148,6 +155,28 @@ public class PostFragment extends BaseFragment {
                     }
                 }
                 commentsRecyclerViewAdapter.setData(commentList);
+            }
+        });
+
+        commentListViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            if (loadingComments) {
+                if (isLoading) {
+                    showProgressBar();
+                } else {
+                    hideProgressBar();
+                    swipeRefreshLayout.setRefreshing(false);
+                    loadingComments = false;
+                }
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(direction -> {
+            if (direction == SwipyRefreshLayoutDirection.TOP) {
+                postViewModel.loadPost(postId);
+                commentListViewModel.loadCommentServerAnswerResource(postId);
+            } else {
+                loadingComments = true;
+                commentListViewModel.loadCommentServerAnswerResource(postId);
             }
         });
     }

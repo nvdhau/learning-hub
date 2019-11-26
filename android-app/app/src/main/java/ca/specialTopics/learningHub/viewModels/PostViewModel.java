@@ -22,15 +22,16 @@ public class PostViewModel extends BaseViewModel {
         if (postResource == null) {
             postResource = new MutableLiveData<>();
             this.id = id;
-            loadPost();
+            loadPost(id);
         } else if (this.id != id) {
             this.id = id;
-            loadPost();
+            loadPost(id);
         }
         return postResource;
     }
 
-    private void loadPost() {
+    public void loadPost(int id) {
+        this.id = id;
         isLoading.setValue(true);
         getAuthorizationToken(task -> {
             String token = task.getResult() != null ? task.getResult().getToken() : "";

@@ -106,13 +106,11 @@ public class PostListFragment extends BaseFragment {
                 showProgressBar();
             } else {
                 hideProgressBar();
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            swipeRefreshLayout.setRefreshing(false);
-            postListViewModel.loadPostList(tag);
-        });
+        swipeRefreshLayout.setOnRefreshListener(() -> postListViewModel.loadPostList(tag));
     }
 
     /*
