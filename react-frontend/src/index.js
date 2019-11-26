@@ -9,7 +9,10 @@ import Home from './views/Home';
 import Upload from './views/Upload';
 import SignUp from './views/SignUp';
 import Post from './views/Post';
+import Explore from './views/Explore';
 import YourUpload from './views/YourUpload';
+import AuthorPosts from './views/AuthorPosts';
+import Chat from './views/Chat';
 import Subscription from './views/Subscription';
 import Bootstrap from './Bootstrap';
 import { doSignOut } from './actions/authenticate';
@@ -44,6 +47,9 @@ ReactDOM.render((
                 <Route path="/login" exact component={Login}/>
                 <Route path="/signup" exact component={SignUp}/>
                 <Route path="/logout" exact render={(props) => doSignOut(props)} />
+                <PrivateRoute path='/chat/to/:author_uid' exact component={Chat} />
+                <PrivateRoute path='/author/:author_uid' exact component={AuthorPosts} />
+                <PrivateRoute path='/explore' exact component={Explore} />
                 <PrivateRoute path='/uploads/' exact component={YourUpload} />
                 <PrivateRoute path='/subscriptions/' exact component={Subscription} />
                 <PrivateRoute path='/post/:filter/:postid' exact component={Post} />

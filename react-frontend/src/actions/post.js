@@ -29,6 +29,7 @@ export const getAllPosts = (getUserIdToken) => (queryString) => {
     const params = {
         is_blog: queryString.filter,
         tags: queryString.tag,
+        search: queryString.search
     };
     
     return getUserIdToken()

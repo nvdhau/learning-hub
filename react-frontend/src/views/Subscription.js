@@ -170,9 +170,14 @@ class Subscription extends Component {
                           <Grid key={"folowinguser-" + index} item xs={12} sm={2} md={3} lg={4} style={{'position': 'relative'}}>
                             <Card className={classes.card} style={{'textAlign': 'center'}}>
                               <CardContent>
-                                <Avatar className={classes.avatarSubcribe}>{this.displayShortName(user.fullName)}</Avatar>
+                                <Avatar 
+                                  className={classes.avatarSubcribe}>{this.displayShortName(user.fullName)}
+                                </Avatar>
                                 <Typography gutterBottom variant="subtitle2" component="h2">
-                                  {user.fullName}
+                                  <Link href={"/author/" + user.id}>
+                                    {user.fullName}
+                                  </Link>
+                                  
                                 </Typography>
                                 <Button 
                                   onClick={() => this.handleSubscription(user, index)}

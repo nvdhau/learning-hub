@@ -180,7 +180,10 @@ export default function PersistentDrawerLeft() {
       onClose={handleMenuClose}
     >
       
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      
+      <Link href="/uploads" style={{ textDecoration: 'none', display: 'block' }}> 
+        <MenuItem onClick={handleMenuClose}>Your uploads</MenuItem>
+      </Link>
       <Link href="/logout" style={{ textDecoration: 'none', display: 'block' }}> 
         <MenuItem onClick={handleMenuClose}>Sign out</MenuItem>
       </Link>
@@ -235,7 +238,7 @@ export default function PersistentDrawerLeft() {
             </Typography>
           </Link>
           
-          <div className={classes.search}>
+          {/* <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
@@ -247,7 +250,7 @@ export default function PersistentDrawerLeft() {
               }}
               inputProps={{ 'aria-label': 'search' }}
             />
-          </div>
+          </div> */}
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             <Button
@@ -290,10 +293,10 @@ export default function PersistentDrawerLeft() {
         </div>
         <Divider />
         <List>
-            <ListItem button key="explore">
-                <ListItemIcon><SearchIcon/></ListItemIcon>
-                <ListItemText primary="Explore" />
-            </ListItem>  
+            <ListItemLink button key="explore" href="/explore" >
+              <ListItemIcon><SearchIcon/></ListItemIcon>
+              <ListItemText primary="Search" />
+            </ListItemLink>  
             <ListItemLink button key="uploadblog" href="/upload/blog" >
                 <ListItemIcon><PostAddIcon/></ListItemIcon>
                 <ListItemText primary="Add blog" />
@@ -305,12 +308,8 @@ export default function PersistentDrawerLeft() {
         </List>
         <Divider />
         <List>
-            <ListItem button key="myprofile">
-                <ListItemIcon><PersonIcon/></ListItemIcon>
-                <ListItemText primary="My Profile" />
-            </ListItem>
             <ListItemLink button key="yourupload" href="/uploads/">
-                <ListItemIcon><PublishIcon/></ListItemIcon>
+                <ListItemIcon><PersonIcon/></ListItemIcon>
                 <ListItemText primary="Your uploads" />
             </ListItemLink>
             <ListItemLink button key="subscription" href="/subscriptions/" >
