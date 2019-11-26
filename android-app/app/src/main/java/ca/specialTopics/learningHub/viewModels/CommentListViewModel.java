@@ -32,7 +32,8 @@ public class CommentListViewModel extends BaseViewModel {
         return commentServerAnswerResource;
     }
 
-    private void loadCommentServerAnswerResource(int postId) {
+    public void loadCommentServerAnswerResource(int postId) {
+        this.postId = postId;
         isLoading.setValue(true);
         getAuthorizationToken(task -> {
             String token = task.getResult() != null ? task.getResult().getToken() : "";

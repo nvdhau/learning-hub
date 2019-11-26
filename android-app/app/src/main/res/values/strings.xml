@@ -25,11 +25,16 @@
 
     <!-- Posts -->
     <string name="posts">Blogs</string>
-    <string name="usernameMask">\@%1$s</string>
+    <string name="usernameMask"><u>\@%1$s</u></string>
     <string name="commentsTitle">Comments</string>
 
     <!-- Tags -->
     <string name="trendingTags">Trending tags</string>
+
+    <!-- Chat -->
+    <string name="action_send">Send</string>
+    <string name="prompt_message">Message</string>
+    <string name="user_action_typing">is typing</string>
 
     <!-- Validation -->
     <string name="someErrors">There are some errors</string>
