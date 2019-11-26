@@ -1,17 +1,15 @@
 package ca.specialTopics.learningHub.ui.chat;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,11 +38,11 @@ public class ChatFragment extends BaseFragment {
     private FirebaseUser firebaseUser;
     private User toUser;
     private Socket mSocket;
-    private List<Message> messageList = new ArrayList<Message>();
+    private List<Message> messageList = new ArrayList<>();
 
     private ChatRecyclerViewAdapter chatRecyclerViewAdapter;
     private RecyclerView recyclerViewMessageList;
-
+    private TextView txtMessage;
 
     public static ChatFragment newInstance(User toUser) {
         ChatFragment fragment = new ChatFragment();
@@ -61,7 +59,7 @@ public class ChatFragment extends BaseFragment {
             toUser = (User) getArguments().getSerializable(ARG_USER);
         }
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        chatRecyclerViewAdapter = new ChatRecyclerViewAdapter(requireContext(), messageList, firebaseUser.getUid());
+        chatRecyclerViewAdapter = new ChatRecyclerViewAdapter(requireContext(), messageList, firebaseUser.getUid(), toUser);
 
         try {
             mSocket = IO.socket(RetrofitService.BASE_URL);
@@ -87,30 +85,41 @@ public class ChatFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
+        setTitle(getString(R.string.usernameMask, toUser.getUsername()));
+
         recyclerViewMessageList = view.findViewById(R.id.recyclerViewMessageList);
         recyclerViewMessageList.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerViewMessageList.setAdapter(chatRecyclerViewAdapter);
 
         subscribe();
 
-        final TextView txtMessage = view.findViewById(R.id.message_input);
-
-        ImageButton sendButton = view.findViewById(R.id.send_button);
-        sendButton.setOnClickListener(view1 -> {
-            String messageString = txtMessage.getText().toString().trim();
-            if (messageString.isEmpty()) {
-                txtMessage.requestFocus();
-                return;
+        txtMessage = view.findViewById(R.id.message_input);
+        txtMessage.setOnEditorActionListener((v, id, event) -> {
+            if (id == EditorInfo.IME_ACTION_SEND) {
+                attemptSend();
+                return true;
             }
-
-            txtMessage.setText("");
-            Message message = new Message(firebaseUser.getUid(), messageString);
-            addMessage(message);
-            mSocket.emit("sendMsg", firebaseUser.getUid(), toUser.getId(), messageString);
+            return false;
         });
 
 
+        ImageButton sendButton = view.findViewById(R.id.send_button);
+        sendButton.setOnClickListener(view1 -> attemptSend());
+
         return view;
+    }
+
+    private void attemptSend() {
+        String messageString = txtMessage.getText().toString().trim();
+        if (messageString.isEmpty()) {
+            txtMessage.requestFocus();
+            return;
+        }
+
+        txtMessage.setText("");
+        Message message = new Message(firebaseUser.getUid(), messageString);
+        addMessage(message);
+        mSocket.emit("sendMsg", firebaseUser.getUid(), toUser.getId(), messageString);
     }
 
     private void addMessage(Message message) {
@@ -128,16 +137,11 @@ public class ChatFragment extends BaseFragment {
         }));
     }
 
-    private Emitter.Listener onNewMessage = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            requireActivity().runOnUiThread(() -> {
-                Message message = JSONParser.parseClass(args[0].toString(), Message.class);
-                addMessage(message);
-                scrollToBottom();
-            });
-        }
-    };
+    private Emitter.Listener onNewMessage = args -> requireActivity().runOnUiThread(() -> {
+        Message message = JSONParser.parseClass(args[0].toString(), Message.class);
+        addMessage(message);
+        scrollToBottom();
+    });
 
     private void scrollToBottom() {
         recyclerViewMessageList.scrollToPosition(chatRecyclerViewAdapter.getItemCount() - 1);

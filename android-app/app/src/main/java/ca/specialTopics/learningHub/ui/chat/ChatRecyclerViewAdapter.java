@@ -14,17 +14,20 @@ import java.util.List;
 
 import ca.specialTopics.learningHub.R;
 import ca.specialTopics.learningHub.models.Message;
+import ca.specialTopics.learningHub.models.User;
 
 public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerViewAdapter.ViewHolder> {
 
     private List<Message> mMessages;
     private Context context;
     private String userUid;
+    private User toUser;
 
-    public ChatRecyclerViewAdapter(Context context, List<Message> messages, String userUid) {
+    public ChatRecyclerViewAdapter(Context context, List<Message> messages, String userUid, User toUser) {
         mMessages = messages;
         this.context = context;
         this.userUid = userUid;
+        this.toUser = toUser;
     }
 
     @NonNull
@@ -51,14 +54,17 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         Message message = mMessages.get(position);
-        //viewHolder.txtUsername.setText(context.getString(R.string.usernameMask, message.getUser().getUsername()));
         viewHolder.txtMessage.setText(message.getContent());
 
         if (message.getType() == Message.TYPE_MESSAGE) {
-            if (userUid.equals(message.getUserUid()))
+            if (userUid.equals(message.getUserUid())) {
                 viewHolder.txtMessage.setGravity(Gravity.END);
-            else
+                viewHolder.txtFullNameImage.setVisibility(View.GONE);
+            } else {
                 viewHolder.txtMessage.setGravity(Gravity.START);
+                viewHolder.txtFullNameImage.setVisibility(View.VISIBLE);
+                viewHolder.txtFullNameImage.setText(toUser.getFullNameImage());
+            }
         }
     }
 
@@ -73,12 +79,12 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        final TextView txtUsername;
+        final TextView txtFullNameImage;
         final TextView txtMessage;
 
         ViewHolder(View view) {
             super(view);
-            txtUsername = view.findViewById(R.id.txtUsername);
+            txtFullNameImage = view.findViewById(R.id.txtFullNameImage);
             txtMessage = view.findViewById(R.id.txtMessage);
         }
     }

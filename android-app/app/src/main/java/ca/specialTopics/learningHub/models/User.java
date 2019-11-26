@@ -7,6 +7,7 @@ public class User implements Serializable {
     private String username;
     private String fullName;
     private boolean isActive;
+    private transient String fullNameImage;
 
     //They are only not null in the user registration
     private String email;
@@ -63,4 +64,17 @@ public class User implements Serializable {
     public String getPassword() {
         return password;
     }
+
+    public String getFullNameImage() {
+        if (fullNameImage == null) {
+            StringBuilder stringBuilder = new StringBuilder("");
+            String[] names = fullName.split(" ");
+            for (String name : names) {
+                stringBuilder.append(name.charAt(0));
+            }
+            fullNameImage = stringBuilder.toString();
+        }
+        return fullNameImage;
+    }
+
 }
